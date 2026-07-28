@@ -1,0 +1,67 @@
+/* ─────────────────────────────────────────────────────────
+   COLORS
+   Palette derived from the Brand brand. Primary Blue is the
+   primary action color. Bright Blue + Electric are accents for
+   data-viz and highlights. Honey is the warning / attention color.
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Brand ── */
+  --hex-blue:         #3C2CDA;   /* primary action, nav, headings */
+  --hex-blue-dark:    #2A1FAA;   /* hover on primary */
+  --hex-blue-light:   #EEF0FD;   /* active bg, tinted surfaces */
+  --hex-bright:       #1D86FF;   /* links, info, charts */
+  --hex-bright-dim:   #D6EAFF;
+  --hex-electric:     #14CBDE;   /* secondary charts, accents */
+  --hex-electric-dim: #D0F6FA;
+  --hex-honey:        #EA9D00;   /* warning, attention, maturity-current */
+  --hex-honey-dim:    #FFF0CC;
+
+  /* ── Semantic ── */
+  --success:        #12A053;
+  --success-dim:    #D4F0E3;
+  --warning:        #EA9D00;
+  --warning-dim:    #FFF0CC;
+  --danger:         #DC3545;
+  --danger-dim:     #FDEAEA;
+  --info:           #1D86FF;
+  --info-dim:       #D6EAFF;
+
+  /* ── Neutrals ── */
+  --gray-50:   #F8F9FA;
+  --gray-100:  #F0F2F5;
+  --gray-200:  #E2E6EA;
+  --gray-300:  #CDD2D8;
+  --gray-400:  #9BA3AD;
+  --gray-500:  #6B7280;
+  --gray-600:  #4B5563;
+  --gray-700:  #374151;
+  --gray-800:  #1F2937;
+  --gray-900:  #111827;
+
+  /* ── Maturity depth scale (M1→M5, deepening blue) ── */
+  --m1: #4B3EEE;
+  --m2: #3C2CDA;
+  --m3: #2D1FC8;
+  --m4: #2015A8;
+  --m5: #130B7A;
+
+  /* ── Semantic aliases ── */
+  --color-primary:        var(--hex-blue);
+  --color-primary-hover:  var(--hex-blue-dark);
+  --color-primary-tint:   var(--hex-blue-light);
+
+  --text-strong:    var(--gray-900);  /* headings, primary text */
+  --text-body:      var(--gray-600);  /* body, secondary */
+  --text-muted:     var(--gray-400);  /* placeholder, captions */
+  --text-on-brand:  #FFFFFF;
+
+  --surface-page:   var(--gray-50);
+  --surface-card:   #FFFFFF;
+  --surface-subtle: var(--gray-100);
+
+  --border-default: var(--gray-200);
+  --border-strong:  var(--gray-300);
+
+  --focus-ring:     rgba(60, 44, 218, 0.12);
+}

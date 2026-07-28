@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/design-system/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/design-system/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/design-system/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/design-system/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/design-system/tokens/radius.css">
+  <link rel="stylesheet" href="_ds/design-system/tokens/shadows.css">
+  <link rel="stylesheet" href="_ds/design-system/styles.css">
+  <script src="_ds/design-system/_ds_bundle.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *{box-sizing:border-box;}
+    html,body{margin:0;height:100%;}
+    body{font-family:var(--font-sans);background:var(--surface-page);color:var(--gray-900);}
+    a{color:var(--hex-bright);text-decoration:none;}
+    a:hover{color:var(--hex-blue);}
+    i[data-lucide]{width:20px;height:20px;stroke-width:2;}
+    ::-webkit-scrollbar{width:8px;height:8px;}
+    ::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:8px;}
+  </style>
+</helmet>
+<div style="height:100vh;display:flex;overflow:hidden;background:var(--surface-page);">
+
+  <!-- Icon rail -->
+  <div style="width:60px;flex:0 0 60px;background:#fff;border-right:1px solid var(--gray-200);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:6px;">
+    <div style="width:34px;height:34px;border-radius:9px;background:var(--hex-blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;margin-bottom:12px;">N</div>
+    <div style="width:40px;height:40px;border-radius:9px;background:var(--hex-blue-light);color:var(--hex-blue);display:flex;align-items:center;justify-content:center;" title="Markets"><i data-lucide="candlestick-chart"></i></div>
+    <div style="width:40px;height:40px;border-radius:9px;color:var(--gray-500);display:flex;align-items:center;justify-content:center;" title="Watchlist"><i data-lucide="list"></i></div>
+    <div style="width:40px;height:40px;border-radius:9px;color:var(--gray-500);display:flex;align-items:center;justify-content:center;" title="Orders"><i data-lucide="receipt"></i></div>
+    <div style="width:40px;height:40px;border-radius:9px;color:var(--gray-500);display:flex;align-items:center;justify-content:center;" title="Portfolio"><i data-lucide="pie-chart"></i></div>
+    <div style="margin-top:auto;width:40px;height:40px;border-radius:9px;color:var(--gray-500);display:flex;align-items:center;justify-content:center;" title="Settings"><i data-lucide="settings"></i></div>
+  </div>
+
+  <!-- Main column -->
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+
+    <!-- Top bar -->
+    <div style="height:56px;flex:0 0 56px;background:#fff;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:16px;padding:0 20px;">
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <span style="font-weight:800;font-size:16px;letter-spacing:-0.02em;">Markets</span>
+        <span style="font-size:12px;color:var(--gray-400);">NSE · Nifty 50</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-left:8px;">
+        <div style="text-align:right;"><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-400);">Nifty 50</div><div style="font-size:13px;font-weight:700;">24,812.05 <span style="color:var(--success);font-weight:600;">+0.62%</span></div></div>
+        <div style="text-align:right;"><div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-400);">Sensex</div><div style="font-size:13px;font-weight:700;">81,340.18 <span style="color:var(--success);font-weight:600;">+0.55%</span></div></div>
+      </div>
+      <div style="flex:1;"></div>
+      <div style="position:relative;width:240px;">
+        <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);width:16px;height:16px;"></i>
+        <input placeholder="Search shares" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 12px 0 32px;font-family:inherit;font-size:13px;outline:none;background:var(--gray-50);" />
+      </div>
+      <div style="width:34px;height:34px;border-radius:999px;background:var(--hex-blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">RK</div>
+    </div>
+
+    <!-- 3-column workspace -->
+    <div style="flex:1;display:flex;min-height:0;">
+
+      <!-- Watchlist -->
+      <div style="width:296px;flex:0 0 296px;background:#fff;border-right:1px solid var(--gray-200);display:flex;flex-direction:column;min-height:0;">
+        <div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-500);font-weight:700;">Watchlist</span>
+          <span style="font-size:11px;color:var(--gray-400);">{{ watchCount }} shares</span>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:0 8px 12px;">
+          <sc-for list="{{ symbols }}" as="row" hint-placeholder-count="8">
+            <div onClick="{{ row.onClick }}" style="{{ row.rowStyle }}">
+              <div style="min-width:0;">
+                <div style="font-weight:700;font-size:13px;color:var(--gray-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ row.sym }}</div>
+                <div style="font-size:11px;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ row.name }}</div>
+              </div>
+              <svg width="52" height="22" viewBox="0 0 52 22" style="flex:0 0 auto;"><polyline points="{{ row.spark }}" fill="none" stroke="{{ row.sparkColor }}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"></polyline></svg>
+              <div style="text-align:right;flex:0 0 auto;">
+                <div style="font-weight:700;font-size:13px;">{{ row.priceStr }}</div>
+                <div style="font-size:11px;font-weight:600;color:{{ row.chgColor }};">{{ row.chgStr }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Chart center -->
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0;padding:16px;gap:12px;">
+
+        <!-- Instrument header -->
+        <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-weight:800;font-size:22px;letter-spacing:-0.02em;">{{ active.sym }}</span>
+              <span style="font-size:12px;color:var(--gray-500);background:var(--gray-100);border-radius:4px;padding:2px 8px;">{{ active.sector }}</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:2px;">{{ active.name }} · NSE</div>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;">
+            <span style="font-weight:800;font-size:26px;letter-spacing:-0.02em;">{{ active.priceStr }}</span>
+            <span style="font-size:15px;font-weight:700;color:{{ active.chgColor }};">{{ active.chgStr }}</span>
+          </div>
+        </div>
+
+        <!-- Chart controls -->
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px;gap:2px;">
+            <button onClick="{{ tf.d1D }}" style="{{ tf.s1D }}">1D</button>
+            <button onClick="{{ tf.d1W }}" style="{{ tf.s1W }}">1W</button>
+            <button onClick="{{ tf.d1M }}" style="{{ tf.s1M }}">1M</button>
+            <button onClick="{{ tf.d1Y }}" style="{{ tf.s1Y }}">1Y</button>
+          </div>
+          <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px;gap:2px;">
+            <button onClick="{{ type.candle }}" style="{{ type.sCandle }}" title="Candlestick"><i data-lucide="candlestick-chart" style="width:16px;height:16px;"></i></button>
+            <button onClick="{{ type.line }}" style="{{ type.sLine }}" title="Line"><i data-lucide="line-chart" style="width:16px;height:16px;"></i></button>
+          </div>
+          <div style="flex:1;"></div>
+          <button onClick="{{ maToggle }}" style="{{ maStyle }}">MA 9</button>
+          <button onClick="{{ rsiToggle }}" style="{{ rsiStyle }}">RSI 14</button>
+        </div>
+
+        <!-- Canvas chart -->
+        <div style="flex:1;position:relative;min-height:0;background:#fff;border:1px solid var(--gray-200);border-radius:12px;overflow:hidden;">
+          <canvas ref="{{ setCanvas }}" onMouseMove="{{ onMove }}" onMouseLeave="{{ onLeave }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;"></canvas>
+          <div style="{{ tip.style }}">
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:5px;">{{ tip.date }}</div>
+            <div style="display:grid;grid-template-columns:auto auto;gap:2px 14px;font-size:11px;">
+              <span style="color:var(--gray-500);">O</span><span style="font-weight:700;text-align:right;">{{ tip.o }}</span>
+              <span style="color:var(--gray-500);">H</span><span style="font-weight:700;text-align:right;">{{ tip.h }}</span>
+              <span style="color:var(--gray-500);">L</span><span style="font-weight:700;text-align:right;">{{ tip.l }}</span>
+              <span style="color:var(--gray-500);">C</span><span style="font-weight:700;text-align:right;color:{{ tip.cColor }};">{{ tip.c }}</span>
+              <span style="color:var(--gray-500);">Vol</span><span style="font-weight:700;text-align:right;">{{ tip.v }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info panel -->
+      <div style="width:336px;flex:0 0 336px;background:#fff;border-left:1px solid var(--gray-200);overflow-y:auto;min-height:0;">
+        <div style="padding:18px 20px;border-bottom:1px solid var(--gray-200);">
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-500);font-weight:700;margin-bottom:8px;">Overview</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;">
+            <span style="font-weight:800;font-size:20px;">{{ active.priceStr }}</span>
+            <span style="font-size:13px;font-weight:700;color:{{ active.chgColor }};">{{ active.chgStr }}</span>
+          </div>
+        </div>
+
+        <div style="padding:18px 20px;border-bottom:1px solid var(--gray-200);">
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-500);font-weight:700;margin-bottom:12px;">Key statistics</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;">
+            <div><div style="font-size:11px;color:var(--gray-400);">Open</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.open }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">Prev close</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.prevClose }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">Day high</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.dayHigh }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">Day low</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.dayLow }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">52W high</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.wkHigh }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">52W low</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.wkLow }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">Volume</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.vol }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">Avg vol</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.avgVol }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">Market cap</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.mcap }}</div></div>
+            <div><div style="font-size:11px;color:var(--gray-400);">P/E</div><div style="font-weight:700;font-size:13px;margin-top:2px;">{{ active.pe }}</div></div>
+          </div>
+        </div>
+
+        <div style="padding:18px 20px;">
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-500);font-weight:700;margin-bottom:12px;">About {{ active.sym }}</div>
+          <p style="font-size:13px;line-height:1.6;color:var(--gray-600);margin:0 0 14px;text-wrap:pretty;">{{ active.about }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+            <span style="font-size:11px;color:var(--gray-600);background:var(--gray-100);border-radius:999px;padding:4px 10px;">Sector · {{ active.sector }}</span>
+            <span style="font-size:11px;color:var(--gray-600);background:var(--gray-100);border-radius:999px;padding:4px 10px;">Index · Nifty 50</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <x-import component-from-global-scope="PaRoDesignSystem.Button" variant="secondary" size="sm" hint-size="auto,34px">Add alert</x-import>
+            <x-import component-from-global-scope="PaRoDesignSystem.Button" variant="ghost" size="sm" hint-size="auto,34px">More detail</x-import>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { symbol: 'RELIANCE', tf: '1D', chart: 'candle', ma: true, rsi: false, cx: null, mx: 0, my: 0 };
+
+  META = [
+    { sym:'RELIANCE',  name:'Reliance Industries', sector:'Energy',      price:2984.50, mcap:'₹20.2L Cr', pe:'24.8', about:'Reliance Industries is a diversified conglomerate with interests spanning oil-to-chemicals, retail, and digital services. It is one of the largest companies by market capitalisation on the NSE.' },
+    { sym:'HDFCBANK',  name:'HDFC Bank',            sector:'Banking',     price:1678.20, mcap:'₹12.7L Cr', pe:'18.9', about:'HDFC Bank is India\u2019s largest private-sector bank by assets, offering retail and wholesale banking, treasury, and digital financial services across a nationwide branch network.' },
+    { sym:'INFY',      name:'Infosys',              sector:'IT Services', price:1842.75, mcap:'₹7.6L Cr',  pe:'26.1', about:'Infosys is a global leader in next-generation digital services and consulting, helping enterprises navigate their transformation across cloud, data, and AI.' },
+    { sym:'TCS',       name:'Tata Consultancy Svc', sector:'IT Services', price:4126.10, mcap:'₹14.9L Cr', pe:'30.4', about:'Tata Consultancy Services is an IT services, consulting and business solutions organisation and the flagship of the Tata Group, operating in over 55 countries.' },
+    { sym:'ICICIBANK', name:'ICICI Bank',           sector:'Banking',     price:1245.60, mcap:'₹8.8L Cr',  pe:'17.3', about:'ICICI Bank is a leading private-sector bank offering a wide range of banking products and financial services to corporate and retail customers.' },
+    { sym:'SBIN',      name:'State Bank of India',  sector:'Banking',     price:842.35,  mcap:'₹7.5L Cr',  pe:'11.2', about:'State Bank of India is the country\u2019s largest public-sector bank, providing a comprehensive range of banking and financial services with an extensive rural and urban footprint.' },
+    { sym:'BHARTIARTL',name:'Bharti Airtel',        sector:'Telecom',     price:1568.90, mcap:'₹9.4L Cr',  pe:'62.7', about:'Bharti Airtel is a leading global telecommunications company offering mobile, broadband, and enterprise connectivity services across India, South Asia and Africa.' },
+    { sym:'ITC',       name:'ITC Ltd',              sector:'FMCG',        price:472.15,  mcap:'₹5.9L Cr',  pe:'27.6', about:'ITC is a diversified conglomerate with a presence in FMCG, hotels, paperboards, packaging and agri-business, and is among India\u2019s foremost private-sector companies.' },
+    { sym:'LT',        name:'Larsen & Toubro',      sector:'Infra',       price:3612.40, mcap:'₹4.9L Cr',  pe:'35.2', about:'Larsen & Toubro is an Indian multinational engaged in engineering, procurement and construction projects, hi-tech manufacturing and services across infrastructure and defence.' },
+    { sym:'HINDUNILVR',name:'Hindustan Unilever',   sector:'FMCG',        price:2456.80, mcap:'₹5.8L Cr',  pe:'52.3', about:'Hindustan Unilever is India\u2019s largest fast-moving consumer goods company with a portfolio of home care, beauty, personal care and foods brands used by millions daily.' },
+  ];
+
+  TF = { '1D':{n:26,step:15*60000,vol:0.0035}, '1W':{n:35,step:60*60000,vol:0.006}, '1M':{n:22,step:24*3600000,vol:0.011}, '1Y':{n:52,step:7*24*3600000,vol:0.02} };
+  ANCHOR = new Date(2026,6,24,15,30,0).getTime();
+
+  cache = {};
+
+  hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+  rng(seed){ let a=seed>>>0; return function(){ a|=0;a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+
+  series(sym, tf){
+    const key = sym+'|'+tf; if(this.cache[key]) return this.cache[key];
+    const meta = this.META.find(m=>m.sym===sym);
+    const cfg = this.TF[tf];
+    const rnd = this.rng(this.hash(sym+tf));
+    const n = cfg.n;
+    let closes = [1];
+    for(let i=1;i<n;i++){ closes.push(closes[i-1]*(1+(rnd()-0.48)*cfg.vol*2)); }
+    const last = closes[n-1];
+    const scale = meta.price/last;
+    const candles = [];
+    let baseVol = 400000 + rnd()*900000;
+    for(let i=0;i<n;i++){
+      const c = closes[i]*scale;
+      const o = (i===0? c*(1-(rnd()-0.5)*cfg.vol) : candles[i-1].c);
+      const hi = Math.max(o,c)*(1+rnd()*cfg.vol);
+      const lo = Math.min(o,c)*(1-rnd()*cfg.vol);
+      const v = Math.round(baseVol*(0.6+rnd()*0.9));
+      const t = this.ANCHOR - (n-1-i)*cfg.step;
+      candles.push({o,h:hi,l:lo,c,v,t});
+    }
+    const out = { candles };
+    this.cache[key] = out; return out;
+  }
+
+  fmt(n){ return '₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  fmtVol(v){ if(v>=1e7) return (v/1e7).toFixed(2)+' Cr'; if(v>=1e5) return (v/1e5).toFixed(2)+' L'; return v.toLocaleString('en-IN'); }
+  pad(x){ return (x<10?'0':'')+x; }
+  fmtDate(t, tf){
+    const d = new Date(t);
+    const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+    if(tf==='1D'||tf==='1W') return mo+' '+d.getDate()+', '+this.pad(d.getHours())+':'+this.pad(d.getMinutes());
+    return d.getDate()+' '+mo+" '"+String(d.getFullYear()).slice(2);
+  }
+
+  sma(arr, w){ const out=arr.map((_,i)=>{ if(i<w-1) return null; let s=0; for(let j=i-w+1;j<=i;j++) s+=arr[j]; return s/w; }); return out; }
+  rsi(arr, w){ const out=arr.map(()=>null); let g=0,l=0; for(let i=1;i<arr.length;i++){ const ch=arr[i]-arr[i-1]; if(i<=w){ if(ch>=0)g+=ch; else l-=ch; if(i===w){ g/=w;l/=w; out[i]=100-100/(1+(l===0?100:g/l)); } } else { const gain=ch>0?ch:0, loss=ch<0?-ch:0; g=(g*(w-1)+gain)/w; l=(l*(w-1)+loss)/w; out[i]=100-100/(1+(l===0?100:g/l)); } } return out; }
+
+  spark(sym){
+    const c = this.series(sym,'1D').candles.map(x=>x.c);
+    const mn=Math.min(...c), mx=Math.max(...c), rng=(mx-mn)||1;
+    return c.map((v,i)=>{ const x=(i/(c.length-1))*50+1; const y=20-((v-mn)/rng)*18+1; return x.toFixed(1)+','+y.toFixed(1); }).join(' ');
+  }
+
+  segStyle(active){
+    return 'border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:6px 12px;border-radius:6px;transition:all 150ms ease;'+
+      (active? 'background:#fff;color:var(--hex-blue);box-shadow:var(--shadow-sm);' : 'background:transparent;color:var(--gray-500);');
+  }
+  toggleStyle(active){
+    return 'white-space:nowrap;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;transition:all 150ms ease;border:1px solid '+
+      (active? 'var(--hex-blue);background:var(--hex-blue-light);color:var(--hex-blue);' : 'var(--gray-200);background:#fff;color:var(--gray-500);');
+  }
+
+  select(sym){ this.setState({ symbol:sym, cx:null }); }
+  setTf(tf){ this.setState({ tf, cx:null }); }
+  setChart(c){ this.setState({ chart:c, cx:null }); }
+
+  setCanvas = (el)=>{
+    this.canvas = el;
+    if(el){
+      if(this.ro) this.ro.disconnect();
+      this.ro = new ResizeObserver(()=>this.draw());
+      this.ro.observe(el.parentElement);
+      requestAnimationFrame(()=>this.draw());
+    }
+  };
+
+  onMove = (e)=>{
+    const cv=this.canvas; if(!cv) return;
+    const r=cv.getBoundingClientRect();
+    const x=e.clientX-r.left, y=e.clientY-r.top;
+    const s=this.series(this.state.symbol,this.state.tf).candles;
+    const geo=this._geo; if(!geo) return;
+    let idx=Math.round((x-geo.padL-geo.cw/2)/geo.cw);
+    idx=Math.max(0,Math.min(s.length-1,idx));
+    this.setState({ cx:idx, mx:x, my:y });
+  };
+  onLeave = ()=>{ this.setState({ cx:null }); };
+
+  componentDidMount(){ this.refreshIcons(); this.draw(); }
+  componentDidUpdate(){ this.refreshIcons(); this.draw(); }
+  componentWillUnmount(){ if(this.ro) this.ro.disconnect(); }
+  refreshIcons(){ if(window.lucide) try{ window.lucide.createIcons(); }catch(e){} }
+
+  draw(){
+    const cv=this.canvas; if(!cv||!cv.parentElement) return;
+    const dpr=window.devicePixelRatio||1;
+    const W=cv.clientWidth, H=cv.clientHeight;
+    if(!W||!H) return;
+    cv.width=W*dpr; cv.height=H*dpr;
+    const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);
+    const st=this.state;
+    const candles=this.series(st.symbol,st.tf).candles;
+    const n=candles.length;
+    const closes=candles.map(c=>c.c);
+
+    const padL=10, padR=62, padT=12, padB=22, gap=10;
+    const plotW=W-padL-padR;
+    const rsiH=st.rsi? Math.max(52,(H-padT-padB)*0.20):0;
+    const volH=Math.max(44,(H-padT-padB)*0.16);
+    const priceH=(H-padT-padB)-volH-rsiH-gap*(st.rsi?2:1);
+    const priceTop=padT, volTop=priceTop+priceH+gap, rsiTop=volTop+volH+gap;
+    const cw=plotW/n;
+    this._geo={padL,cw};
+
+    let hi=-Infinity, lo=Infinity;
+    candles.forEach(c=>{ if(c.h>hi)hi=c.h; if(c.l<lo)lo=c.l; });
+    const padv=(hi-lo)*0.06||1; hi+=padv; lo-=padv;
+    const py=v=>priceTop+(1-(v-lo)/(hi-lo))*priceH;
+    const cx=i=>padL+cw*i+cw/2;
+
+    // grid + price axis
+    ctx.font='10px '+getComputedStyle(document.body).fontFamily;
+    ctx.textBaseline='middle';
+    const gridN=5;
+    for(let i=0;i<=gridN;i++){
+      const v=lo+(hi-lo)*i/gridN; const y=py(v);
+      ctx.strokeStyle='#E2E6EA'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke();
+      ctx.fillStyle='#9BA3AD'; ctx.textAlign='left';
+      ctx.fillText(v.toFixed(0), padL+plotW+6, y);
+    }
+    // x axis labels
+    ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillStyle='#9BA3AD';
+    const xt=6;
+    for(let i=0;i<=xt;i++){ const idx=Math.round((n-1)*i/xt); const d=new Date(candles[idx].t);
+      const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+      let lab = (st.tf==='1D'||st.tf==='1W')? this.pad(d.getHours())+':'+this.pad(d.getMinutes()) : (st.tf==='1M'? d.getDate()+' '+mo : mo);
+      ctx.fillText(lab, cx(idx), rsiTop+ (st.rsi?rsiH:0) + (st.rsi?0:0) + (H-padB+4)-(rsiTop) > 0 ? H-padB+4 : H-padB+4);
+    }
+
+    const UP='#12A053', DN='#DC3545';
+    if(st.chart==='candle'){
+      const bw=Math.max(2,cw*0.62);
+      candles.forEach((c,i)=>{
+        const up=c.c>=c.o; const col=up?UP:DN; const x=cx(i);
+        ctx.strokeStyle=col; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(x,py(c.h)); ctx.lineTo(x,py(c.l)); ctx.stroke();
+        const yo=py(c.o), yc=py(c.c);
+        ctx.fillStyle=col;
+        ctx.fillRect(x-bw/2, Math.min(yo,yc), bw, Math.max(1,Math.abs(yc-yo)));
+      });
+    } else {
+      ctx.beginPath();
+      candles.forEach((c,i)=>{ const x=cx(i),y=py(c.c); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.strokeStyle='#1D86FF'; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+      ctx.lineTo(cx(n-1),priceTop+priceH); ctx.lineTo(cx(0),priceTop+priceH); ctx.closePath();
+      ctx.fillStyle='rgba(29,134,255,0.08)'; ctx.fill();
+    }
+
+    // MA
+    if(st.ma){
+      const ma=this.sma(closes,9);
+      ctx.beginPath(); let started=false;
+      ma.forEach((v,i)=>{ if(v==null)return; const x=cx(i),y=py(v); started?ctx.lineTo(x,y):(ctx.moveTo(x,y),started=true); });
+      ctx.strokeStyle='#EA9D00'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+
+    // volume
+    let mv=0; candles.forEach(c=>{ if(c.v>mv)mv=c.v; });
+    ctx.fillStyle='#9BA3AD'; ctx.textAlign='left'; ctx.textBaseline='top';
+    ctx.fillText('Vol', padL, volTop-1);
+    const bw2=Math.max(2,cw*0.62);
+    candles.forEach((c,i)=>{ const up=c.c>=c.o; const h=(c.v/mv)*volH; ctx.fillStyle=up?'rgba(18,160,83,0.45)':'rgba(220,53,69,0.45)'; ctx.fillRect(cx(i)-bw2/2, volTop+volH-h, bw2, h); });
+
+    // RSI
+    if(st.rsi){
+      const rs=this.rsi(closes,14);
+      const ry=v=>rsiTop+(1-v/100)*rsiH;
+      ctx.strokeStyle='#E2E6EA'; ctx.setLineDash([3,3]);
+      [30,70].forEach(lv=>{ ctx.beginPath(); ctx.moveTo(padL,ry(lv)); ctx.lineTo(padL+plotW,ry(lv)); ctx.stroke(); });
+      ctx.setLineDash([]);
+      ctx.fillStyle='#9BA3AD'; ctx.textBaseline='middle'; ctx.textAlign='left';
+      ctx.fillText('70', padL+plotW+6, ry(70)); ctx.fillText('30', padL+plotW+6, ry(30));
+      ctx.fillStyle='#9BA3AD'; ctx.textBaseline='top'; ctx.fillText('RSI 14', padL, rsiTop-1);
+      ctx.beginPath(); let s2=false;
+      rs.forEach((v,i)=>{ if(v==null)return; const x=cx(i),y=ry(v); s2?ctx.lineTo(x,y):(ctx.moveTo(x,y),s2=true); });
+      ctx.strokeStyle='#14CBDE'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+
+    // crosshair
+    if(st.cx!=null && candles[st.cx]){
+      const x=cx(st.cx);
+      ctx.strokeStyle='#9BA3AD'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(x,priceTop); ctx.lineTo(x, st.rsi? rsiTop+rsiH : volTop+volH); ctx.stroke();
+      if(st.my>=priceTop && st.my<=priceTop+priceH){
+        ctx.beginPath(); ctx.moveTo(padL,st.my); ctx.lineTo(padL+plotW,st.my); ctx.stroke();
+        const pv=lo+(1-(st.my-priceTop)/priceH)*(hi-lo);
+        ctx.setLineDash([]); ctx.fillStyle='#374151';
+        ctx.fillRect(padL+plotW, st.my-9, padR-4, 18);
+        ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(pv.toFixed(1), padL+plotW+(padR-4)/2, st.my);
+      }
+      ctx.setLineDash([]);
+    }
+  }
+
+  renderVals(){
+    const st=this.state;
+    const meta=this.META.find(m=>m.sym===st.symbol);
+    const symbols=this.META.map(m=>{
+      const c=this.series(m.sym,'1D').candles;
+      const chg=(c[c.length-1].c-c[0].o)/c[0].o*100;
+      const up=chg>=0;
+      const active=m.sym===st.symbol;
+      return {
+        sym:m.sym, name:m.name, priceStr:this.fmt(m.price),
+        chgStr:(up?'+':'')+chg.toFixed(2)+'%',
+        chgColor: up?'var(--success)':'var(--danger)',
+        sparkColor: up?'#12A053':'#DC3545',
+        spark:this.spark(m.sym),
+        onClick:()=>this.select(m.sym),
+        rowStyle:'display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;margin-bottom:2px;transition:background 150ms ease;'+(active?'background:var(--hex-blue-light);box-shadow:inset 3px 0 0 var(--hex-blue);':'background:transparent;')
+      };
+    });
+
+    const tfc=this.series(st.symbol,st.tf).candles;
+    const first=tfc[0], lastc=tfc[tfc.length-1];
+    const chg=(lastc.c-first.o)/first.o*100; const up=chg>=0;
+
+    const day=this.series(st.symbol,'1D').candles;
+    const dhi=Math.max(...day.map(c=>c.h)), dlo=Math.min(...day.map(c=>c.l));
+    const dvol=day.reduce((s,c)=>s+c.v,0);
+    const avgvol=dvol/day.length*day.length*0.9;
+
+    const tip=(()=>{
+      if(st.cx==null||!tfc[st.cx]) return { style:'display:none;' };
+      const c=tfc[st.cx]; const cup=c.c>=c.o;
+      const cvW=this.canvas?this.canvas.clientWidth:600;
+      const left = st.mx>cvW-170? st.mx-160 : st.mx+16;
+      return {
+        style:'position:absolute;pointer-events:none;background:#fff;border:1px solid var(--gray-200);border-radius:10px;box-shadow:var(--shadow-md);padding:9px 12px;min-width:130px;z-index:5;left:'+left+'px;top:14px;',
+        date:this.fmtDate(c.t,st.tf),
+        o:c.o.toFixed(2), h:c.h.toFixed(2), l:c.l.toFixed(2), c:c.c.toFixed(2),
+        cColor: cup?'var(--success)':'var(--danger)',
+        v:this.fmtVol(c.v)
+      };
+    })();
+
+    return {
+      watchCount:this.META.length,
+      symbols,
+      active:{
+        sym:meta.sym, name:meta.name, sector:meta.sector,
+        priceStr:this.fmt(meta.price),
+        chgStr:(up?'+':'')+((lastc.c-first.o).toFixed(2))+' ('+(up?'+':'')+chg.toFixed(2)+'%)',
+        chgColor: up?'var(--success)':'var(--danger)',
+        open:this.fmt(first.o), prevClose:this.fmt(first.o*0.999),
+        dayHigh:this.fmt(dhi), dayLow:this.fmt(dlo),
+        wkHigh:this.fmt(meta.price*1.28), wkLow:this.fmt(meta.price*0.72),
+        vol:this.fmtVol(dvol), avgVol:this.fmtVol(avgvol),
+        mcap:meta.mcap, pe:meta.pe, about:meta.about
+      },
+      tf:{
+        d1D:()=>this.setTf('1D'), d1W:()=>this.setTf('1W'), d1M:()=>this.setTf('1M'), d1Y:()=>this.setTf('1Y'),
+        s1D:this.segStyle(st.tf==='1D'), s1W:this.segStyle(st.tf==='1W'), s1M:this.segStyle(st.tf==='1M'), s1Y:this.segStyle(st.tf==='1Y')
+      },
+      type:{
+        candle:()=>this.setChart('candle'), line:()=>this.setChart('line'),
+        sCandle:this.segStyle(st.chart==='candle'), sLine:this.segStyle(st.chart==='line')
+      },
+      maToggle:()=>this.setState({ma:!st.ma}), maStyle:this.toggleStyle(st.ma),
+      rsiToggle:()=>this.setState({rsi:!st.rsi}), rsiStyle:this.toggleStyle(st.rsi),
+      setCanvas:this.setCanvas, onMove:this.onMove, onLeave:this.onLeave,
+      tip
+    };
+  }
+}
+</script>
+</body>
+</html>

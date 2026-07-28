@@ -1,0 +1,38 @@
+/* ─────────────────────────────────────────────────────────
+   TYPOGRAPHY
+   One family — Manrope. 800-weight display pairs with 400–500 body.
+   Never introduce a second typeface.
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Font sizes ── */
+  --text-xs:    11px;   /* label / eyebrow */
+  --text-sm:    13px;   /* small / UI */
+  --text-base:  15px;   /* body */
+  --text-md:    17px;   /* body large, h4-ish */
+  --text-lg:    20px;   /* heading 4 */
+  --text-xl:    24px;   /* heading 3 */
+  --text-2xl:   30px;   /* heading 2 */
+  --text-3xl:   38px;   /* heading 1 / metric */
+  --text-4xl:   48px;   /* display */
+
+  /* ── Weights ── */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --weight-display:  800;
+
+  /* ── Line heights ── */
+  --leading-tight:  1.1;
+  --leading-snug:   1.2;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.7;
+
+  /* ── Tracking ── */
+  --tracking-display: -0.02em;  /* display + h1/h2 */
+  --tracking-tight:   -0.01em;
+  --tracking-eyebrow:  0.10em;  /* uppercase labels */
+  --tracking-caps:     0.08em;
+}

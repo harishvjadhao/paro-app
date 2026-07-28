@@ -1,0 +1,12 @@
+/* ─────────────────────────────────────────────────────────
+   RADIUS
+   Small radius for inline elements, large for cards/containers.
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  --r-sm:   4px;     /* badges, chips, tags */
+  --r-md:   8px;     /* buttons, inputs */
+  --r-lg:   12px;    /* panels, alerts */
+  --r-xl:   16px;    /* cards, modals */
+  --r-full: 9999px;  /* avatars, pills */
+}

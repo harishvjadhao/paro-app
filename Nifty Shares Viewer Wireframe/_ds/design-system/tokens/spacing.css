@@ -1,0 +1,23 @@
+/* ─────────────────────────────────────────────────────────
+   SPACING
+   A 4px base grid. All spacing is a multiple of 4. Use named
+   tokens — never arbitrary pixel values.
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  --sp-1:  4px;    /* icon gap */
+  --sp-2:  8px;    /* tight element gap */
+  --sp-3:  12px;   /* default inline gap */
+  --sp-4:  16px;   /* component padding */
+  --sp-5:  20px;
+  --sp-6:  24px;   /* card padding */
+  --sp-8:  32px;   /* section gap */
+  --sp-10: 40px;
+  --sp-12: 48px;   /* between sections */
+  --sp-16: 64px;   /* page section padding */
+
+  /* ── Layout ── */
+  --layout-max:       1280px;  /* content max-width */
+  --layout-sidebar:   240px;   /* fixed sidebar */
+  --layout-gutter:    24px;
+}

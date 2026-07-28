@@ -1,0 +1,12 @@
+/* ─────────────────────────────────────────────────────────
+   FONTS — Manrope
+   The platform uses a single typeface: Manrope.
+   Loaded from Google Fonts CDN (weights 300–800).
+   ───────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
