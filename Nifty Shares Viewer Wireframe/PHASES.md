@@ -26,13 +26,13 @@ Global rule: keep a constant `user_id` on per-user tables so multi-user can be a
 - **Done when:** upload → sync → `price_bars` populated; a forced failure shows a `partial` run with per-symbol messages.
 
 ## Phase 2 — Stock APIs + candles/indicators  · spec §2, §3
-- [ ] `ma44`, `above`, `pct_vs_ma`.
-- [ ] `/stocks?filter=all|ma|fav|watch&q=` grouped by industry; `/stocks/{symbol}`.
-- [ ] `/stocks/{symbol}/candles?timeframe=D|W|M&bars=44&indicators=ma44,bb,rsi`:
-  - [ ] W/M aggregation from daily (open=first, close=last, high=max, low=min, vol=sum).
-  - [ ] 44-period MA on the selected timeframe.
-  - [ ] Bollinger (20, 2, population σ) and Wilder RSI (14) arrays when requested.
-  - [ ] Highlight/comment markers **daily only**.
+- [x] `ma44`, `above`, `pct_vs_ma`.
+- [x] `/stocks?filter=all|ma|fav|watch&q=` grouped by industry; `/stocks/{symbol}`.
+- [x] `/stocks/{symbol}/candles?timeframe=D|W|M&bars=44&indicators=ma44,bb,rsi`:
+  - [x] W/M aggregation from daily (open=first, close=last, high=max, low=min, vol=sum).
+  - [x] 44-period MA on the selected timeframe.
+  - [x] Bollinger (20, 2, population σ) and Wilder RSI (14) arrays when requested.
+  - [x] Highlight/comment markers **daily only**.
 - **Done when:** unit tests pass for MA, breadth, W/M aggregation, Bollinger, RSI.
 
 ## Phase 3 — Workspace + chart (frontend)  · spec §1, §7; prototype
