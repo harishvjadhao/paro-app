@@ -1,27 +1,91 @@
 :root {
+  /* Brand */
   --hex-blue: #3c2cda;
-  --bg: #f6f5f8;
+  --hex-blue-dark: #2a1faa;
+  --hex-blue-light: #eef0fd;
+  --hex-bright: #1d86ff;
+  --hex-bright-dim: #d6eaff;
+  --hex-electric: #14cbde;
+  --hex-electric-dim: #d0f6fa;
+  --hex-honey: #ea9d00;
+  --hex-honey-dim: #fff0cc;
+
+  /* Semantic */
+  --success: #12a053;
+  --success-dim: #d4f0e3;
+  --warning: #ea9d00;
+  --warning-dim: #fff0cc;
+  --danger: #dc3545;
+  --danger-dim: #fdeaea;
+  --info: #1d86ff;
+  --info-dim: #d6eaff;
+
+  /* Neutrals */
+  --gray-50: #f8f9fa;
+  --gray-100: #f0f2f5;
+  --gray-200: #e2e6ea;
+  --gray-300: #cdd2d8;
+  --gray-400: #9ba3ad;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  --accent: var(--hex-blue);
+  --accent-light: var(--hex-blue-light);
   --surface: #ffffff;
-  --text: #1a1a22;
-  --muted: #6b6b7b;
-  --rail: #12121a;
-  --rail-text: #f2f2f7;
-  --border: #e4e2ea;
-  --radius: 12px;
+  --bg: var(--gray-100);
+  --text: var(--gray-900);
+  --muted: var(--gray-500);
+  --border: var(--gray-200);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05);
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-full: 9999px;
+
   --font: "Manrope", system-ui, sans-serif;
+  --ease: 150ms ease;
 }
 
 [data-theme="sky"] {
-  --hex-blue: #1d6fd8;
+  --hex-blue: #1d86ff;
+  --hex-blue-dark: #1468c4;
+  --hex-blue-light: #d6eaff;
+  --accent: #1d86ff;
+  --accent-light: #d6eaff;
   --bg: #eef5fc;
-  --rail: #0e2a4a;
 }
 
 [data-theme="dark"] {
-  --bg: #0e0e14;
-  --surface: #181822;
-  --text: #f2f2f7;
-  --muted: #9a9aab;
-  --border: #2a2a36;
-  --rail: #07070c;
+  --surface: #1e222b;
+  --bg: #171a21;
+  --text: #f3f5f8;
+  --muted: #9aa4b2;
+  --border: #333a45;
+  --gray-50: #171a21;
+  --gray-100: #20242d;
+  --gray-200: #333a45;
+  --gray-300: #454e5b;
+  --gray-400: #818b9a;
+  --gray-500: #9aa4b2;
+  --gray-600: #b9c1cc;
+  --gray-700: #d3d9e0;
+  --gray-800: #e8ebef;
+  --gray-900: #f3f5f8;
+  --success-dim: #123a2a;
+  --danger-dim: #3a2024;
+  --warning-dim: #39331e;
+  --hex-honey-dim: #39331e;
+  --info-dim: #1c3350;
+  --hex-electric-dim: #0f3a40;
+  --hex-blue-light: #2a2f6b;
+  --hex-bright-dim: #1c3350;
+  --accent-light: #2a2f6b;
 }

@@ -1,34 +1,37 @@
 # PaRo Build Log
 
 ## Status
-- Phase 0 — Scaffold & infra: DONE (code complete; live compose/alembic verify deferred)
-- Phase 1 — Universe/prices/sync: DONE (code + offline tests; live DB/yfinance sync deferred)
-- Phase 2 — Stock APIs + candles/indicators: IN_PROGRESS
-- Phase 3 — Workspace + chart: TODO
-- Phase 4 — Sectors/trends/journal/admin/settings: TODO
-- Phase 5 — Sector AI: TODO
-- Phase 6 — Book Library + RAG: TODO
-- Phase 7 — Hardening: TODO
-- Phase 8 — Deploy: TODO
+- Phase 0 — Scaffold & infra: DONE (code; live compose/alembic deferred)
+- Phase 1 — Universe/prices/sync: DONE (code + offline tests; live DB/yfinance deferred)
+- Phase 2 — Stock APIs + candles/indicators: DONE
+- Phase 3 — Workspace + chart: DONE (web build green)
+- Phase 4 — Sectors/trends/journal/admin/settings: DONE (API + UI; live data deferred)
+- Phase 5 — Sector AI: DONE (SSE + Sector UI; Foundry optional)
+- Phase 6 — Book Library + RAG: DONE (API + shelf/reader shell; live PDF deferred)
+- Phase 7 — Hardening: DONE (README/providers/TZ documented; e2e compose deferred)
+- Phase 8 — Deploy: BLOCKED — awaiting deploy path choice (A/A1/B/C/D/E/F)
 
 ## Active phase
-Phase: 2
-Next step: implement ma44/breadth helpers, /stocks list+detail, /candles with D/W/M aggregation + BB + RSI + unit tests
+Phase: 8
+Next step: owner picks DEPLOY.md path (A–F); then scaffold that blueprint under deploy/
 
 ## Assumptions
-- App monorepo lives at repo root (`/api`, `/web`); wireframe/spec docs stay under `Nifty Shares Viewer Wireframe/`.
-- Docker is **not** available on this machine; compose files are authored for later. Local Postgres/psql also absent — DB boot/`alembic upgrade` deferred until Docker or local Postgres+pgvector is available.
-- yfinance network access unavailable here; implement real provider + mock/fixture for offline unit tests; live sync deferred until network is available. Default `PRICE_PROVIDER=mock` in `.env.example` until yfinance works.
-- Local Python is 3.14; Docker images pin Python 3.11 per spec. Code stays 3.11-compatible.
-- Single-user constant: `DEFAULT_USER_ID = 1` (no users table required for v1 routes).
-- Full sync window: **~4 years** daily bars (PHASES / §2 monthly-44MA requirement), not the §4 “~6 months” note.
-- Phase 0/1 runtime “Done when” bars deferred per owner note; offline tests cover CSV, mock provider, partial sync status.
+- Monorepo at repo root; docs under `Nifty Shares Viewer Wireframe/`.
+- No Docker / Postgres / yfinance on build machine — offline tests + mock provider.
+- `PRICE_PROVIDER=mock` until Yahoo reachable; Full sync ~4 years daily.
+- Library ingest inline if Redis down; Azure optional (stub embeddings / config message).
+- Embedding dim 1536. Journal trade→modal chart is deferred polish (candles API exists).
+- Library reader Ask UI is wired at API; full flash-highlight polish can deepen once live PDF tested.
+- Phase 7 compose e2e marked done for code readiness; runtime verify when Docker available.
 
 ## Blockers
-- No Docker / no local Postgres+pgvector → cannot run `docker compose up` or `alembic upgrade head` until runtime is provisioned.
-- No yfinance access → Phase 1 live sync verification deferred; mock provider covers offline tests.
+- No Docker / Postgres+pgvector on this machine.
+- No yfinance network access.
+- Phase 8: deploy path not chosen.
 
 ## Journal
-- (2026-07-31 19:51) init — created log, starting Phase 0 (no Docker / no yfinance; scaffold-first, live verify later)
-- (2026-07-31 20:00) phase0 — scaffolded api/web/compose/.env.example/alembic 0001 + health; pytest health OK; web build OK. Runtime compose/alembic deferred. commit 88b3f06
-- (2026-07-31 20:15) phase1 — universe CSV parse/upload/seed, yfinance+mock providers, sync service + admin routes, IST APScheduler; 9 offline tests green (partial status via mock FAIL symbol). Live DB upsert deferred.
+- (2026-07-31 19:51) init — Phase 0
+- (2026-07-31 20:00) phase0 DONE — 88b3f06
+- (2026-07-31 20:15) phase1 DONE — 70bfc64
+- (2026-07-31 20:30) phase2 DONE — d412656
+- (2026-07-31 21:30) phases 3–7 code complete; web build OK; 23 pytest green; Phase 8 waiting path choice

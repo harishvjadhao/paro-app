@@ -12,6 +12,16 @@ from app.models.base_tables import (  # noqa: F401
     UniverseUpload,
     WatchlistItem,
 )
+from app.models.books import (  # noqa: F401
+    Book,
+    BookBookmark,
+    BookChunk,
+    BookHighlight,
+    BookPage,
+    BookSuggestion,
+    IngestionJob,
+    ReadingProgress,
+)
 
 __all__ = [
     "StockUniverse",
@@ -24,4 +34,12 @@ __all__ = [
     "JournalTrade",
     "SyncRun",
     "SyncRunItem",
+    "Book",
+    "BookPage",
+    "BookChunk",
+    "BookSuggestion",
+    "IngestionJob",
+    "ReadingProgress",
+    "BookBookmark",
+    "BookHighlight",
 ]
