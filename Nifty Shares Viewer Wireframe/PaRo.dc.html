@@ -194,14 +194,23 @@
 
         <!-- Price timeline -->
         <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:18px;box-shadow:var(--shadow-sm);padding:18px 20px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
             <span style="font-weight:800;font-size:15px;">Price Timeline</span>
-            <span style="font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-light);border-radius:999px;padding:3px 10px;">44 Candles</span>
-            <div style="flex:1;"></div>
-            <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--gray-500);">
-              <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:2px;background:var(--hex-honey);display:inline-block;border-radius:2px;"></span>44-day MA</span>
-              <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;background:var(--gray-300);display:inline-block;border-radius:2px;"></span>Highlight</span>
+            <span style="font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-light);border-radius:999px;padding:3px 10px;">{{ tfPill }}</span>
+            <div style="flex:1;min-width:12px;"></div>
+            <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px;gap:2px;">
+              <sc-for list="{{ tfBtns }}" as="t" hint-placeholder-count="3">
+                <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+              </sc-for>
             </div>
+            <button onClick="{{ bbToggle.onClick }}" style="{{ bbToggle.style }}"><span style="width:10px;height:10px;border:1.5px solid currentColor;border-radius:2px;display:inline-block;"></span>{{ bbToggle.label }}</button>
+            <button onClick="{{ rsiToggle.onClick }}" style="{{ rsiToggle.style }}"><span style="width:12px;border-top:1.5px solid currentColor;display:inline-block;"></span>{{ rsiToggle.label }}</button>
+          </div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--gray-500);margin-bottom:14px;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:2px;background:var(--hex-honey);display:inline-block;border-radius:2px;"></span>44-period MA</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;border-top:1px dashed var(--accent);display:inline-block;"></span>Bollinger (20, 2)</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;border-top:1.5px solid var(--accent);display:inline-block;"></span>RSI (14)</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;background:var(--gray-300);display:inline-block;border-radius:2px;"></span>Highlight</span>
           </div>
           <!-- Top stat strip -->
           <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--gray-100);border:1px solid var(--gray-100);border-radius:10px;overflow:hidden;margin-bottom:14px;">
@@ -212,7 +221,7 @@
             <div style="background:var(--surface);padding:9px 12px;"><div style="font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.08em;">Close</div><div style="font-weight:700;font-size:12.5px;margin-top:3px;">{{ strip.c }}</div></div>
             <div style="background:var(--surface);padding:9px 12px;"><div style="font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.08em;">44 MA</div><div style="font-weight:700;font-size:12.5px;margin-top:3px;color:var(--hex-honey);">{{ strip.ma }}</div></div>
           </div>
-          <div style="position:relative;height:300px;border:1px solid var(--gray-100);border-radius:10px;overflow:hidden;">
+          <div style="position:relative;height:clamp(280px, calc(100vh - 380px), 520px);border:1px solid var(--gray-100);border-radius:10px;overflow:hidden;">
             <canvas ref="{{ setCanvas }}" onMouseMove="{{ onMove }}" onMouseLeave="{{ onLeave }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;"></canvas>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
@@ -328,7 +337,76 @@
     <div style="max-width:1200px;">
       <div style="margin-bottom:14px;">
         <div style="font-weight:800;font-size:22px;letter-spacing:-0.02em;">Admin</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">Manage the stock universe, sync engine, chart highlights, and theme.</div>
+        <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">Manage the stock universe, sync engine, book library, chart highlights, and theme.</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><i data-lucide="book-up" style="width:18px;height:18px;color:var(--accent);"></i><span style="font-weight:800;font-size:15px;">Book Library · PDF Ingestion</span></div>
+        <div style="font-size:12.5px;color:var(--gray-500);line-height:1.55;margin-bottom:14px;max-width:760px;">Upload a PDF book. Text PDFs are parsed directly; scanned or image-only PDFs are read page-by-page by the vision model (OCR). The extracted text is chunked and embedded so the reader can answer questions with page citations, then it is published to the Library.</div>
+
+        <sc-if value="{{ ingest.idle }}" hint-placeholder-val="{{ true }}">
+          <div onDragOver="{{ ingest.onDragOver }}" onDragLeave="{{ ingest.onDragLeave }}" onDrop="{{ ingest.onDrop }}" onClick="{{ ingest.pick }}" style="{{ ingest.dropStyle }};cursor:pointer;">
+            <input type="file" accept="application/pdf,.pdf" ref="{{ ingest.setInput }}" onChange="{{ ingest.onFile }}" style="display:none;" />
+            <i data-lucide="upload-cloud" style="width:28px;height:28px;color:var(--gray-400);"></i>
+            <div style="font-size:13px;font-weight:700;margin-top:8px;">Drag &amp; drop a PDF here</div>
+            <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">or click to browse. Scanned/image PDFs are auto-detected for OCR.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+            <span style="font-size:11px;color:var(--gray-400);">Or try a sample:</span>
+            <button onClick="{{ ingest.sampleText }}" style="cursor:pointer;font-size:11.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 11px;display:flex;align-items:center;gap:5px;"><i data-lucide="file-text" style="width:13px;height:13px;"></i>Text PDF</button>
+            <button onClick="{{ ingest.sampleScan }}" style="cursor:pointer;font-size:11.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 11px;display:flex;align-items:center;gap:5px;"><i data-lucide="scan-line" style="width:13px;height:13px;"></i>Scanned PDF</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ ingest.picked }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid var(--gray-200);border-radius:12px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;"><i data-lucide="file-text" style="width:18px;height:18px;color:var(--accent);flex:0 0 auto;"></i><span style="font-size:13px;font-weight:700;word-break:break-all;">{{ ingest.name }}</span></div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);font-weight:700;margin-bottom:6px;">Source type</div>
+            <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px;gap:2px;max-width:360px;margin-bottom:16px;">
+              <button onClick="{{ ingest.setKindText }}" style="{{ ingest.kindTextStyle }}"><i data-lucide="file-text" style="width:13px;height:13px;"></i>Text PDF</button>
+              <button onClick="{{ ingest.setKindScan }}" style="{{ ingest.kindScanStyle }}"><i data-lucide="scan-line" style="width:13px;height:13px;"></i>Scanned / OCR</button>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onClick="{{ ingest.start }}" style="cursor:pointer;font-size:12px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:9px 15px;display:flex;align-items:center;gap:6px;"><i data-lucide="sparkles" style="width:14px;height:14px;"></i>Start ingestion</button>
+              <button onClick="{{ ingest.cancel }}" style="cursor:pointer;font-size:12px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:9px 15px;">Cancel</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ ingest.active }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid var(--gray-200);border-radius:12px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><i data-lucide="file" style="width:15px;height:15px;color:var(--gray-400);"></i><span style="font-size:12.5px;font-weight:700;">{{ ingest.name }}</span><span style="margin-left:auto;font-size:12px;color:var(--gray-500);">{{ ingest.pct }}%</span></div>
+            <div style="height:8px;background:var(--gray-100);border-radius:999px;overflow:hidden;margin-bottom:14px;"><div style="height:100%;width:{{ ingest.pct }}%;background:var(--accent);border-radius:999px;transition:width 300ms ease;"></div></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <sc-for list="{{ ingest.steps }}" as="s" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0;">
+                  <span style="{{ s.dotStyle }}"><sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}"><i data-lucide="check" style="width:12px;height:12px;"></i></sc-if><sc-if value="{{ s.showNum }}" hint-placeholder-val="{{ true }}">{{ s.num }}</sc-if></span>
+                  <span style="font-size:11px;font-weight:600;color:var(--gray-500);white-space:nowrap;">{{ s.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="font-size:12px;color:var(--accent);margin-top:12px;display:flex;align-items:center;gap:6px;"><i data-lucide="loader" style="width:13px;height:13px;"></i>{{ ingest.stageLabel }}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ ingest.done }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid var(--success);border-radius:12px;overflow:hidden;">
+            <div style="background:var(--success-dim);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <i data-lucide="check-circle-2" style="width:18px;height:18px;color:var(--success);flex:0 0 auto;"></i>
+              <div style="flex:1;min-width:180px;"><div style="font-size:13px;font-weight:700;">{{ ingest.name }} added to the Library</div><div style="font-size:12px;color:var(--gray-600);">Parsed, embedded, and ready to read with cited Q&amp;A.</div></div>
+              <button onClick="{{ ingest.openLibrary }}" style="cursor:pointer;font-size:12px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 13px;">Open Library</button>
+              <button onClick="{{ ingest.reset }}" style="cursor:pointer;font-size:12px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:8px 13px;">Upload another</button>
+            </div>
+            <sc-if value="{{ ingest.report }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:12px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--gray-100);border-top:1px solid var(--gray-200);">
+                <div style="background:var(--surface);padding:10px 12px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);">Pages</div><div style="font-weight:800;font-size:17px;margin-top:2px;">{{ ingest.report.pages }}</div></div>
+                <div style="background:var(--surface);padding:10px 12px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);">Chunks</div><div style="font-weight:800;font-size:17px;margin-top:2px;">{{ ingest.report.chunks }}</div></div>
+                <div style="background:var(--surface);padding:10px 12px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);">Tokens</div><div style="font-weight:800;font-size:17px;margin-top:2px;">{{ ingest.report.tokens }}</div></div>
+                <div style="background:var(--surface);padding:10px 12px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);">OCR confidence</div><div style="font-weight:800;font-size:17px;margin-top:2px;"><sc-if value="{{ ingest.report.hasConf }}" hint-placeholder-val="{{ false }}">{{ ingest.report.confidence }}%</sc-if><sc-if value="{{ ingest.textSel }}" hint-placeholder-val="{{ true }}">n/a</sc-if></div></div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
       </div>
 
       <div style="{{ adminGridStyle }}">
@@ -1018,6 +1096,214 @@
   </div>
   </sc-if>
 
+  <!-- ============ LIBRARY / READER ============ -->
+  <sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
+  <div style="{{ adminStyle }}">
+    <sc-if value="{{ shelfOpen }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width:1100px;">
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:16px;">
+          <div style="flex:1;">
+            <div style="font-weight:800;font-size:22px;letter-spacing:-0.02em;">Library</div>
+            <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">Books ingested from PDF. Open one to read like Kindle, or ask questions and get cited answers.</div>
+          </div>
+          <button onClick="{{ ingest.openLibrary }}" style="display:none;"></button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:16px;">
+          <sc-for list="{{ shelf }}" as="bk" hint-placeholder-count="3">
+            <div onClick="{{ bk.onOpen }}" style-hover="transform:translateY(-3px);box-shadow:var(--shadow-md);" style="cursor:pointer;background:var(--surface);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;transition:transform 150ms ease,box-shadow 150ms ease;display:flex;flex-direction:column;">
+              <div style="height:152px;{{ bk.coverStyle }}position:relative;display:flex;align-items:flex-end;padding:14px;">
+                <div style="position:absolute;top:12px;left:12px;font-size:9.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.9);background:rgba(0,0,0,0.2);border-radius:6px;padding:3px 8px;">{{ bk.tag }}</div>
+                <div style="color:#fff;font-weight:800;font-size:17px;line-height:1.25;letter-spacing:-0.01em;text-shadow:0 1px 10px rgba(0,0,0,0.3);">{{ bk.title }}</div>
+                <button onClick="{{ bk.onMenu }}" title="Options" style="position:absolute;top:10px;right:10px;cursor:pointer;width:28px;height:28px;border-radius:8px;border:none;background:rgba(0,0,0,0.28);color:#fff;display:flex;align-items:center;justify-content:center;"><i data-lucide="more-vertical" style="width:15px;height:15px;"></i></button>
+                <sc-if value="{{ bk.menuOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:42px;right:10px;z-index:20;background:var(--surface);border:1px solid var(--gray-200);border-radius:10px;box-shadow:var(--shadow-lg);overflow:hidden;width:146px;">
+                    <button onClick="{{ bk.onRename }}" style-hover="background:var(--gray-100);" style="cursor:pointer;width:100%;text-align:left;border:none;background:transparent;color:var(--gray-700);font-size:12.5px;font-weight:600;padding:9px 12px;display:flex;align-items:center;gap:8px;"><i data-lucide="pencil" style="width:14px;height:14px;"></i>Rename</button>
+                    <button onClick="{{ bk.onDelete }}" style-hover="background:var(--danger-dim);" style="cursor:pointer;width:100%;text-align:left;border:none;background:transparent;color:var(--danger);font-size:12.5px;font-weight:600;padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--gray-100);"><i data-lucide="trash-2" style="width:14px;height:14px;"></i>Delete</button>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;flex:1;">
+                <div style="font-size:12.5px;color:var(--gray-500);">{{ bk.author }}</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400);"><i data-lucide="{{ bk.kindIcon }}" style="width:13px;height:13px;"></i>{{ bk.kindLabel }} · {{ bk.pageCount }}</div>
+                <div style="margin-top:auto;">
+                  <div style="height:5px;background:var(--gray-100);border-radius:999px;overflow:hidden;margin-bottom:6px;"><div style="height:100%;width:{{ bk.pct }}%;background:var(--accent);border-radius:999px;"></div></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:11px;color:var(--gray-500);">{{ bk.progressLabel }}</span><span style="font-size:11.5px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px;">Read<i data-lucide="arrow-right" style="width:13px;height:13px;"></i></span></div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ reader.open }}" hint-placeholder-val="{{ false }}">
+      <div style="position:relative;height:calc(100vh - 24px);display:flex;flex-direction:column;background:{{ reader.shellBg }};border:1px solid var(--gray-200);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surface);border-bottom:1px solid var(--gray-100);flex:0 0 auto;">
+          <button onClick="{{ reader.close }}" title="Back to library" style="cursor:pointer;width:34px;height:34px;border-radius:9px;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-500);display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i></button>
+          <div style="min-width:0;flex:1;">
+            <div style="font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ reader.title }}</div>
+            <div style="font-size:11px;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ reader.author }} · {{ reader.kindLabel }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1px;background:var(--gray-100);border-radius:8px;padding:3px;flex:0 0 auto;">
+            <button onClick="{{ reader.fontDown }}" title="Smaller" style="cursor:pointer;border:none;background:transparent;color:var(--gray-600);font-weight:800;font-size:12px;padding:4px 9px;border-radius:6px;">A</button>
+            <button onClick="{{ reader.fontUp }}" title="Larger" style="cursor:pointer;border:none;background:transparent;color:var(--gray-600);font-weight:800;font-size:16px;padding:4px 9px;border-radius:6px;">A</button>
+          </div>
+          <div style="display:flex;gap:6px;flex:0 0 auto;">
+            <button onClick="{{ reader.setLight }}" title="Light" style="{{ reader.lightStyle }}"></button>
+            <button onClick="{{ reader.setSepia }}" title="Sepia" style="{{ reader.sepiaStyle }}"></button>
+            <button onClick="{{ reader.setDark }}" title="Dark" style="{{ reader.darkStyle }}"></button>
+          </div>
+          <button onClick="{{ reader.toggleSettings }}" title="Reading settings" style="{{ reader.setBtnStyle }}"><i data-lucide="type" style="width:16px;height:16px;"></i></button>
+          <button onClick="{{ reader.toggleBookmark }}" title="Bookmark this page" style="{{ reader.bkBtnStyle }}"><i data-lucide="bookmark" style="width:16px;height:16px;"></i></button>
+          <button onClick="{{ reader.toggleToc }}" title="Contents, bookmarks &amp; notes" style="{{ reader.tocBtnStyle }}"><i data-lucide="list" style="width:16px;height:16px;"></i></button>
+          <button onClick="{{ reader.toggleAsk }}" title="Ask this book" style="{{ reader.askBtnStyle }}"><i data-lucide="sparkles" style="width:15px;height:15px;"></i>Ask</button>
+        </div>
+        <sc-if value="{{ reader.settingsOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;z-index:30;top:58px;right:14px;background:var(--surface);border:1px solid var(--gray-200);border-radius:12px;box-shadow:var(--shadow-lg);padding:14px;width:236px;">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin-bottom:6px;">Font</div>
+            <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px;gap:2px;margin-bottom:12px;"><button onClick="{{ reader.setSerif }}" style="{{ reader.famSerifStyle }}">Serif</button><button onClick="{{ reader.setSans }}" style="{{ reader.famSansStyle }}">Sans</button></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin-bottom:6px;">Page width</div>
+            <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px;gap:2px;"><button onClick="{{ reader.setWNarrow }}" style="{{ reader.wNarrowStyle }}">Narrow</button><button onClick="{{ reader.setWNormal }}" style="{{ reader.wNormalStyle }}">Normal</button><button onClick="{{ reader.setWWide }}" style="{{ reader.wWideStyle }}">Wide</button></div>
+          </div>
+        </sc-if>
+
+        <div style="flex:1;display:flex;min-height:0;">
+          <sc-if value="{{ reader.tocOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="width:268px;flex:0 0 268px;background:var(--surface);border-right:1px solid var(--gray-100);overflow-y:auto;padding:12px;">
+              <div style="display:flex;align-items:center;gap:7px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:9px;padding:7px 10px;margin-bottom:12px;"><i data-lucide="search" style="width:14px;height:14px;color:var(--gray-400);flex:0 0 auto;"></i><input value="{{ reader.searchQ }}" onInput="{{ reader.onSearch }}" placeholder="Search in book…" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:12.5px;color:var(--gray-900);" /></div>
+
+              <sc-if value="{{ reader.hasSearch }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin-bottom:8px;padding:0 6px;">Results</div>
+                <sc-for list="{{ reader.searchResults }}" as="r" hint-placeholder-count="2">
+                  <div onClick="{{ r.onClick }}" style-hover="filter:brightness(0.98);" style="{{ r.style }}"><div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:2px;">{{ r.label }} · p.{{ r.page }}</div><div style="font-size:11.5px;color:var(--gray-500);line-height:1.4;">{{ r.snippet }}</div></div>
+                </sc-for>
+                <sc-if value="{{ reader.noSearchResults }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:var(--gray-400);padding:10px 6px;">No matches in this book.</div></sc-if>
+              </sc-if>
+
+              <sc-if value="{{ reader.hasBookmarks }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin:4px 0 8px;padding:0 6px;">Bookmarks</div>
+                <sc-for list="{{ reader.bmList }}" as="bm" hint-placeholder-count="1">
+                  <div onClick="{{ bm.onClick }}" style-hover="background:var(--gray-100);" style="{{ bm.style }}"><i data-lucide="bookmark" style="width:13px;height:13px;flex:0 0 auto;"></i>{{ bm.label }}</div>
+                </sc-for>
+              </sc-if>
+
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin:8px 0 8px;padding:0 6px;">Contents</div>
+              <sc-for list="{{ reader.toc }}" as="t" hint-placeholder-count="4">
+                <div onClick="{{ t.onClick }}" style-hover="background:var(--gray-100);" style="{{ t.style }}">{{ t.title }}</div>
+              </sc-for>
+
+              <sc-if value="{{ reader.hasHighlights }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:8px;margin:12px 0 8px;padding:0 6px;">
+                  <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;flex:1;">Highlights</span>
+                  <button onClick="{{ reader.exportHighlights }}" title="Copy all highlights" style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:7px;padding:3px 8px;"><i data-lucide="copy" style="width:12px;height:12px;"></i><sc-if value="{{ reader.hlCopied }}" hint-placeholder-val="{{ false }}">Copied</sc-if><sc-if value="{{ reader.notHlCopied }}" hint-placeholder-val="{{ true }}">Export</sc-if></button>
+                </div>
+                <sc-for list="{{ reader.hlList }}" as="h" hint-placeholder-count="1">
+                  <div onClick="{{ h.onClick }}" style="cursor:pointer;display:flex;gap:8px;padding:9px 10px;border-radius:8px;margin-bottom:4px;background:var(--gray-50);border-left:3px solid #EA9D00;">
+                    <div style="flex:1;min-width:0;"><div style="font-size:11.5px;color:var(--gray-700);line-height:1.45;">{{ h.text }}</div><div style="font-size:10.5px;color:var(--gray-400);margin-top:3px;">{{ h.pageLabel }}</div></div>
+                    <button onClick="{{ h.onRemove }}" title="Remove" style="cursor:pointer;border:none;background:transparent;color:var(--gray-400);flex:0 0 auto;padding:0;"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
+                  </div>
+                </sc-for>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+            <div style="flex:1;overflow-y:auto;display:flex;justify-content:center;padding:26px 20px;">
+              <div onMouseUp="{{ reader.onPageMouseUp }}" style="width:100%;max-width:{{ reader.maxW }}px;height:fit-content;background:{{ reader.pageBg }};color:{{ reader.pageColor }};border-radius:10px;box-shadow:0 12px 44px rgba(0,0,0,0.14);padding:44px 50px;">
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;opacity:0.6;font-weight:700;margin-bottom:18px;">{{ reader.chapter }}</div>
+                <div style="font-family:{{ reader.fontFam }};font-size:{{ reader.fontPx }}px;line-height:{{ reader.lineH }}px;">
+                  <sc-for list="{{ reader.paras }}" as="p" hint-placeholder-count="2">
+                    <p style="margin:0 0 1.05em;text-wrap:pretty;"><sc-for list="{{ p.segs }}" as="sg" hint-placeholder-count="1"><span style="{{ sg.style }}">{{ sg.text }}</span></sc-for></p>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--surface);border-top:1px solid var(--gray-100);">
+              <button onClick="{{ reader.prev }}" style="{{ reader.prevStyle }}"><i data-lucide="chevron-left" style="width:15px;height:15px;"></i>Prev</button>
+              <div style="flex:1;"><div style="height:5px;background:var(--gray-100);border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ reader.pct }}%;background:var(--accent);border-radius:999px;transition:width 200ms ease;"></div></div></div>
+              <span style="font-size:12px;color:var(--gray-500);white-space:nowrap;">{{ reader.pageLabel }}</span>
+              <button onClick="{{ reader.next }}" style="{{ reader.nextStyle }}">Next<i data-lucide="chevron-right" style="width:15px;height:15px;"></i></button>
+            </div>
+          </div>
+
+          <sc-if value="{{ reader.askOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="width:322px;flex:0 0 322px;background:var(--surface);border-left:1px solid var(--gray-100);display:flex;flex-direction:column;min-height:0;">
+              <div style="padding:12px 14px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;gap:8px;flex:0 0 auto;"><i data-lucide="sparkles" style="width:15px;height:15px;color:var(--accent);"></i><span style="font-weight:800;font-size:13.5px;">Ask this book</span></div>
+              <div style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;">
+                <sc-if value="{{ reader.emptyAsk }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:12.5px;color:var(--gray-500);line-height:1.6;background:var(--gray-50);border:1px solid var(--gray-100);border-radius:10px;padding:12px 13px;">Ask anything about this book. The model retrieves the most relevant passages and answers with page citations — tap a citation to jump there and see it highlighted.</div>
+                  <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin-top:2px;">Try asking</div>
+                  <sc-for list="{{ reader.suggests }}" as="sug" hint-placeholder-count="3">
+                    <button onClick="{{ sug.onClick }}" style-hover="border-color:var(--accent);color:var(--accent);" style="cursor:pointer;text-align:left;font-size:12.5px;font-weight:600;color:var(--gray-700);border:1px solid var(--gray-200);background:var(--surface);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;"><i data-lucide="message-circle-question" style="width:14px;height:14px;color:var(--accent);flex:0 0 auto;"></i>{{ sug.t }}</button>
+                  </sc-for>
+                </sc-if>
+                <sc-for list="{{ reader.askLog }}" as="m" hint-placeholder-count="0">
+                  <div style="{{ m.wrapStyle }}">
+                    {{ m.text }}<sc-if value="{{ m.streaming }}" hint-placeholder-val="{{ false }}"><span style="opacity:0.6;">▍</span></sc-if>
+                    <sc-if value="{{ m.hasCites }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+                        <sc-for list="{{ m.cites }}" as="c" hint-placeholder-count="1">
+                          <button onClick="{{ c.onClick }}" style="cursor:pointer;font-size:11px;font-weight:700;border:1px solid var(--accent);color:var(--accent);background:var(--accent-light);border-radius:999px;padding:2px 9px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;"><i data-lucide="corner-down-right" style="width:11px;height:11px;"></i>{{ c.label }}</button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ reader.thinking }}" hint-placeholder-val="{{ false }}">
+                  <div style="align-self:flex-start;font-size:12px;color:var(--gray-400);display:flex;align-items:center;gap:6px;"><i data-lucide="loader" style="width:13px;height:13px;"></i>Retrieving passages…</div>
+                </sc-if>
+              </div>
+              <div style="padding:10px 12px 12px;border-top:1px solid var(--gray-100);flex:0 0 auto;">
+                <div style="display:flex;gap:6px;margin-bottom:8px;">
+                  <button onClick="{{ reader.explainPage }}" style-hover="border-color:var(--accent);color:var(--accent);" style="cursor:pointer;flex:1;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:5px;"><i data-lucide="file-search" style="width:13px;height:13px;"></i>Explain page</button>
+                  <button onClick="{{ reader.summarizeChapter }}" style-hover="border-color:var(--accent);color:var(--accent);" style="cursor:pointer;flex:1;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:5px;"><i data-lucide="book-marked" style="width:13px;height:13px;"></i>Summarize chapter</button>
+                  <button onClick="{{ reader.summarizeBook }}" style-hover="border-color:var(--accent);color:var(--accent);" style="cursor:pointer;flex:1;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:5px;"><i data-lucide="book-open-text" style="width:13px;height:13px;"></i>Summarize book</button>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <input value="{{ reader.askQ }}" onInput="{{ reader.onAskQ }}" placeholder="Ask about this book…" style="flex:1;min-width:0;border:1px solid var(--gray-200);border-radius:8px;padding:9px 11px;font-size:12.5px;outline:none;background:var(--surface);color:var(--gray-900);" />
+                  <button onClick="{{ reader.ask }}" style="{{ reader.askSendStyle }}">Send</button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ============ RENAME BOOK MODAL ============ -->
+  <sc-if value="{{ renameModal.open }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ renameModal.cancel }}" style="position:fixed;inset:0;background:rgba(17,24,39,0.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;">
+    <div onClick="{{ renameModal.stop }}" style="width:420px;max-width:92vw;background:var(--surface);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-lg);padding:18px 20px;">
+      <div style="font-weight:800;font-size:15px;margin-bottom:12px;">Rename book</div>
+      <input value="{{ renameModal.text }}" onInput="{{ renameModal.onText }}" style="width:100%;box-sizing:border-box;border:1px solid var(--gray-200);border-radius:9px;padding:10px 12px;font-size:13.5px;outline:none;background:var(--surface);color:var(--gray-900);margin-bottom:14px;" />
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button onClick="{{ renameModal.cancel }}" style="cursor:pointer;font-size:12.5px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:8px 14px;">Cancel</button>
+        <button onClick="{{ renameModal.save }}" style="cursor:pointer;font-size:12.5px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;">Save</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ DELETE BOOK MODAL ============ -->
+  <sc-if value="{{ bookDelModal.open }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ bookDelModal.cancel }}" style="position:fixed;inset:0;background:rgba(17,24,39,0.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;">
+    <div onClick="{{ bookDelModal.stop }}" style="width:420px;max-width:92vw;background:var(--surface);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-lg);padding:18px 20px;">
+      <div style="font-weight:800;font-size:15px;margin-bottom:6px;">Delete book?</div>
+      <div style="font-size:12.5px;color:var(--gray-600);line-height:1.5;margin-bottom:14px;">Remove &ldquo;{{ bookDelModal.title }}&rdquo; from the library. This also clears its reading progress, bookmarks, and highlights.</div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button onClick="{{ bookDelModal.cancel }}" style="cursor:pointer;font-size:12.5px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:8px 14px;">Cancel</button>
+        <button onClick="{{ bookDelModal.confirm }}" style="cursor:pointer;font-size:12.5px;font-weight:700;border:none;background:var(--danger);color:#fff;border-radius:8px;padding:8px 14px;">Delete</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ HIGHLIGHT SELECTION POPOVER ============ -->  <sc-if value="{{ selPopover.show }}" hint-placeholder-val="{{ false }}">
+  <div style="{{ selPopover.style }}"><button onClick="{{ selPopover.add }}" style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:none;background:#EA9D00;color:#fff;border-radius:8px;padding:7px 12px;box-shadow:var(--shadow-lg);"><i data-lucide="highlighter" style="width:14px;height:14px;"></i>Highlight</button></div>
+  </sc-if>
+
   <!-- ============ WEEKLY-TREND DRILL ============ -->
   <sc-if value="{{ trendDrill.open }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ trendDrill.close }}" style="position:fixed;inset:0;background:rgba(17,24,39,0.45);z-index:55;display:flex;align-items:center;justify-content:center;padding:24px;">
@@ -1151,7 +1437,7 @@ class Component extends DCLogic {
         { id:'l3', status:'failed', mode:'Full', start:'Jul 22, 06:00', processed:12, updated:0, failed:12, error:'Auth token expired before run completed.', details:[] },
       ],
       selectedLog:'l1',
-      hoverIdx:null, draft:'', editing:null, editDraft:'',
+      hoverIdx:null, draft:'', editing:null, editDraft:'', timeframe:'D', bollinger:false, rsi:false,
       up:{ state:'summary', pct:0, total:198, dup:4, invalid:2, ts:'Jul 24, 2026 · 09:12' },
       hl:{ date:'', label:'' },
       mobile:(typeof window!=='undefined' && window.innerWidth<860),
@@ -1162,16 +1448,20 @@ class Component extends DCLogic {
       hmx:0, hmy:0, dense:false, paletteOpen:false, paletteQuery:'', universeLoaded:true, secSort:'pct', secSortDir:'desc', runExpanded:null, searchFocus:false,
       jf:{symbol:'',segment:'Delivery',qty:'',buy:'',sell:'',note:'',tags:'',entryDate:'',exitDate:''}, jEdit:null, jEditText:'', journalChart:null, jChartType:'candle',
       jFilter:{q:'',seg:'All'}, defaultSegment:'Delivery', trendCell:null,
+      books:this.seedBooks(), readerBook:null, readerPage:0, readerFont:106, readerTheme:'sepia', readerToc:false, readerAsk:false,
+      bookAskQ:'', bookAskLog:[], bookAsking:false, progress:{}, ingest:{state:'idle',pct:0,name:'',kind:'text'},
+      bookmarks:{}, bookHighlights:{}, readerFontFamily:'serif', readerWidth:'normal', readerSearch:'', selPopover:null, readerSettings:false, flashHl:null,
+      ingestDrag:false, bookMenu:null, renameId:null, renameText:'', bookDelId:null, hlCopied:false,
       journal:[
         { id:'js1', entryDate:'2026-07-21', exitDate:'2026-07-24', symbol:'RELIANCE', segment:'Delivery', qty:20, buy:2905.00, sell:2984.50, note:'Breakout retest above 44 MA — booked into strength.', tags:['breakout','swing'] },
         { id:'js2', entryDate:'2026-07-23', exitDate:'2026-07-23', symbol:'TATAMOTORS', segment:'Intraday', qty:150, buy:988.00, sell:978.00, note:'Stopped out; entered late against the trend.', tags:['revenge'] },
         { id:'js3', entryDate:'2026-07-24', exitDate:'', symbol:'INFY', segment:'Delivery', qty:40, buy:1820.00, sell:null, note:'Adding on strength; holding above 44 MA.', tags:['swing'] }
       ]
     };
-    try{ const sv=JSON.parse(localStorage.getItem('paro:v1')||'null'); if(sv){ ['selected','filter','fav','watch','theme','comments','highlights','order','collapsed','selectedSector','pins','chat','dense','universeLoaded','journal','screen','defaultSegment'].forEach(k=>{ if(sv[k]!==undefined) this.state[k]=sv[k]; }); } }catch(e){}
+    try{ const sv=JSON.parse(localStorage.getItem('paro:v1')||'null'); if(sv){ ['selected','filter','fav','watch','theme','comments','highlights','order','collapsed','selectedSector','pins','chat','dense','journal','screen','defaultSegment','timeframe','bollinger','rsi','books','progress','readerFont','readerTheme','bookmarks','bookHighlights','readerFontFamily','readerWidth'].forEach(k=>{ if(sv[k]!==undefined) this.state[k]=sv[k]; }); } }catch(e){}
   }
   onResize=()=>{ const m=window.innerWidth<860; if(m!==this.state.mobile) this.setState({mobile:m}); };
-  persist(){ try{ const {selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,universeLoaded,journal,screen,defaultSegment}=this.state; const snap=JSON.stringify({selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,universeLoaded,journal,screen,defaultSegment}); if(snap!==this._snap){ this._snap=snap; localStorage.setItem('paro:v1',snap); } }catch(e){} }
+  persist(){ try{ const {selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,journal,screen,defaultSegment,timeframe,bollinger,rsi}=this.state; const snap=JSON.stringify({selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,journal,screen,defaultSegment,timeframe,bollinger,rsi,books:this.state.books,progress:this.state.progress,readerFont:this.state.readerFont,readerTheme:this.state.readerTheme,bookmarks:this.state.bookmarks,bookHighlights:this.state.bookHighlights,readerFontFamily:this.state.readerFontFamily,readerWidth:this.state.readerWidth}); if(snap!==this._snap){ this._snap=snap; localStorage.setItem('paro:v1',snap); } }catch(e){} }
 
   fmtTs(ts){ const d=new Date(ts); const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; let h=d.getHours(),m=d.getMinutes(); const ap=h>=12?'PM':'AM'; h=h%12||12; return mo+' '+d.getDate()+', '+h+':'+(m<10?'0':'')+m+' '+ap; }
   onChatInput=(e)=>this.setState({chatInput:e.target.value});
@@ -1232,12 +1522,16 @@ class Component extends DCLogic {
   hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
   rng(seed){ let a=seed>>>0; return ()=>{ a|=0;a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
   sma(arr,w){ return arr.map((_,i)=>{ if(i<w-1) return null; let s=0; for(let j=i-w+1;j<=i;j++) s+=arr[j]; return s/w; }); }
+  aggCandles(raw,grp){ const out=[]; for(let i=0;i<raw.length;i+=grp){ const ck=raw.slice(i,i+grp); if(!ck.length)break; out.push({ o:ck[0].o, c:ck[ck.length-1].c, h:Math.max(...ck.map(x=>x.h)), l:Math.min(...ck.map(x=>x.l)), t:ck[ck.length-1].t, v:ck.reduce((a,x)=>a+x.v,0) }); } return out; }
+  bollinger(cds,w,k){ const cl=cds.map(c=>c.c); const mid=this.sma(cl,w); return mid.map((m,i)=>{ if(m==null)return null; let s=0; for(let j=i-w+1;j<=i;j++) s+=(cl[j]-m)*(cl[j]-m); const sd=Math.sqrt(s/w); return { mid:m, up:m+k*sd, lo:m-k*sd }; }); }
+  rsiCalc(cds,w){ const cl=cds.map(c=>c.c); const out=cl.map(()=>null); if(cl.length<=w) return out; let ag=0,al=0; for(let i=1;i<=w;i++){ const d=cl[i]-cl[i-1]; ag+=Math.max(d,0); al+=Math.max(-d,0); } ag/=w; al/=w; out[w]=100-100/(1+(al===0?100:ag/al)); for(let i=w+1;i<cl.length;i++){ const d=cl[i]-cl[i-1]; ag=(ag*(w-1)+Math.max(d,0))/w; al=(al*(w-1)+Math.max(-d,0))/w; out[i]=100-100/(1+(al===0?100:ag/al)); } return out; }
+  chartData(s){ const tf=this.state.timeframe||'D'; const base=tf==='D'?s.raw:this.aggCandles(s.raw, tf==='W'?5:21); const ma=this.sma(base.map(c=>c.c),44); const win=44; const start=Math.max(0,base.length-win); const cds=base.slice(start); const maD=ma.slice(start); let bb=null; if(this.state.bollinger){ bb=this.bollinger(base,20,2).slice(start); } let rsi=null; if(this.state.rsi){ rsi=this.rsiCalc(base,14).slice(start); } return { cds, ma:maD, bb, rsi }; }
   clean(s){ return s.replace(/&amp;/g,'&').replace(/&rsquo;|&#8217;|\u2019/g,"'"); }
 
   buildUniverse(){
     return this.DEFS.map(([industry,sym,company],k)=>{
       const rnd=this.rng(this.hash(sym));
-      const N=88, vol=0.014;
+      const N=1400, vol=0.014;
       let closes=[1]; for(let i=1;i<N;i++) closes.push(closes[i-1]*(1+(rnd()-0.485)*vol*2));
       const base=this.BASE[sym]||1000;
       const scale=base/closes[N-1];
@@ -1251,11 +1545,11 @@ class Component extends DCLogic {
         candles.push({o,h:hi,l:lo,c,t,v});
       }
       const ma=this.sma(candles.map(c=>c.c),44);
-      const disp=candles.slice(44), maDisp=ma.slice(44);
+      const disp=candles.slice(N-44), maDisp=ma.slice(N-44);
       const close=disp[disp.length-1].c, ma44=maDisp[maDisp.length-1];
       const pct=(close-ma44)/ma44*100;
       const h4=this.hash(sym+'i');
-      return { sym, company, industry, series:'EQ', yahoo:sym+'.NS',
+      return { sym, company, industry, series:'EQ', yahoo:sym+'.NS', raw:candles,
         isin:'INE'+(100+h4%800)+'A01'+(10+h4%80),
         disp, maDisp, close, ma44, pct, above:close>=ma44,
         lastSync:['2h ago','4h ago','1d ago','3h ago','6h ago'][k%5],
@@ -1574,15 +1868,125 @@ class Component extends DCLogic {
   setCanvas=(el)=>{ this.canvas=el; if(el){ if(this.ro)this.ro.disconnect(); this.ro=new ResizeObserver(()=>this.draw()); this.ro.observe(el.parentElement); requestAnimationFrame(()=>this.draw()); } };
   onMove=(e)=>{ const cv=this.canvas; if(!cv||!this._geo)return; const r=cv.getBoundingClientRect(); const x=e.clientX-r.left, y=e.clientY-r.top; let i=Math.round((x-this._geo.padL-this._geo.cw/2)/this._geo.cw); i=Math.max(0,Math.min(this._geo.n-1,i)); this.setState({hoverIdx:i, hmx:x, hmy:y}); };
   onLeave=()=>this.setState({hoverIdx:null});
+  setTimeframe=(tf)=>this.setState({timeframe:tf,hoverIdx:null});
+  toggleBollinger=()=>this.setState(s=>({bollinger:!s.bollinger}));
+  toggleRsi=()=>this.setState(s=>({rsi:!s.rsi}));
   onKeyGlobal=(e)=>{
     const tag=(e.target&&e.target.tagName)||''; const typing=tag==='INPUT'||tag==='TEXTAREA';
     if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){ e.preventDefault(); this.setState(s=>({paletteOpen:!s.paletteOpen, paletteQuery:''})); return; }
     if(e.key==='Escape'){ if(this.state.paletteOpen){ this.setState({paletteOpen:false}); return; } if(this.state.screen==='workspace'&&this.state.selected){ this.setState({selected:null}); } return; }
     if(typing) return;
     if(e.key==='/'){ e.preventDefault(); const el=document.querySelector('input[placeholder^="Search symbol"]'); if(el) el.focus(); return; }
+    if((e.key==='ArrowRight'||e.key==='ArrowLeft')&&this.state.screen==='library'&&this.state.readerBook){ e.preventDefault(); e.key==='ArrowRight'?this.readerNext():this.readerPrev(); return; }
     if((e.key==='ArrowDown'||e.key==='ArrowUp')&&this.state.screen==='workspace'){ const v=this._visible||[]; if(!v.length) return; e.preventDefault(); const cur=v.indexOf(this.state.selected); let n=cur+(e.key==='ArrowDown'?1:-1); if(cur<0) n=0; n=Math.max(0,Math.min(v.length-1,n)); this.setState({selected:v[n], detailLoading:false, hoverIdx:null}); }
   };
   toggleDense=()=>this.setState(s=>({dense:!s.dense}));
+
+  // ---- Book library / Kindle reader
+  seedBooks(){
+    const A={ id:'bk1', title:'Trading in the Trend', author:'Anjali Mehta', subtitle:'A field guide to the 44-day moving average', tag:'Strategy', spine:'#3C2CDA', kind:'text', addedTs:'Jul 20, 2026', suggests:['How much should I risk per trade?','Why does the 44-day line matter?','How should I keep a trading journal?'],
+      pages:[
+        {chapter:'Chapter 1 · The 44-Day Line', paras:['Most traders drown in indicators. This book asks you to master one line first: the 44-day moving average. It is slow enough to ignore noise, and fast enough to keep you inside a real trend.','When price sits above the line and the line is rising, you are a buyer looking for entries. When price is below and the line is falling, you step aside. Everything else in this book is detail layered on top of that single idea.']},
+        {chapter:'Chapter 1 · The 44-Day Line', paras:['The line is not a command to be obeyed blindly. Treat it as a question: is the market willing to defend this average? A shallow pullback that holds the 44-day and reclaims it on volume is worth far more than a clean breakout into thin air.','Mark the days price closed back above the line after a dip. Over months you will build an instinct for which reclaims lead somewhere and which fade by lunch.']},
+        {chapter:'Chapter 2 · Sizing the Position', paras:['Your edge is small and statistical. Size so that no single trade can end your season. A fixed fraction of capital per idea, risking one to two percent, keeps you in the game long enough for the math to work.','Position size is where discipline is won or lost. The chart may look identical on two days; the only thing you truly control is how much you put behind your opinion.']},
+        {chapter:'Chapter 3 · The Honest Journal', paras:['Write the trade down before you take it: the reason, the level, the invalidation. A journal written after the fact is a diary of excuses. Written before, it becomes a contract with yourself.','Review weekly. Sort by outcome, then by whether you followed your own rule. You will find that broken rules and losses do not line up as neatly as you feared, and that is the most useful lesson of all.']},
+      ] };
+    const B={ id:'bk2', title:'Candlesticks, Annotated', author:'Rohan Nair', subtitle:'Scanned from the 1994 print edition', tag:'Patterns', spine:'#B4632E', kind:'scanned', addedTs:'Jul 24, 2026', ocrPages:214, suggests:['What do the wicks tell me?','How do reversal patterns work?','Why does context matter for a pattern?'],
+      pages:[
+        {chapter:'Chapter 1 · Anatomy of a Candle', paras:['A single candle records four facts: where trading opened, where it closed, and the extremes reached in between. The body is the story of conviction; the wicks are the story of rejection.','A long lower wick beneath a small body tells you sellers pushed price down and were overwhelmed before the close. Read the wick before you read the colour.']},
+        {chapter:'Chapter 2 · Reversal Patterns', paras:['The hammer and the shooting star are the same shape seen in a mirror, and their meaning depends entirely on the trend that comes before them. Context is not optional: a hammer inside an uptrend is just noise.','Engulfing patterns work because they show a full transfer of control within one session. The second candle erases the first, and with it the assumptions of everyone who acted on that first candle.']},
+        {chapter:'Chapter 2 · Reversal Patterns', paras:['Do not trade a pattern in isolation. The strongest reversals cluster at a level the market already respects: a prior high, a round number, or a moving average that has held before.','When a textbook pattern forms far from any level, treat it with suspicion. The pattern is a sentence; the level is the paragraph that gives it meaning.']},
+      ] };
+    return [A,B];
+  }
+  makeIngestedBook(kind, title, report){
+    const id='bk'+Date.now();
+    const scanned = { id, title:title||'Reminiscences of a Stock Operator', author:'Edwin Lef\u00e8vre', subtitle:'OCR-extracted from scanned page images by the ingestion model', tag:'Classic', spine:'#2E7D5B', kind:'scanned', addedTs:'Just now', ocrPages:312, report, suggests:['Is the market ever wrong?','What is the oldest lesson of Wall Street?'],
+      pages:[ {chapter:'Chapter 1', paras:['[Reconstructed by the vision model] The market is never wrong; opinions often are. This page was rebuilt from a scanned image, with layout and hyphenation normalised automatically.','There is nothing new in Wall Street. Whatever happens today has happened before and will happen again.']},
+        {chapter:'Chapter 2', paras:['The scanned pages were deskewed, split into text blocks, and read by the model; figures and marginalia were kept in the source but dropped from the reading flow.','A man must believe in himself and his judgement if he expects to make a living at this game.']} ] };
+    const text = { id, title:title||'The Little Book of Common Sense Investing', author:'John C. Bogle', subtitle:'Parsed from a text PDF and chunked for retrieval', tag:'Investing', spine:'#8A5CF6', kind:'text', addedTs:'Just now', report, suggests:['What is the winning strategy?','Why do costs matter so much?'],
+      pages:[ {chapter:'Introduction', paras:['[Parsed from PDF] The winning strategy for investing is to own all of the nation\u2019s publicly held businesses at very low cost.','Text was extracted per page, stripped of headers and footers, and split into overlapping chunks for the retrieval index.']},
+        {chapter:'Chapter 1', paras:['The relentless rules of humble arithmetic: gross return in the market, minus the costs of investing, equals the net return delivered to investors.','This chapter is now searchable. Ask a question from the reader and the model will cite the page it drew from.']} ] };
+    return kind==='scanned'?scanned:text;
+  }
+  openLibrary=()=>this.setState({screen:'library', readerBook:null});
+  openBook=(id)=>{ const p=this.state.progress[id]||0; this.setState({screen:'library', readerBook:id, readerPage:p, readerToc:false, readerAsk:false, bookAskLog:[], bookAskQ:''}); };
+  closeBook=()=>this.setState({readerBook:null});
+  _rbook(){ return this.state.books.find(x=>x.id===this.state.readerBook); }
+  readerNext=()=>this.setState(s=>{ const b=s.books.find(x=>x.id===s.readerBook); if(!b)return{}; const p=Math.min(b.pages.length-1,s.readerPage+1); return {readerPage:p, progress:{...s.progress,[b.id]:p}}; });
+  readerPrev=()=>this.setState(s=>{ const p=Math.max(0,s.readerPage-1); return {readerPage:p, progress:{...s.progress,[s.readerBook]:p}}; });
+  gotoPage=(p)=>this.setState(s=>({readerPage:p, readerToc:false, progress:{...s.progress,[s.readerBook]:p}}));
+  setReaderFont=(d)=>this.setState(s=>({readerFont:Math.max(84,Math.min(150,s.readerFont+d))}));
+  setReaderTheme=(t)=>this.setState({readerTheme:t});
+  toggleToc=()=>this.setState(s=>({readerToc:!s.readerToc, readerAsk:false}));
+  toggleAsk=()=>this.setState(s=>({readerAsk:!s.readerAsk, readerToc:false}));
+  onBookAsk=(e)=>this.setState({bookAskQ:e.target.value});
+  _retrieve(q){ const b=this._rbook(); const pages=b.pages; const qw=q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
+    const scored=pages.map((pg,i)=>{ const t=(pg.chapter+' '+pg.paras.join(' ')).toLowerCase(); let sc=0; qw.forEach(w=>{ if(t.indexOf(w)>=0) sc++; }); return {i,pg,sc}; }).filter(o=>o.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,3);
+    const p=Math.min(this.state.readerPage,pages.length-1);
+    return { pages, qw, hits: scored.length?scored:[{i:p,pg:pages[p],sc:0}] }; }
+  _bestPara(pg,qw){ let best=pg.paras[0],bs=-1; pg.paras.forEach(p=>{ const t=p.toLowerCase(); let s=0; (qw||[]).forEach(w=>{ if(t.indexOf(w)>=0)s++; }); if(s>bs){bs=s;best=p;} }); return best; }
+  _sentence(text,qw){ const sents=text.split(/([.!?])\s+/).reduce((a,c,i)=>{ if(i%2===0)a.push(c); else a[a.length-1]+=c; return a; },[]); if(!qw||!qw.length) return sents[0]; let best=sents[0],bs=-1; sents.forEach(se=>{ const t=se.toLowerCase(); let s=0; qw.forEach(w=>{ if(t.indexOf(w)>=0)s++; }); if(s>bs){bs=s;best=se;} }); return best; }
+  _lower1(s){ return s? s.charAt(0).toLowerCase()+s.slice(1) : s; }
+  _runAsk(displayQ, full, cites){ this.setState(s=>({ bookAskLog:[...s.bookAskLog,{role:'user',text:displayQ},{role:'ai',text:'',cites,streaming:true}], bookAskQ:'', bookAsking:true }));
+    clearInterval(this._askS); let idx=0; const words=full.split(' ');
+    this._askS=setInterval(()=>{ this.setState(s=>{ const log=s.bookAskLog.slice(); const last=log[log.length-1]; if(!last||last.role!=='ai'){ clearInterval(this._askS); return {bookAsking:false}; } idx+=2; last.text=words.slice(0,idx).join(' '); const done=idx>=words.length; if(done){ clearInterval(this._askS); last.streaming=false; } return { bookAskLog:log, bookAsking:!done }; }); }, 55); }
+  askBook=()=>{ const q=(this.state.bookAskQ||'').trim(); if(!q||this.state.bookAsking||!this._rbook()) return; this._answer(q,q); };
+  askSuggestion=(text)=>{ if(this.state.bookAsking||!this._rbook()) return; this._answer(text,text); };
+  _answer(displayQ,q){ const {qw,hits}=this._retrieve(q); const pages=this._rbook().pages;
+    const cites=hits.map(h=>{ const para=this._bestPara(h.pg,qw); return { page:h.i, hlText:this._sentence(para,qw).trim() }; });
+    const lead = hits.length>1 && hits[0].sc>0 ? 'A few passages bear on that. ' : (hits[0].sc===0?'I could not find a direct passage, but the closest is this. ':'');
+    const body = cites.map(c=>'In '+pages[c.page].chapter+' (p.'+(c.page+1)+'), '+this._lower1(c.hlText)).join(' ');
+    this._runAsk(displayQ, lead+body, cites); }
+  explainPage=()=>{ if(this.state.bookAsking||!this._rbook()) return; const b=this._rbook(); const p=Math.min(this.state.readerPage,b.pages.length-1); const pg=b.pages[p];
+    const full='On this page \u2014 '+pg.chapter+' \u2014 the book makes '+(pg.paras.length>1?'two points. ':'one point. ')+pg.paras.map(x=>this._sentence(x,[]).trim()).join(' ');
+    this._runAsk('Explain this page', full, [{page:p, hlText:this._sentence(pg.paras[0],[]).trim()}]); }
+  summarizeChapter=()=>{ if(this.state.bookAsking||!this._rbook()) return; const b=this._rbook(); const p=Math.min(this.state.readerPage,b.pages.length-1); const ch=b.pages[p].chapter;
+    const idxs=b.pages.map((pg,i)=>({pg,i})).filter(o=>o.pg.chapter===ch);
+    const full='In \u201c'+ch+'\u201d the book argues: '+idxs.map(o=>this._sentence(o.pg.paras[0],[]).trim()).join(' ');
+    this._runAsk('Summarize this chapter', full, idxs.map(o=>({page:o.i, hlText:this._sentence(o.pg.paras[0],[]).trim()}))); }
+  jumpToCite=(page,text)=>{ this.setState(s=>({ readerPage:page, readerToc:false, progress:{...s.progress,[s.readerBook]:page}, flashHl:{page,text} })); clearTimeout(this._flashT); this._flashT=setTimeout(()=>this.setState({flashHl:null}), 4500); };
+  summarizeBook=()=>{ if(this.state.bookAsking||!this._rbook()) return; const b=this._rbook(); const seen={}, firsts=[]; b.pages.forEach((pg,i)=>{ if(!seen[pg.chapter]){ seen[pg.chapter]=true; firsts.push({i,pg}); } });
+    const full='Overall, \u201c'+this.clean(b.title)+'\u201d '+(b.kind==='scanned'?'(OCR-extracted) ':'')+'makes these points across '+firsts.length+' section'+(firsts.length>1?'s':'')+': '+firsts.map(o=>this._sentence(o.pg.paras[0],[]).trim()).join(' ');
+    this._runAsk('Summarize this book', full, firsts.map(o=>({page:o.i, hlText:this._sentence(o.pg.paras[0],[]).trim()}))); }
+  exportHighlights=()=>{ const b=this._rbook(); if(!b) return; const hs=this.state.bookHighlights[b.id]||[]; if(!hs.length) return;
+    const txt='Highlights \u2014 '+this.clean(b.title)+'\n\n'+hs.slice().sort((a,c)=>a.page-c.page).map(h=>'p.'+(h.page+1)+'  \u201c'+h.text+'\u201d').join('\n\n');
+    try{ navigator.clipboard.writeText(txt); }catch(e){} this.setState({hlCopied:true}); clearTimeout(this._hlT); this._hlT=setTimeout(()=>this.setState({hlCopied:false}),1600); }
+  _pretty(name){ return (name||'').replace(/\.pdf$/i,'').replace(/[-_]+/g,' ').trim().replace(/\b\w/g,c=>c.toUpperCase()) || null; }
+  _ingReport(kind){ const pages=kind==='scanned'?312:248; const chunks=Math.round(pages*3.4); const r={pages, chunks, tokens:Math.round(chunks*180/1000)+'k'}; if(kind==='scanned') r.confidence=(96+Math.random()*2.6).toFixed(1); return r; }
+  setIngestInput=(el)=>{ this.ingestInput=el; };
+  triggerIngestPick=()=>{ if(this.ingestInput) this.ingestInput.click(); };
+  onIngestFile=(e)=>{ const f=e.target.files&&e.target.files[0]; if(f) this._pickIngest(f.name); if(this.ingestInput) this.ingestInput.value=''; };
+  onIngestDragOver=(e)=>{ e.preventDefault(); if(!this.state.ingestDrag&&(this.state.ingest.state==='idle'||this.state.ingest.state==='picked')) this.setState({ingestDrag:true}); };
+  onIngestDragLeave=(e)=>{ e.preventDefault(); if(this.state.ingestDrag) this.setState({ingestDrag:false}); };
+  onIngestDrop=(e)=>{ e.preventDefault(); const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; this.setState({ingestDrag:false}); if(f) this._pickIngest(f.name); };
+  _pickIngest=(name)=>{ const kind=/scan|image|ocr/i.test(name)?'scanned':'text'; this.setState({ingest:{state:'picked', pct:0, name, kind, title:this._pretty(name)}}); };
+  setIngestKind=(kind)=>this.setState(s=>({ingest:{...s.ingest, kind}}));
+  startIngest=()=>{ const ig=this.state.ingest; if(ig.state!=='picked') return; this.setState({ingest:{state:'uploading',pct:6,name:ig.name,kind:ig.kind,title:ig.title}}); clearInterval(this._ing);
+    this._ing=setInterval(()=>{ this.setState(s=>{ let pct=Math.min(100, s.ingest.pct + Math.round(5+Math.random()*10)); let state;
+      if(pct>=100){ pct=100; state='done'; } else if(pct>75) state='embedding'; else if(pct>30) state='parsing'; else state='uploading';
+      if(state==='done'){ clearInterval(this._ing); const rep=this._ingReport(s.ingest.kind); const nb=this.makeIngestedBook(s.ingest.kind, s.ingest.title, rep); return { ingest:{...s.ingest,pct:100,state:'done',report:rep}, books:[...s.books, nb] }; }
+      return { ingest:{...s.ingest,pct,state} }; }); }, 430);
+  };
+  ingestSample=(kind)=>{ if(this.state.ingest.state!=='idle'&&this.state.ingest.state!=='done') return; const name=kind==='scanned'?'reminiscences-scanned.pdf':'little-book-investing.pdf'; this.setState({ingest:{state:'picked',pct:0,name,kind,title:null}}); setTimeout(this.startIngest,0); };
+  resetIngest=()=>this.setState({ingest:{state:'idle',pct:0,name:'',kind:'text'}, ingestDrag:false});
+  toggleBookMenu=(id,e)=>{ if(e)e.stopPropagation(); this.setState(s=>({bookMenu:s.bookMenu===id?null:id})); };
+  startRename=(id,e)=>{ if(e)e.stopPropagation(); const b=this.state.books.find(x=>x.id===id); this.setState({renameId:id, renameText:b?this.clean(b.title):'', bookMenu:null}); };
+  onRenameText=(e)=>this.setState({renameText:e.target.value});
+  saveRename=()=>{ const id=this.state.renameId, t=(this.state.renameText||'').trim(); if(!id||!t){ this.setState({renameId:null}); return; } this.setState(s=>({ books:s.books.map(b=>b.id===id?{...b,title:t}:b), renameId:null })); };
+  cancelRename=()=>this.setState({renameId:null});
+  askDeleteBook=(id,e)=>{ if(e)e.stopPropagation(); this.setState({bookDelId:id, bookMenu:null}); };
+  cancelDeleteBook=()=>this.setState({bookDelId:null});
+  confirmDeleteBook=()=>{ const id=this.state.bookDelId; if(!id) return; this.setState(s=>{ const progress={...s.progress}; delete progress[id]; const bookmarks={...s.bookmarks}; delete bookmarks[id]; const bookHighlights={...s.bookHighlights}; delete bookHighlights[id]; return { books:s.books.filter(b=>b.id!==id), progress, bookmarks, bookHighlights, readerBook:s.readerBook===id?null:s.readerBook, bookDelId:null, bookMenu:null }; }); };
+  segmentPara(text,hls){ if(!hls||!hls.length) return [{text,hl:false,k:0}]; let segs=[{text,hl:false}]; hls.forEach(h=>{ if(!h) return; const next=[]; segs.forEach(s=>{ if(s.hl){ next.push(s); return; } let str=s.text, idx; while((idx=str.indexOf(h))>=0){ if(idx>0) next.push({text:str.slice(0,idx),hl:false}); next.push({text:h,hl:true}); str=str.slice(idx+h.length); } if(str) next.push({text:str,hl:false}); }); segs=next; }); return segs.map((s,k)=>({text:s.text,hl:s.hl,k})); }
+  toggleBookmark=()=>{ const b=this._rbook(); if(!b)return; const p=this.state.readerPage; this.setState(s=>{ const cur=s.bookmarks[b.id]||[]; const has=cur.includes(p); return { bookmarks:{...s.bookmarks,[b.id]: has?cur.filter(x=>x!==p):[...cur,p].sort((a,c)=>a-c)} }; }); };
+  onReaderSearch=(e)=>this.setState({readerSearch:e.target.value});
+  setFontFamily=(f)=>this.setState({readerFontFamily:f});
+  setReaderWidth=(w)=>this.setState({readerWidth:w});
+  toggleSettings=()=>this.setState(s=>({readerSettings:!s.readerSettings}));
+  onPageMouseUp=(e)=>{ let txt=''; try{ txt=(window.getSelection().toString()||'').trim(); }catch(_){} if(txt&&txt.length>2){ this.setState({selPopover:{x:e.clientX,y:e.clientY,text:txt}}); } else if(this.state.selPopover){ this.setState({selPopover:null}); } };
+  addHighlight=()=>{ const sp=this.state.selPopover; if(!sp)return; const b=this._rbook(); if(!b)return; const p=Math.min(this.state.readerPage,b.pages.length-1); const id='h'+Date.now(); this.setState(s=>{ const cur=s.bookHighlights[b.id]||[]; return { bookHighlights:{...s.bookHighlights,[b.id]:[...cur,{id,page:p,text:sp.text}]}, selPopover:null }; }); try{ window.getSelection().removeAllRanges(); }catch(_){} };
+  removeHighlight=(id)=>{ const b=this._rbook(); if(!b)return; this.setState(s=>({ bookHighlights:{...s.bookHighlights,[b.id]:(s.bookHighlights[b.id]||[]).filter(h=>h.id!==id)} })); };
   openPalette=()=>this.setState({paletteOpen:true, paletteQuery:''});
   closePalette=()=>this.setState({paletteOpen:false});
   onPaletteQuery=(e)=>this.setState({paletteQuery:e.target.value});
@@ -1606,20 +2010,25 @@ class Component extends DCLogic {
     const s=this.stock(this.state.selected); if(!s) return;
     const dpr=window.devicePixelRatio||1, W=cv.clientWidth, H=cv.clientHeight; if(!W||!H) return;
     cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
-    const cds=s.disp, ma=s.maDisp, n=cds.length;
+    const cd=this.chartData(s); const cds=cd.cds, ma=cd.ma, bb=cd.bb, n=cds.length;
     const padL=10,padR=58,padT=12,padB=22,gap=8;
     const plotW=W-padL-padR;
-    const volH=Math.max(34,(H-padT-padB)*0.18);
-    const priceH=(H-padT-padB)-volH-gap;
+    const rsiOn=!!(this.state.rsi&&cd.rsi);
+    const avail=H-padT-padB;
+    const volH=Math.max(rsiOn?26:34, avail*(rsiOn?0.12:0.18));
+    const rsiH=rsiOn?Math.max(56, avail*0.30):0;
+    const priceH=avail-volH-rsiH-gap*(rsiOn?2:1);
     const priceTop=padT, volTop=priceTop+priceH+gap, cw=plotW/n, bandBottom=volTop+volH;
+    const rsiTop=bandBottom+gap, rsiBottom=rsiTop+rsiH;
     this._geo={padL,cw,n};
     let hi=-Infinity,lo=Infinity; cds.forEach(c=>{ if(c.h>hi)hi=c.h; if(c.l<lo)lo=c.l; }); ma.forEach(v=>{ if(v!=null){ if(v>hi)hi=v; if(v<lo)lo=v; } });
+    if(bb) bb.forEach(b=>{ if(b){ if(b.up>hi)hi=b.up; if(b.lo<lo)lo=b.lo; } });
     const pad=(hi-lo)*0.08||1; hi+=pad; lo-=pad;
     const py=v=>priceTop+(1-(v-lo)/(hi-lo))*priceH, cx=i=>padL+cw*i+cw/2;
     ctx.font='10px '+getComputedStyle(document.body).fontFamily;
-    // highlight bands (span price + volume)
-    const hmap={}; this.state.highlights.forEach(h=>{ hmap[this.dayKey(h.ts)]=h; });
-    cds.forEach((c,i)=>{ const h=hmap[this.dayKey(c.t)]; if(h){ ctx.fillStyle=h.color+'20'; ctx.fillRect(cx(i)-cw/2,priceTop,cw,bandBottom-priceTop); ctx.fillStyle=h.color; ctx.fillRect(cx(i)-cw*0.35,priceTop,cw*0.7,3); } });
+    // highlight bands (span price + volume) — daily only
+    if(this.state.timeframe==='D'){ const hmap={}; this.state.highlights.forEach(h=>{ hmap[this.dayKey(h.ts)]=h; });
+      cds.forEach((c,i)=>{ const h=hmap[this.dayKey(c.t)]; if(h){ ctx.fillStyle=h.color+'20'; ctx.fillRect(cx(i)-cw/2,priceTop,cw,bandBottom-priceTop); ctx.fillStyle=h.color; ctx.fillRect(cx(i)-cw*0.35,priceTop,cw*0.7,3); } }); }
     // price grid
     for(let i=0;i<=4;i++){ const v=lo+(hi-lo)*i/4,y=py(v); ctx.strokeStyle='#EEF0F3'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke(); ctx.fillStyle='#9BA3AD'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(v.toFixed(0),padL+plotW+6,y); }
     // x labels
@@ -1631,15 +2040,27 @@ class Component extends DCLogic {
       if(i===hv){ ctx.strokeStyle='#111827'; ctx.lineWidth=1.5; ctx.strokeRect(x-bw/2-1.5,Math.min(yo,yc)-1.5,bw+3,Math.max(1,Math.abs(yc-yo))+3); } });
     // MA line
     ctx.beginPath(); let started=false; ma.forEach((v,i)=>{ if(v==null)return; const x=cx(i),y=py(v); started?ctx.lineTo(x,y):(ctx.moveTo(x,y),started=true); }); ctx.strokeStyle='#EA9D00'; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+    // Bollinger bands (20, 2)
+    if(bb){ ctx.beginPath(); let sU=false; bb.forEach((b,i)=>{ if(!b)return; const x=cx(i),y=py(b.up); sU?ctx.lineTo(x,y):(ctx.moveTo(x,y),sU=true); }); for(let i=bb.length-1;i>=0;i--){ const b=bb[i]; if(!b)continue; ctx.lineTo(cx(i),py(b.lo)); } ctx.closePath(); ctx.fillStyle='rgba(60,44,218,0.07)'; ctx.fill();
+      const bline=(key,dash)=>{ ctx.beginPath(); let stt=false; bb.forEach((b,i)=>{ if(!b)return; const x=cx(i),y=py(b[key]); stt?ctx.lineTo(x,y):(ctx.moveTo(x,y),stt=true); }); ctx.strokeStyle='rgba(60,44,218,0.55)'; ctx.lineWidth=1; ctx.setLineDash(dash); ctx.stroke(); ctx.setLineDash([]); };
+      bline('up',[4,3]); bline('lo',[4,3]); ctx.globalAlpha=0.8; bline('mid',[1,3]); ctx.globalAlpha=1; }
     // volume panel
     let mv=0; cds.forEach(c=>{ if(c.v>mv)mv=c.v; });
     ctx.fillStyle='#9BA3AD'; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillText('Vol',padL,volTop-1);
     cds.forEach((c,i)=>{ const up=c.c>=c.o; const bh=(c.v/mv)*(volH-6); ctx.fillStyle=up?'rgba(18,160,83,0.4)':'rgba(220,53,69,0.4)'; ctx.fillRect(cx(i)-bw/2, bandBottom-bh, bw, bh); });
-    // comment markers (top of price area)
-    const cmts=this.state.comments[s.sym]||[];
-    cmts.forEach((cm,k)=>{ const idx=n-1-(k*3+1); if(idx<0)return; const x=cx(idx); ctx.fillStyle='#6B7280'; ctx.beginPath(); ctx.moveTo(x,priceTop+9); ctx.lineTo(x-4,priceTop+2); ctx.lineTo(x+4,priceTop+2); ctx.closePath(); ctx.fill(); });
+    // RSI panel (14)
+    if(rsiOn){ const rsi=cd.rsi; const ry=v=>rsiTop+(1-v/100)*rsiH; const ff='10px '+getComputedStyle(document.body).fontFamily;
+      ctx.fillStyle='rgba(60,44,218,0.05)'; ctx.fillRect(padL,ry(70),plotW,ry(30)-ry(70));
+      [70,50,30].forEach(v=>{ ctx.strokeStyle=v===50?'#EEF0F3':'#D9DCF7'; ctx.setLineDash(v===50?[]:[3,3]); ctx.beginPath(); ctx.moveTo(padL,ry(v)); ctx.lineTo(padL+plotW,ry(v)); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#9BA3AD'; ctx.font=ff; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(v+'',padL+plotW+6,ry(v)); });
+      ctx.beginPath(); let sr=false; rsi.forEach((v,i)=>{ if(v==null)return; const x=cx(i),y=ry(v); sr?ctx.lineTo(x,y):(ctx.moveTo(x,y),sr=true); }); ctx.strokeStyle='#3C2CDA'; ctx.lineWidth=1.5; ctx.lineJoin='round'; ctx.stroke();
+      ctx.fillStyle='#9BA3AD'; ctx.font=ff; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillText('RSI 14',padL,rsiTop-1);
+      let last=null; for(let i=rsi.length-1;i>=0;i--){ if(rsi[i]!=null){ last=rsi[i]; break; } }
+      if(last!=null){ ctx.fillStyle='#3C2CDA'; ctx.textAlign='right'; ctx.textBaseline='top'; ctx.font='700 10px '+getComputedStyle(document.body).fontFamily; ctx.fillText(last.toFixed(0),padL+plotW,rsiTop-1); } }
+    // comment markers (top of price area) — daily only
+    if(this.state.timeframe==='D'){ const cmts=this.state.comments[s.sym]||[];
+      cmts.forEach((cm,k)=>{ const idx=n-1-(k*3+1); if(idx<0)return; const x=cx(idx); ctx.fillStyle='#6B7280'; ctx.beginPath(); ctx.moveTo(x,priceTop+9); ctx.lineTo(x-4,priceTop+2); ctx.lineTo(x+4,priceTop+2); ctx.closePath(); ctx.fill(); }); }
     // hover crosshair
-    if(hv!=null&&cds[hv]){ const x=cx(hv); ctx.strokeStyle='#CDD2D8'; ctx.setLineDash([4,4]); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x,priceTop); ctx.lineTo(x,bandBottom); ctx.stroke();
+    if(hv!=null&&cds[hv]){ const x=cx(hv); ctx.strokeStyle='#CDD2D8'; ctx.setLineDash([4,4]); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x,priceTop); ctx.lineTo(x,rsiOn?rsiBottom:bandBottom); ctx.stroke();
       const my=this.state.hmy; if(my>=priceTop&&my<=priceTop+priceH){ ctx.beginPath(); ctx.moveTo(padL,my); ctx.lineTo(padL+plotW,my); ctx.stroke(); ctx.setLineDash([]); const pv=lo+(1-(my-priceTop)/priceH)*(hi-lo); ctx.fillStyle='#374151'; ctx.fillRect(padL+plotW,my-9,padR-4,18); ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(pv.toFixed(1),padL+plotW+(padR-4)/2,my); }
       ctx.setLineDash([]); }
   }
@@ -1669,6 +2090,7 @@ class Component extends DCLogic {
     const adminStyle=M?'width:100%;padding:0 10px 10px;':'flex:1;min-width:0;overflow-y:auto;padding:12px 12px 12px 0;';
     const adminGridStyle=M?'display:grid;grid-template-columns:1fr;gap:10px;':'display:grid;grid-template-columns:1.4fr 1fr;gap:12px;align-items:start;';
     const isWorkspace=st.screen==='workspace', isAdmin=st.screen==='admin';
+    const isLibrary=st.screen==='library';
     const syncBusy=st.sync.status==='running';
 
     const wb=this.weeklyBreadth();
@@ -1762,6 +2184,7 @@ class Component extends DCLogic {
       railItem('layers','Sector analysis', isSector, ()=>this.go('sector')),
       railItem('bar-chart-3','Weekly sector trends', isTrends, ()=>this.go('trends')),
       railItem('notebook-pen','Trading journal', isJournal, ()=>this.go('journal')),
+      railItem('book-open','Library · reader', isLibrary, ()=>this.openLibrary()),
       railItem('sliders-horizontal','Admin', isAdmin, ()=>this.go('admin')),
     ];
     const settingsStyle=(M?'margin-left:auto;':'margin-top:auto;')+'width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;'+(isSettings?'background:var(--accent-light);color:var(--accent);':'color:var(--gray-400);');
@@ -1825,7 +2248,7 @@ class Component extends DCLogic {
     if(hasSelection){
       const s=this.stock(st.selected);
       const cmts=st.comments[s.sym]||[];
-      const hi=this.state.hoverIdx; const idx=hi!=null?hi:s.disp.length-1; const c=s.disp[idx]; const mv=s.maDisp[idx];
+      const cdS=this.chartData(s); const dcds=cdS.cds; const hi=this.state.hoverIdx; const idx=hi!=null?Math.min(hi,dcds.length-1):dcds.length-1; const c=dcds[idx]; const mv=cdS.ma[idx];
       strip={ date:this.fmtDate(c.t), o:c.o.toFixed(1), h:c.h.toFixed(1), l:c.l.toFixed(1), c:c.c.toFixed(1), ma:mv!=null?mv.toFixed(1):'\u2014' };
       if(hi!=null){ const cw=this.canvas?this.canvas.clientWidth:600; const left=st.hmx>cw-158?st.hmx-150:st.hmx+14; const up=c.c>=c.o;
         chartTip={ style:'position:absolute;pointer-events:none;z-index:6;background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:10px;box-shadow:var(--shadow-md);padding:9px 12px;min-width:132px;top:10px;left:'+left+'px;',
@@ -1842,8 +2265,8 @@ class Component extends DCLogic {
         watchColor:st.watch[s.sym]?'var(--accent)':'var(--gray-400)', watchLabel:st.watch[s.sym]?'Yes':'No'
       };
       // legend from highlights on this stock's window
-      const winKeys=new Set(s.disp.map(cc=>this.dayKey(cc.t)));
-      chartLegend=this.state.highlights.filter(h=>winKeys.has(this.dayKey(h.ts))).map(h=>({label:h.label,color:h.color,date:this.fmtDate(h.ts)}));
+      const winKeys=new Set(dcds.map(cc=>this.dayKey(cc.t)));
+      chartLegend=st.timeframe==='D'?this.state.highlights.filter(h=>winKeys.has(this.dayKey(h.ts))).map(h=>({label:h.label,color:h.color,date:this.fmtDate(h.ts)})):[];
       comments=cmts.map(cm=>({ id:cm.id, created:cm.created, updated:cm.updated, body:cm.body,
         isEditing: st.editing===cm.id, isView: st.editing!==cm.id,
         edit:()=>this.startEdit(cm.id,cm.body), del:()=>this.delComment(cm.id), saveEdit:()=>this.saveEdit(cm.id) }));
@@ -2010,9 +2433,98 @@ class Component extends DCLogic {
         onClick:()=>this.select(s.sym) }))
     };
 
+    // ---- Library / reader / ingest models
+    const shelfOpen = isLibrary && !st.readerBook;
+    const shelf = st.books.map(b=>{ const tot=b.pages.length; const pr=st.progress[b.id]||0; const pct=Math.round((pr/(tot-1||1))*100);
+      return { id:b.id, title:this.clean(b.title), author:b.author, subtitle:b.subtitle, tag:b.tag,
+        coverStyle:'background:linear-gradient(140deg,'+b.spine+' 0%,'+b.spine+'bb 100%);',
+        kindLabel:b.kind==='scanned'?'OCR · scanned':'Text PDF', kindIcon:b.kind==='scanned'?'scan-line':'file-text',
+        pageCount: b.report?(b.report.pages+' pages · '+b.report.chunks+' chunks'):(tot+' pages'), pct, progressLabel: pr>0?(pct+'% read'):'Not started', onOpen:()=>this.openBook(b.id),
+        menuOpen: st.bookMenu===b.id, onMenu:(e)=>this.toggleBookMenu(b.id,e), onRename:(e)=>this.startRename(b.id,e), onDelete:(e)=>this.askDeleteBook(b.id,e) }; });
+    const renameOpen = !!st.renameId;
+    const delBook = st.bookDelId ? (st.books.find(b=>b.id===st.bookDelId)||null) : null;
+    const bookDelModal = delBook ? { open:true, title:this.clean(delBook.title), confirm:this.confirmDeleteBook, cancel:this.cancelDeleteBook, stop:(e)=>e.stopPropagation() } : { open:false };
+    const renameModal = { open:renameOpen, text:st.renameText, onText:this.onRenameText, save:this.saveRename, cancel:this.cancelRename, stop:(e)=>e.stopPropagation() };
+    let reader={open:false};
+    if(isLibrary && st.readerBook){ const b=this._rbook(); if(b){ const pages=b.pages; const p=Math.min(st.readerPage,pages.length-1); const pg=pages[p];
+      const TH={ light:['#ffffff','#20242c'], sepia:['#f4ecd8','#5b4636'], dark:['#12151b','#c7cfda'] };
+      const [bg,fg]=TH[st.readerTheme]||TH.sepia;
+      const shellBg=st.readerTheme==='dark'?'#0c0e12':(st.readerTheme==='sepia'?'#ece2c8':'#eef0f2');
+      const seen={}, toc=[]; pages.forEach((pp,i)=>{ if(!seen[pp.chapter]){ seen[pp.chapter]=true; toc.push({ title:pp.chapter, page:i,
+        style:'cursor:pointer;padding:9px 10px;border-radius:8px;font-size:12.5px;line-height:1.35;margin-bottom:2px;'+(i===p?'background:var(--accent-light);color:var(--accent);font-weight:700;':'color:var(--gray-600);'), onClick:()=>this.gotoPage(i) }); } });
+      const swatch=(t,c)=>'cursor:pointer;width:28px;height:28px;border-radius:8px;background:'+c+';border:2px solid '+(st.readerTheme===t?'var(--accent)':'transparent')+';box-shadow:0 0 0 1px var(--gray-200);';
+      const navBtn=(dis)=>'cursor:'+(dis?'default':'pointer')+';opacity:'+(dis?'0.4':'1')+';display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-700);border-radius:9px;padding:8px 13px;';
+      const pageHls=[...(st.bookHighlights[b.id]||[]).filter(h=>h.page===p).map(h=>h.text), ...((st.flashHl&&st.flashHl.page===p)?[st.flashHl.text]:[])];
+      const readerParas=pg.paras.map((t,i)=>({ k:i, segs:this.segmentPara(t,pageHls).map(sg=>({ text:sg.text, k:sg.k, style: sg.hl?'background:rgba(234,157,0,0.42);border-radius:2px;box-shadow:0 0 0 1px rgba(234,157,0,0.3);':'' })) }));
+      const bmarks=st.bookmarks[b.id]||[]; const isBk=bmarks.includes(p);
+      const fam = st.readerFontFamily==='sans' ? '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' : 'Georgia,"Times New Roman",serif';
+      const maxW = st.readerWidth==='narrow'?560:(st.readerWidth==='wide'?820:668);
+      const sq=(st.readerSearch||'').trim().toLowerCase();
+      const searchResults= sq? pages.map((pp,i)=>({pp,i})).filter(o=>((o.pp.chapter+' '+o.pp.paras.join(' ')).toLowerCase().indexOf(sq)>=0)).map(o=>{ const joined=o.pp.paras.join(' '); const idx=joined.toLowerCase().indexOf(sq); const start=Math.max(0,idx-24); return { page:o.i, label:o.pp.chapter, snippet:(start>0?'\u2026':'')+joined.slice(start,start+72).trim()+'\u2026', style:'cursor:pointer;padding:8px 10px;border-radius:8px;margin-bottom:3px;'+(o.i===p?'background:var(--accent-light);':'background:var(--gray-50);'), onClick:()=>this.gotoPage(o.i) }; }) : [];
+      const bmList=bmarks.map(bp=>({ page:bp, label:(pages[bp]?pages[bp].chapter:'Page')+' \u00b7 p.'+(bp+1), style:'cursor:pointer;display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;font-size:12px;margin-bottom:2px;'+(bp===p?'background:var(--accent-light);color:var(--accent);font-weight:700;':'color:var(--gray-600);'), onClick:()=>this.gotoPage(bp) }));
+      const hlList=(st.bookHighlights[b.id]||[]).map(h=>({ id:h.id, text:h.text.length>92?h.text.slice(0,92).trim()+'\u2026':h.text, pageLabel:'p.'+(h.page+1), onClick:()=>this.gotoPage(h.page), onRemove:(e)=>{ if(e)e.stopPropagation(); this.removeHighlight(h.id); } }));
+      const segB=(on)=>'cursor:pointer;border:none;border-radius:6px;font-size:11px;font-weight:700;padding:5px 10px;flex:1;'+(on?'background:var(--surface);color:var(--accent);box-shadow:var(--shadow-sm);':'background:transparent;color:var(--gray-500);');
+      reader={ open:true, id:b.id, title:this.clean(b.title), author:b.author,
+        kindLabel:b.kind==='scanned'?'OCR from scanned images':'Text PDF', chapter:pg.chapter,
+        paras:readerParas, page:p, pageLabel:'Page '+(p+1)+' of '+pages.length,
+        pct:Math.round((p/(pages.length-1||1))*100), fontPx:Math.round(19*st.readerFont/100), lineH:Math.round(19*st.readerFont/100*1.72),
+        pageBg:bg, pageColor:fg, shellBg, next:this.readerNext, prev:this.readerPrev, close:this.closeBook,
+        prevStyle:navBtn(p<=0), nextStyle:navBtn(p>=pages.length-1),
+        fontUp:()=>this.setReaderFont(8), fontDown:()=>this.setReaderFont(-8),
+        setLight:()=>this.setReaderTheme('light'), setSepia:()=>this.setReaderTheme('sepia'), setDark:()=>this.setReaderTheme('dark'),
+        lightStyle:swatch('light','#ffffff'), sepiaStyle:swatch('sepia','#f4ecd8'), darkStyle:swatch('dark','#12151b'),
+        toc, tocOpen:st.readerToc, askOpen:st.readerAsk, toggleToc:this.toggleToc, toggleAsk:this.toggleAsk,
+        tocBtnStyle:'cursor:pointer;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid '+(st.readerToc?'var(--accent);color:var(--accent);background:var(--accent-light);':'var(--gray-200);color:var(--gray-500);background:var(--surface);'),
+        askBtnStyle:'cursor:pointer;height:34px;padding:0 13px;border-radius:9px;display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;border:1px solid '+(st.readerAsk?'var(--accent);color:#fff;background:var(--accent);':'var(--gray-200);color:var(--gray-700);background:var(--surface);'),
+        askLog:st.bookAskLog.map((m,i)=>({ k:i, text:m.text, isUser:m.role==='user', isAi:m.role==='ai', streaming:!!m.streaming,
+          wrapStyle: m.role==='user' ? 'align-self:flex-end;max-width:86%;background:var(--accent);color:#fff;border-radius:12px 12px 4px 12px;padding:9px 12px;font-size:12.5px;line-height:1.5;' : 'align-self:flex-start;max-width:92%;background:var(--gray-100);color:var(--gray-800);border-radius:12px 12px 12px 4px;padding:10px 12px;font-size:12.5px;line-height:1.55;',
+          cites:(m.cites||[]).map(c=>({ label:'p. '+(c.page+1), onClick:()=>this.jumpToCite(c.page,c.hlText) })), hasCites: m.role==='ai' && !m.streaming && !!(m.cites&&m.cites.length) })),
+        hasAskLog:st.bookAskLog.length>0, emptyAsk:!st.bookAskLog.length&&!st.bookAsking, asking:st.bookAsking,
+        thinking: st.bookAsking && (()=>{ const l=st.bookAskLog[st.bookAskLog.length-1]; return !l||l.role!=='ai'||!l.text; })(),
+        suggests:((b.suggests&&b.suggests.length)?b.suggests:(function(){ const chs=[],sn={}; pages.forEach(pp=>{ if(!sn[pp.chapter]){ sn[pp.chapter]=true; chs.push(pp.chapter.replace(/^Chapter\s*\d+\s*·?\s*/i,'').trim()||pp.chapter); } }); return chs.slice(0,3).map(c=>'What does the book say about '+c.charAt(0).toLowerCase()+c.slice(1)+'?'); })()).map(t=>({ t, onClick:()=>this.askSuggestion(t) })),
+        explainPage:this.explainPage, summarizeChapter:this.summarizeChapter, summarizeBook:this.summarizeBook,
+        exportHighlights:this.exportHighlights, hlCopied:st.hlCopied, notHlCopied:!st.hlCopied,
+        askQ:st.bookAskQ, onAskQ:this.onBookAsk, ask:this.askBook, askDisabled:!st.bookAskQ.trim()||st.bookAsking,
+        askSendStyle:'cursor:'+(!st.bookAskQ.trim()||st.bookAsking?'default':'pointer')+';opacity:'+(!st.bookAskQ.trim()||st.bookAsking?'0.5':'1')+';border:none;background:var(--accent);color:#fff;border-radius:8px;padding:0 14px;font-size:12.5px;font-weight:700;',
+        fontFam:fam, maxW, onPageMouseUp:this.onPageMouseUp,
+        toggleBookmark:this.toggleBookmark, isBookmarked:isBk,
+        bkBtnStyle:'cursor:pointer;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid '+(isBk?'var(--accent);color:var(--accent);background:var(--accent-light);':'var(--gray-200);color:var(--gray-500);background:var(--surface);'),
+        toggleSettings:this.toggleSettings, settingsOpen:st.readerSettings,
+        setBtnStyle:'cursor:pointer;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid '+(st.readerSettings?'var(--accent);color:var(--accent);background:var(--accent-light);':'var(--gray-200);color:var(--gray-500);background:var(--surface);'),
+        famSerifStyle:segB(st.readerFontFamily!=='sans'), famSansStyle:segB(st.readerFontFamily==='sans'), setSerif:()=>this.setFontFamily('serif'), setSans:()=>this.setFontFamily('sans'),
+        wNarrowStyle:segB(st.readerWidth==='narrow'), wNormalStyle:segB(st.readerWidth==='normal'), wWideStyle:segB(st.readerWidth==='wide'),
+        setWNarrow:()=>this.setReaderWidth('narrow'), setWNormal:()=>this.setReaderWidth('normal'), setWWide:()=>this.setReaderWidth('wide'),
+        searchQ:st.readerSearch, onSearch:this.onReaderSearch, searchResults, hasSearch:!!sq, noSearchResults:!!sq&&!searchResults.length,
+        bmList, hasBookmarks:bmList.length>0, hlList, hasHighlights:hlList.length>0 };
+    } }
+    const ig=st.ingest; const ingSeq=['uploading','parsing','embedding','done']; const ingIdx=ingSeq.indexOf(ig.state);
+    const ingSteps=[['uploading','Upload'],['parsing', ig.kind==='scanned'?'OCR':'Parse'],['embedding','Embed'],['done','Ready']];
+    const rep=ig.report;
+    const ingest={ state:ig.state, pct:ig.pct, name:ig.name, kind:ig.kind,
+      idle:ig.state==='idle', picked:ig.state==='picked', active:ig.state==='uploading'||ig.state==='parsing'||ig.state==='embedding', done:ig.state==='done',
+      dragging:st.ingestDrag,
+      dropStyle:'border:1.5px dashed '+(st.ingestDrag?'var(--accent)':'var(--gray-300)')+';border-radius:12px;padding:26px;text-align:center;background:'+(st.ingestDrag?'var(--accent-light)':'var(--gray-50)')+';transition:all 120ms ease;',
+      kindText:ig.kind==='scanned'?'Scanned / image PDF (OCR)':'Text PDF',
+      textSel:ig.kind!=='scanned', scanSel:ig.kind==='scanned',
+      kindTextStyle:'cursor:pointer;flex:1;border:none;border-radius:6px;font-size:11.5px;font-weight:700;padding:7px 10px;display:flex;align-items:center;justify-content:center;gap:5px;'+(ig.kind!=='scanned'?'background:var(--surface);color:var(--accent);box-shadow:var(--shadow-sm);':'background:transparent;color:var(--gray-500);'),
+      kindScanStyle:'cursor:pointer;flex:1;border:none;border-radius:6px;font-size:11.5px;font-weight:700;padding:7px 10px;display:flex;align-items:center;justify-content:center;gap:5px;'+(ig.kind==='scanned'?'background:var(--surface);color:var(--accent);box-shadow:var(--shadow-sm);':'background:transparent;color:var(--gray-500);'),
+      setKindText:()=>this.setIngestKind('text'), setKindScan:()=>this.setIngestKind('scanned'),
+      report: rep? { pages:rep.pages, chunks:rep.chunks, tokens:rep.tokens, confidence:rep.confidence, hasConf:!!rep.confidence } : null,
+      stageLabel: ig.state==='uploading'?'Uploading PDF\u2026': ig.state==='parsing'?(ig.kind==='scanned'?'Reading scanned page images with the vision model\u2026':'Extracting text from the PDF\u2026'): ig.state==='embedding'?'Chunking & embedding for retrieval\u2026':'',
+      steps:ingSteps.map(([k,label],i)=>{ const done=ig.state==='done'?i<3:i<ingIdx; const active=k===ig.state;
+        return { label, done, num:(i+1)+'', showNum:!done,
+          dotStyle:'width:22px;height:22px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto;'+(done?'background:var(--success);color:#fff;':(active?'background:var(--accent);color:#fff;':'background:var(--gray-100);color:var(--gray-400);')) }; }),
+      setInput:this.setIngestInput, onFile:this.onIngestFile, pick:this.triggerIngestPick,
+      onDragOver:this.onIngestDragOver, onDragLeave:this.onIngestDragLeave, onDrop:this.onIngestDrop,
+      sampleText:()=>this.ingestSample('text'), sampleScan:()=>this.ingestSample('scanned'),
+      start:this.startIngest, cancel:this.resetIngest, reset:this.resetIngest, openLibrary:this.openLibrary };
+    const selPopover = st.selPopover ? { show:true, add:this.addHighlight,
+      style:'position:fixed;z-index:70;left:'+Math.max(8,Math.min((typeof window!=='undefined'?window.innerWidth:1200)-140, st.selPopover.x-52))+'px;top:'+Math.max(8,st.selPopover.y-48)+'px;' } : { show:false };
+
     return {
       shellStyle, railOuterStyle, railInnerStyle, wsStyle, sidebarStyle, panelStyle, adminStyle, adminGridStyle,
       isWorkspace, isAdmin, isTrends, trends, isSector, sector, isJournal, journal, tradeChart, isSettings, settings, trendDrill,
+      isLibrary, shelfOpen, shelf, reader, ingest, selPopover, renameModal, bookDelModal,
       ai, pins:pinRows, pinsEmpty, hasPins, pinExport, setChatBox:this.setChatBox,
       syncBusy, chartTip,
       palette, densityStyle, toggleDense:this.toggleDense, openPalette:this.openPalette,
@@ -2023,6 +2535,13 @@ class Component extends DCLogic {
       quickSync:this.quickSync, quickSyncStyle, quickSyncLabel:syncBusy?'Syncing…':'Quick sync',
       groups, hasResults, noResults, listLoading:st.listLoading, showResults, showNoResults,
       hasSelection, noSelection, showDetail, showDetailSkeleton, sel, strip, chartLegend,
+      tfBtns:[['D','Daily'],['W','Weekly'],['M','Monthly']].map(([k,label])=>({ label, onClick:()=>this.setTimeframe(k),
+        style:'cursor:pointer;border:none;border-radius:6px;font-size:11px;font-weight:700;padding:5px 12px;white-space:nowrap;'+(st.timeframe===k?'background:var(--surface);color:var(--accent);box-shadow:var(--shadow-sm);':'background:transparent;color:var(--gray-500);') })),
+      bbToggle:{ onClick:this.toggleBollinger, label:'Bollinger',
+        style:'display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap;border:1px solid '+(st.bollinger?'var(--accent);background:var(--accent-light);color:var(--accent);':'var(--gray-200);background:var(--surface);color:var(--gray-500);') },
+      rsiToggle:{ onClick:this.toggleRsi, label:'RSI',
+        style:'display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap;border:1px solid '+(st.rsi?'var(--accent);background:var(--accent-light);color:var(--accent);':'var(--gray-200);background:var(--surface);color:var(--gray-500);') },
+      tfPill:(st.timeframe==='W'?'Weekly · 44 bars':st.timeframe==='M'?'Monthly · 44 bars':'Daily · 44 bars'),
       setCanvas:this.setCanvas, onMove:this.onMove, onLeave:this.onLeave,
       clearSelection:this.clearSelection,
       draft:st.draft, onDraft:this.onDraft, addComment:this.addComment, addDisabled, addCommentStyle,

@@ -1,0 +1,27 @@
+:root {
+  --hex-blue: #3c2cda;
+  --bg: #f6f5f8;
+  --surface: #ffffff;
+  --text: #1a1a22;
+  --muted: #6b6b7b;
+  --rail: #12121a;
+  --rail-text: #f2f2f7;
+  --border: #e4e2ea;
+  --radius: 12px;
+  --font: "Manrope", system-ui, sans-serif;
+}
+
+[data-theme="sky"] {
+  --hex-blue: #1d6fd8;
+  --bg: #eef5fc;
+  --rail: #0e2a4a;
+}
+
+[data-theme="dark"] {
+  --bg: #0e0e14;
+  --surface: #181822;
+  --text: #f2f2f7;
+  --muted: #9a9aab;
+  --border: #2a2a36;
+  --rail: #07070c;
+}
