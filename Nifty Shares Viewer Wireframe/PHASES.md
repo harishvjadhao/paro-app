@@ -17,12 +17,12 @@ Global rule: keep a constant `user_id` on per-user tables so multi-user can be a
 - **Done when:** `docker compose up` serves API and web; `alembic upgrade head` runs clean.
 
 ## Phase 1 — Universe + prices + sync  · spec §2, §4, §5
-- [ ] Tables: `stock_universe`, `universe_uploads`, `price_bars`, `indicators`, `sync_runs`, `sync_run_items`.
-- [ ] CSV upload + validate (company, symbol, industry, series, isin; report total/dup/invalid; replace = destructive/confirmed).
-- [ ] Seed script loads the owner's Nifty-200 CSV at `uploads/ind_nifty200list.csv` (header: `Company Name, Industry, Symbol, Series, ISIN Code` → map to company/industry/symbol/series/isin; yahoo_symbol = `SYMBOL.NS`, `&`→ keep, e.g. `M&M.NS`; ~200 rows).
-- [ ] yfinance provider (swappable): Full sync (~2–4 yrs daily so monthly 44-MA fills), Incremental, single-stock; write `sync_runs`/`_items`; backoff + partial-failure state.
-- [ ] APScheduler daily incremental (IST, post-close).
-- [ ] Endpoints: `/universe`, `/admin/universe/upload`, `/admin/sync`, `/admin/sync/{symbol}`, `/admin/sync/runs`, `/admin/sync/runs/{id}`, retry-failed.
+- [x] Tables: `stock_universe`, `universe_uploads`, `price_bars`, `indicators`, `sync_runs`, `sync_run_items`.
+- [x] CSV upload + validate (company, symbol, industry, series, isin; report total/dup/invalid; replace = destructive/confirmed).
+- [x] Seed script loads the owner's Nifty-200 CSV at `uploads/ind_nifty200list.csv` (header: `Company Name, Industry, Symbol, Series, ISIN Code` → map to company/industry/symbol/series/isin; yahoo_symbol = `SYMBOL.NS`, `&`→ keep, e.g. `M&M.NS`; ~200 rows).
+- [x] yfinance provider (swappable): Full sync (~2–4 yrs daily so monthly 44-MA fills), Incremental, single-stock; write `sync_runs`/`_items`; backoff + partial-failure state.
+- [x] APScheduler daily incremental (IST, post-close).
+- [x] Endpoints: `/universe`, `/admin/universe/upload`, `/admin/sync`, `/admin/sync/{symbol}`, `/admin/sync/runs`, `/admin/sync/runs/{id}`, retry-failed.
 - **Done when:** upload → sync → `price_bars` populated; a forced failure shows a `partial` run with per-symbol messages.
 
 ## Phase 2 — Stock APIs + candles/indicators  · spec §2, §3
