@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+
+.env
+
+data/*.db
+
+data/files/*
+!data/files/.gitkeep
+
+web/node_modules/
+web/dist/

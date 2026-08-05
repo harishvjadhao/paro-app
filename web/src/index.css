@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap');
+
+:root {
+  --bg-app: #f2f3fb;
+  --bg-surface: #ffffff;
+  --bg-muted: #eceff6;
+  --text-main: #2f3346;
+  --text-soft: #6a728a;
+  --accent: #3c2cda;
+  --accent-soft: #eef0fd;
+  --border: #dde3ef;
+  --danger: #d43c53;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-md: 0 8px 24px rgba(30, 41, 59, 0.08);
+}
+
+:root[data-theme='sky'] {
+  --accent: #1d86ff;
+  --accent-soft: #e6f2ff;
+}
+
+:root[data-theme='dark'] {
+  --bg-app: #151a24;
+  --bg-surface: #1d2431;
+  --bg-muted: #263041;
+  --text-main: #ecf0f9;
+  --text-soft: #a8b0c3;
+  --accent: #6f83ff;
+  --accent-soft: rgba(111, 131, 255, 0.2);
+  --border: #334156;
+  --shadow-md: 0 8px 22px rgba(2, 6, 23, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg-app);
+  color: var(--text-main);
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.rail-wrap {
+  width: 78px;
+  padding: 12px 12px 10px;
+}
+
+.rail {
+  width: 100%;
+  height: calc(100vh - 22px);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 8px;
+}
+
+.brand-pill {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  background: linear-gradient(160deg, var(--accent) 0%, #192da6 100%);
+}
+
+.rail-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  flex: 1;
+}
+
+.rail-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  color: #9aa4b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.rail-btn:hover {
+  color: var(--accent);
+  border-color: var(--border);
+}
+
+.rail-btn.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
+}
+
+.main-area {
+  flex: 1;
+  padding: 28px 26px 24px 10px;
+}
+
+.screen {
+  min-height: calc(100vh - 56px);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 26px;
+}
+
+.screen-title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.screen-subtitle {
+  margin-top: 10px;
+  margin-bottom: 0;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.theme-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  background: color-mix(in srgb, var(--bg-surface) 88%, var(--bg-muted));
+}
+
+.chip,
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pill {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  height: 36px;
+  padding: 0 14px;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--accent);
+}
+
+.btn-secondary {
+  color: var(--text-main);
+  background: var(--bg-muted);
+  border-color: var(--border);
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-main);
+}
+
+.modal,
+.dropdown,
+.tabs,
+.toast,
+.skeleton,
+.empty-state {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .rail-wrap {
+    width: auto;
+    padding: 12px;
+  }
+
+  .rail {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .rail-links {
+    flex-direction: row;
+    margin-top: 0;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .main-area {
+    padding: 0 12px 12px;
+  }
+
+  .theme-grid {
+    grid-template-columns: 1fr;
+  }
+}
