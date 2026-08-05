@@ -122,9 +122,9 @@ created_at)`, `universe_uploads(id, filename, total, dup, invalid, mode, created
 Missing-column error shows the exact message: *"Missing required column(s): X. No changes were applied."*
 
 **Acceptance**
-- [ ] Real CSV uploads → 200 rows, correct dup/invalid counts, preview matches file.
-- [ ] A CSV missing `ISIN Code` is rejected with the exact copy and **no** DB writes.
-- [ ] Replace requires confirmation; cancel leaves data untouched.
+- [x] Real CSV uploads → 200 rows, correct dup/invalid counts, preview matches file.
+- [x] A CSV missing `ISIN Code` is rejected with the exact copy and **no** DB writes.
+- [x] Replace requires confirmation; cancel leaves data untouched.
 
 > **STOP. Request verification of S1 before S2.**
 

@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
+import { AdminScreen } from './screens/AdminScreen'
 import { SettingsScreen } from './screens/SettingsScreen'
 import { StubScreen } from './screens/StubScreen'
 import { WorkspaceScreen } from './screens/WorkspaceScreen'
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
       { path: '/journal', element: <StubScreen title='Trading journal' /> },
       { path: '/list', element: <StubScreen title='Stock list' /> },
       { path: '/library', element: <StubScreen title='Library · reader' /> },
-      { path: '/admin', element: <StubScreen title='Admin' /> },
+      { path: '/admin', element: <AdminScreen /> },
       { path: '/settings', element: <SettingsScreen /> },
     ],
   },

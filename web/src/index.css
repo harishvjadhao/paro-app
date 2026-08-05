@@ -202,6 +202,138 @@ body {
   border-color: var(--border);
 }
 
+.admin-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.admin-state {
+  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  text-transform: capitalize;
+  font-weight: 700;
+}
+
+.admin-form {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.file-input,
+.mode-select {
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  font-family: inherit;
+}
+
+.file-input {
+  padding: 5px 8px;
+}
+
+.mode-select {
+  padding: 0 10px;
+}
+
+.admin-error {
+  margin: 10px 0 0;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.empty-dashed {
+  margin-top: 16px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  color: var(--text-soft);
+}
+
+.progress-wrap,
+.success-wrap {
+  margin-top: 14px;
+}
+
+.progress-bar {
+  height: 9px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.15s linear;
+}
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.preview-table th,
+.preview-table td {
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 6px;
+  font-size: 13px;
+}
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 20, 33, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 30;
+}
+
+.confirm-modal {
+  width: min(420px, 90vw);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.confirm-modal h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.confirm-modal p {
+  margin-top: 8px;
+  color: var(--text-soft);
+}
+
+.confirm-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .icon-btn {
   width: 34px;
   height: 34px;
