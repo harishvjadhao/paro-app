@@ -30,4 +30,4 @@ Next step: wait for owner verification of S1, then start S2 sync control/status/
 - (2026-08-05 15:58) cleanup — ignored and removed SQLite WAL sidecar files from git tracking. commit 3d7c3d7.
 - (2026-08-05 16:32) s1 backend — added stock_universe/universe_uploads models and migration, upload CSV parsing/validation service, universe repository, admin upload/list/clear routes, and seed script for uploads/ind_nifty200list (1).csv.
 - (2026-08-05 16:36) s1 frontend — replaced admin stub with universe upload card states (empty/progress/success/confirm), wired multipart API client, and added exact missing-column error rendering.
-- (2026-08-05 16:40) s1 verify — alembic upgrade head, pytest (4 passed), npm run build, live API/browser acceptance checks for 200-row upload, exact missing ISIN rejection with no writes, and replace-confirm/cancel behavior.
+- (2026-08-05 16:40) s1 verify — alembic upgrade head, pytest (4 passed), npm run build, live API/browser acceptance checks for 200-row upload, exact missing ISIN rejection with no writes, and replace-confirm/cancel behavior. commit 040e1f2.
