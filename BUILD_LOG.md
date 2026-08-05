@@ -25,4 +25,5 @@ Next step: wait for owner verification of S0, then start S1 universe upload vert
 - (2026-08-05 15:20) init — created log and started S0 foundation implementation.
 - (2026-08-05 15:42) s0 backend — added FastAPI app skeleton, SQLite WAL/foreign-key initialization, centralized error envelope handlers, health route, Alembic bootstrap, and initial migration.
 - (2026-08-05 15:48) s0 frontend — scaffolded Vite React TypeScript app, implemented nav rail shell/routes for all destinations, added settings theme switch with localStorage persistence, and created reusable primitive components plus typed API client and useQuery hook.
-- (2026-08-05 15:54) verify — ran alembic upgrade head, pytest, live uvicorn /health check, npm run build, and tsc --noEmit; all passing.
+- (2026-08-05 15:54) verify — ran alembic upgrade head, pytest, live uvicorn /health check, npm run build, and tsc --noEmit; all passing. commit d6ea7da.
+- (2026-08-05 15:58) cleanup — ignored and removed SQLite WAL sidecar files from git tracking. commit 3d7c3d7.
