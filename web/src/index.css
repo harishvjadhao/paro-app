@@ -208,9 +208,40 @@ body {
   align-items: center;
 }
 
+.admin-page {
+  min-height: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.admin-wrap {
+  max-width: 1200px;
+}
+
+.admin-intro {
+  margin-bottom: 12px;
+}
+
+.universe-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: 18px 20px;
+}
+
+.admin-title-wrap {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--accent);
+}
+
 .admin-title {
   margin: 0;
-  font-size: 18px;
+  font-size: 15px;
+  color: var(--text-main);
 }
 
 .admin-state {
@@ -222,6 +253,116 @@ body {
   font-size: 12px;
   text-transform: capitalize;
   font-weight: 700;
+}
+
+.field-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.field-chips span {
+  font-size: 11px;
+  color: var(--text-soft);
+  background: var(--bg-muted);
+  border-radius: 6px;
+  padding: 4px 9px;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.drop-zone {
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  background: color-mix(in srgb, var(--bg-muted) 45%, var(--bg-surface));
+  margin-bottom: 12px;
+  color: var(--text-soft);
+}
+
+.drop-zone svg {
+  color: #9aa4b8;
+}
+
+.drop-zone p {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+}
+
+.drop-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.picked-file {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.btn-primary-inline,
+.btn-secondary-inline,
+.btn-danger-inline {
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: inherit;
+}
+
+.btn-primary-inline {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.btn-secondary-inline {
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.btn-danger-inline {
+  border: none;
+  background: var(--danger);
+  color: #fff;
+  font-weight: 700;
+}
+
+.confirm-inline {
+  border: 1px solid #ea9d00;
+  background: rgba(234, 157, 0, 0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.confirm-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.confirm-copy {
+  font-size: 12px;
+  color: var(--text-soft);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.confirm-actions-inline {
+  display: flex;
+  gap: 8px;
 }
 
 .admin-form {
@@ -257,18 +398,74 @@ body {
   font-weight: 700;
 }
 
+.error-panel {
+  border: 1px solid var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, var(--bg-surface));
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.error-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--danger);
+  margin-bottom: 4px;
+}
+
+.error-copy {
+  font-size: 12px;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.success-banner {
+  border: 1px solid #12a053;
+  background: rgba(18, 160, 83, 0.1);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.success-banner svg {
+  color: #12a053;
+}
+
 .empty-dashed {
   margin-top: 16px;
   border: 1px dashed var(--border);
   border-radius: 12px;
-  padding: 14px;
+  padding: 22px;
   text-align: center;
   color: var(--text-soft);
+  font-size: 12.5px;
 }
 
 .progress-wrap,
 .success-wrap {
   margin-top: 14px;
+}
+
+.progress-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.progress-title span:first-child {
+  font-weight: 700;
+}
+
+.progress-title span:last-child {
+  color: var(--text-soft);
 }
 
 .progress-bar {
@@ -288,50 +485,72 @@ body {
 .preview-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .preview-table th,
 .preview-table td {
   text-align: left;
   border-bottom: 1px solid var(--border);
-  padding: 8px 6px;
-  font-size: 13px;
+  padding: 8px 12px;
+  font-size: 12px;
 }
 
-.confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(12, 20, 33, 0.45);
-  display: grid;
-  place-items: center;
-  z-index: 30;
-}
-
-.confirm-modal {
-  width: min(420px, 90vw);
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: var(--shadow-md);
-}
-
-.confirm-modal h3 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.confirm-modal p {
-  margin-top: 8px;
+.preview-table th {
+  background: color-mix(in srgb, var(--bg-muted) 65%, var(--bg-surface));
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text-soft);
 }
 
-.confirm-actions {
-  margin-top: 14px;
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.summary-box {
+  background: color-mix(in srgb, var(--bg-muted) 45%, var(--bg-surface));
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.summary-box div {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8a93a8;
+}
+
+.summary-box strong {
+  display: block;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.clear-row {
+  margin-top: 12px;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+}
+
+.clear-btn {
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .icon-btn {
@@ -385,5 +604,13 @@ body {
 
   .theme-grid {
     grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .confirm-actions-inline {
+    flex-wrap: wrap;
   }
 }
