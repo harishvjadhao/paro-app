@@ -34,3 +34,8 @@ class UniverseUploadResponse(BaseModel):
     mode: Literal["append", "replace"]
     preview: list[UniverseUploadPreviewRow]
     created_at: datetime
+
+
+class UniverseStatusResponse(BaseModel):
+    active_stocks: int
+    last_upload_at: datetime | None

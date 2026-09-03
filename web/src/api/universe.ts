@@ -30,8 +30,17 @@ export type UniverseUploadResponse = {
   created_at: string
 }
 
+export type UniverseStatus = {
+  active_stocks: number
+  last_upload_at: string | null
+}
+
 export async function getUniverse(): Promise<UniverseStock[]> {
   return apiRequest<UniverseStock[]>('/universe')
+}
+
+export async function getUniverseStatus(): Promise<UniverseStatus> {
+  return apiRequest<UniverseStatus>('/admin/universe/status')
 }
 
 export async function uploadUniverse(file: File, mode: 'append' | 'replace', confirm = false): Promise<UniverseUploadResponse> {

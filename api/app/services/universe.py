@@ -6,7 +6,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.repositories.universe import UniverseRepository
-from app.schemas.universe import UniverseUploadResponse
+from app.schemas.universe import UniverseStatusResponse, UniverseUploadResponse
 from app.services.universe_csv import ParsedUniverseRow, parse_universe_csv
 
 
@@ -16,6 +16,14 @@ class UniverseService:
 
     def list_universe(self, db: Session):
         return self.repository.list_universe(db)
+
+    def get_status(self, db: Session) -> UniverseStatusResponse:
+        rows = self.repository.list_universe(db)
+        latest = self.repository.latest_upload(db)
+        return UniverseStatusResponse(
+            active_stocks=len(rows),
+            last_upload_at=latest.created_at if latest else None,
+        )
 
     def clear_universe(self, db: Session) -> int:
         deleted = self.repository.clear_universe(db)

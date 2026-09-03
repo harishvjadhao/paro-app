@@ -100,3 +100,21 @@ def test_replace_requires_confirmation() -> None:
 
     universe_after_accept = client.get("/universe")
     assert len(universe_after_accept.json()) == 4
+
+
+def test_universe_status_reports_latest_upload() -> None:
+    _reset_tables()
+
+    client = TestClient(app)
+    upload = client.post(
+        "/admin/universe/upload",
+        data={"mode": "append"},
+        files={"file": ("universe.csv", SAMPLE_CSV, "text/csv")},
+    )
+    assert upload.status_code == 200
+
+    status = client.get("/admin/universe/status")
+    assert status.status_code == 200
+    payload = status.json()
+    assert payload["active_stocks"] == 4
+    assert payload["last_upload_at"] is not None

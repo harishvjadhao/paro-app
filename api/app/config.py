@@ -18,7 +18,16 @@ class Settings(BaseSettings):
     azure_foundry_embeddings_deployment: str = ""
     azure_foundry_vision_deployment: str = ""
 
+    ai_force_stub: bool = False
+    ai_rate_limit_per_min: int = 20
+    library_max_upload_mb: int = 25
+
     app_version: str = "0.1.0-s0"
+
+    sync_retry_attempts: int = 2
+    sync_retry_backoff_sec: float = 0.5
+    sync_force_fail_symbols: str = ""
+    scheduler_enabled: bool = True
 
     model_config = SettingsConfigDict(
         env_file=str(DEFAULT_ENV_PATH),

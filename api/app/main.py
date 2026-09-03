@@ -9,6 +9,7 @@ from app.errors import (
     validation_exception_handler,
 )
 from app.routes import api_router
+from app.scheduler import start_scheduler, stop_scheduler
 
 
 def create_app() -> FastAPI:
@@ -27,6 +28,14 @@ def create_app() -> FastAPI:
     app.add_exception_handler(HTTPException, http_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)
+
+    @app.on_event("startup")
+    async def on_startup() -> None:
+        start_scheduler()
+
+    @app.on_event("shutdown")
+    async def on_shutdown() -> None:
+        stop_scheduler()
 
     return app
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from sqlalchemy import desc
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
@@ -47,4 +48,8 @@ class UniverseRepository:
 
     def delete_all_upload_records(self, db: Session) -> None:
         db.execute(delete(UniverseUpload))
+
+    def latest_upload(self, db: Session) -> UniverseUpload | None:
+        statement = select(UniverseUpload).order_by(desc(UniverseUpload.id)).limit(1)
+        return db.scalar(statement)
 

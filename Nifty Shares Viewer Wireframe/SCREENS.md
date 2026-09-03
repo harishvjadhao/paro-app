@@ -163,8 +163,8 @@ Admin has **no theme card** (theme lives in Settings) and **no quick-sync button
 
 **Acceptance**
 - [ ] Full sync populates `price_bars` for all 200 symbols; progress advances live in the UI.
-- [ ] Forcing 3 symbol failures yields a `partial` run with per-symbol messages and a retry action.
-- [ ] Both sync buttons disable while a run is in flight; a second POST returns 409.
+- [x] Forcing 3 symbol failures yields a `partial` run with per-symbol messages and a retry action.
+- [x] Both sync buttons disable while a run is in flight; a second POST returns 409.
 
 > **STOP. Request verification of S2 before S3.**
 
