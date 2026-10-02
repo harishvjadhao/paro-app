@@ -1,40 +1,43 @@
-from contextlib import asynccontextmanager
-
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.ai import router as ai_router
-from app.api.health import router as health_router
-from app.api.library import router as library_router
-from app.api.markets import router as markets_router
-from app.api.stocks import router as stocks_router
-from app.api.universe import router as universe_router
-from app.api.workspace import router as workspace_router
-from app.config import settings
-from app.scheduler import shutdown_scheduler, start_scheduler
-
-
-@asynccontextmanager
-async def lifespan(_app: FastAPI):
-    start_scheduler()
-    yield
-    shutdown_scheduler()
-
-
-app = FastAPI(title="PaRo API", version="0.1.0", lifespan=lifespan)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+from app.db import ensure_data_dir
+from app.errors import (
+    http_exception_handler,
+    unhandled_exception_handler,
+    validation_exception_handler,
 )
+from app.routes import api_router
+from app.scheduler import start_scheduler, stop_scheduler
 
-app.include_router(health_router)
-app.include_router(universe_router)
-app.include_router(stocks_router)
-app.include_router(workspace_router)
-app.include_router(markets_router)
-app.include_router(ai_router)
-app.include_router(library_router)
+
+def create_app() -> FastAPI:
+    ensure_data_dir()
+
+    app = FastAPI(title="PaRo API", version="0.1.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    app.include_router(api_router)
+
+    app.add_exception_handler(HTTPException, http_exception_handler)
+    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.add_exception_handler(Exception, unhandled_exception_handler)
+
+    @app.on_event("startup")
+    async def on_startup() -> None:
+        start_scheduler()
+
+    @app.on_event("shutdown")
+    async def on_shutdown() -> None:
+        stop_scheduler()
+
+    return app
+
+
+app = create_app()

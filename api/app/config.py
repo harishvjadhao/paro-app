@@ -1,46 +1,39 @@
-from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "paro.db"
+DEFAULT_ENV_PATH = PROJECT_ROOT / ".env"
+
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
-
-    database_url: str = "postgresql+psycopg://paro:paro@localhost:5432/paro"
-    redis_url: str = "redis://localhost:6379/0"
-    default_user_id: int = 1
-    api_cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
-    tz: str = "Asia/Kolkata"
+    database_url: str = f"sqlite:///{DEFAULT_DB_PATH.as_posix()}"
+    data_dir: str = str((PROJECT_ROOT / "data").as_posix())
 
     azure_foundry_endpoint: str = ""
-    azure_foundry_api_key: str = ""
-    azure_foundry_api_version: str = "2024-08-01-preview"
-    azure_foundry_chat_deployment: str = "gpt-4o"
-    azure_foundry_embeddings_deployment: str = "text-embedding-3-small"
-    azure_foundry_vision_deployment: str = "gpt-4o"
+    azure_foundry_api_version: str = ""
+    azure_foundry_key: str = ""
+    azure_foundry_chat_deployment: str = ""
+    azure_foundry_embeddings_deployment: str = ""
+    azure_foundry_vision_deployment: str = ""
 
-    storage_backend: str = "local"
-    storage_local_path: str = "./data/storage"
-    azure_storage_connection_string: str = ""
-    azure_storage_container: str = "paro-books"
-    s3_endpoint_url: str = ""
-    s3_access_key: str = ""
-    s3_secret_key: str = ""
-    s3_bucket: str = "paro-books"
-    s3_region: str = "us-east-1"
+    ai_force_stub: bool = False
+    ai_rate_limit_per_min: int = 20
+    library_max_upload_mb: int = 25
 
-    price_provider: str = "yfinance"
-    sync_cron_hour_ist: int = 16
-    sync_cron_minute_ist: int = 30
+    app_version: str = "0.1.0-s0"
 
-    @property
-    def cors_origins(self) -> list[str]:
-        return [o.strip() for o in self.api_cors_origins.split(",") if o.strip()]
+    sync_retry_attempts: int = 2
+    sync_retry_backoff_sec: float = 0.5
+    sync_force_fail_symbols: str = ""
+    scheduler_enabled: bool = True
 
-
-@lru_cache
-def get_settings() -> Settings:
-    return Settings()
+    model_config = SettingsConfigDict(
+        env_file=str(DEFAULT_ENV_PATH),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 
-settings = get_settings()
+settings = Settings()

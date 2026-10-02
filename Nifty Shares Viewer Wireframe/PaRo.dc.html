@@ -60,12 +60,12 @@
             <button onClick="{{ openPalette }}" title="Command palette (⌘K)" style="cursor:pointer;font-family:inherit;border:none;border-radius:7px;padding:6px 8px;display:flex;align-items:center;background:var(--gray-100);color:var(--gray-600);"><i data-lucide="command" style="width:14px;height:14px;"></i></button>
             <button onClick="{{ toggleDense }}" title="Toggle density" style="{{ densityStyle }}"><i data-lucide="rows-3" style="width:14px;height:14px;"></i></button>
             <button onClick="{{ toggleCollapseAll }}" style="cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;color:var(--gray-600);background:var(--gray-100);border:none;border-radius:7px;padding:6px 9px;">{{ collapseLabel }}</button>
-            <button onClick="{{ quickSync }}" disabled="{{ syncBusy }}" style="{{ quickSyncStyle }}"><i data-lucide="refresh-cw" style="width:13px;height:13px;"></i>{{ quickSyncLabel }}</button>
+            <button onClick="{{ quickSync }}" disabled="{{ syncBusy }}" title="Incremental sync of watchlist stocks only" style="{{ quickSyncStyle }}"><i data-lucide="refresh-cw" style="width:13px;height:13px;"></i>{{ quickSyncLabel }}</button>
           </div>
         </div>
         <div style="position:relative;margin-bottom:10px;">
           <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);width:15px;height:15px;"></i>
-          <input value="{{ search }}" onInput="{{ onSearch }}" onFocus="{{ onSearchFocus }}" onClick="{{ onSearchFocus }}" onBlur="{{ onSearchBlur }}" placeholder="Search symbol, company, or industry" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:9px;padding:0 12px 0 32px;font-size:12.5px;outline:none;background:var(--gray-50);" />
+          <input value="{{ search }}" onInput="{{ onSearch }}" onFocus="{{ onSearchFocus }}" onClick="{{ onSearchFocus }}" onBlur="{{ onSearchBlur }}" placeholder="Search symbol, company, or industry" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:9px;padding:0 12px 0 32px;font-size:12.5px;outline:none;background:var(--gray-50);">
           <sc-if value="{{ favDropdown.open }}" hint-placeholder-val="{{ false }}">
             <div style="position:absolute;top:42px;left:0;right:0;z-index:20;background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:10px;box-shadow:var(--shadow-md);overflow:hidden;max-height:280px;overflow-y:auto;">
               <div style="padding:9px 12px 6px;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);font-weight:700;display:flex;align-items:center;gap:6px;"><i data-lucide="star" style="width:12px;height:12px;color:var(--hex-honey);"></i>Favorites</div>
@@ -152,7 +152,7 @@
           <div style="padding:48px 24px;text-align:center;">
             <div style="width:44px;height:44px;border-radius:12px;background:var(--gray-100);display:inline-flex;align-items:center;justify-content:center;color:var(--gray-400);margin-bottom:12px;"><i data-lucide="search-x" style="width:22px;height:22px;"></i></div>
             <div style="font-weight:700;font-size:14px;margin-bottom:4px;">No matching stocks</div>
-            <div style="font-size:12px;color:var(--gray-500);line-height:1.5;">No stocks in the active universe match &ldquo;{{ search }}&rdquo; and the selected filters. Try clearing filters or search.</div>
+            <div style="font-size:12px;color:var(--gray-500);line-height:1.5;">No stocks in the active universe match “{{ search }}” and the selected filters. Try clearing filters or search.</div>
           </div>
         </sc-if>
       </div>
@@ -337,7 +337,7 @@
     <div style="max-width:1200px;">
       <div style="margin-bottom:14px;">
         <div style="font-weight:800;font-size:22px;letter-spacing:-0.02em;">Admin</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">Manage the stock universe, sync engine, book library, chart highlights, and theme.</div>
+        <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">Manage the stock universe, sync engine, book library, and chart highlights.</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:12px;">
@@ -346,7 +346,7 @@
 
         <sc-if value="{{ ingest.idle }}" hint-placeholder-val="{{ true }}">
           <div onDragOver="{{ ingest.onDragOver }}" onDragLeave="{{ ingest.onDragLeave }}" onDrop="{{ ingest.onDrop }}" onClick="{{ ingest.pick }}" style="{{ ingest.dropStyle }};cursor:pointer;">
-            <input type="file" accept="application/pdf,.pdf" ref="{{ ingest.setInput }}" onChange="{{ ingest.onFile }}" style="display:none;" />
+            <input type="file" accept="application/pdf,.pdf" ref="{{ ingest.setInput }}" onChange="{{ ingest.onFile }}" style="display:none;">
             <i data-lucide="upload-cloud" style="width:28px;height:28px;color:var(--gray-400);"></i>
             <div style="font-size:13px;font-weight:700;margin-top:8px;">Drag &amp; drop a PDF here</div>
             <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">or click to browse. Scanned/image PDFs are auto-detected for OCR.</div>
@@ -428,7 +428,7 @@
             <div style="border:1.5px dashed var(--gray-300);border-radius:12px;padding:24px;text-align:center;background:var(--gray-50);margin-bottom:12px;">
               <i data-lucide="file-spreadsheet" style="width:26px;height:26px;color:var(--gray-400);"></i>
               <div style="font-size:12.5px;color:var(--gray-500);margin-top:8px;">Drop a CSV or spreadsheet here, or</div>
-              <input type="file" accept=".csv,text/csv" ref="{{ up.setFile }}" onChange="{{ up.onFile }}" style="display:none;" />
+              <input type="file" accept=".csv,text/csv" ref="{{ up.setFile }}" onChange="{{ up.onFile }}" style="display:none;">
               <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
                 <button onClick="{{ up.upload }}" style="cursor:pointer;font-size:12px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;">Upload stock list</button>
                 <button onClick="{{ up.replace }}" style="cursor:pointer;font-size:12px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);border-radius:8px;padding:8px 14px;color:var(--gray-600);">Replace existing list</button>
@@ -513,8 +513,8 @@
         <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><i data-lucide="calendar-days" style="width:18px;height:18px;color:var(--accent);"></i><span style="font-weight:800;font-size:15px;">Chart Highlights</span></div>
           <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;">
-            <div style="flex:0 0 140px;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Date</div><input type="date" value="{{ hl.date }}" onInput="{{ hl.onDate }}" style="width:100%;height:34px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px;font-size:12px;outline:none;" /></div>
-            <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Label</div><input value="{{ hl.label }}" onInput="{{ hl.onLabel }}" placeholder="Results day, Breakout, Review…" style="width:100%;height:34px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px;font-size:12px;outline:none;" /></div>
+            <div style="flex:0 0 140px;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Date</div><input type="date" value="{{ hl.date }}" onInput="{{ hl.onDate }}" style="width:100%;height:34px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px;font-size:12px;outline:none;"></div>
+            <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Label</div><input value="{{ hl.label }}" onInput="{{ hl.onLabel }}" placeholder="Results day, Breakout, Review…" style="width:100%;height:34px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px;font-size:12px;outline:none;"></div>
             <div style="flex:0 0 auto;text-align:center;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Color</div><div style="width:34px;height:34px;border-radius:8px;border:1px solid var(--gray-200);background:{{ hl.previewColor }};"></div></div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -541,33 +541,11 @@
           </sc-if>
         </div>
 
-        <!-- Theme -->
-        <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><i data-lucide="palette" style="width:18px;height:18px;color:var(--accent);"></i><span style="font-weight:800;font-size:15px;">Theme</span></div>
-          <div style="display:flex;gap:10px;">
-            <div onClick="{{ theme.setDefault }}" style="{{ theme.defaultStyle }}">
-              <span style="width:22px;height:22px;border-radius:6px;background:#3C2CDA;display:inline-block;"></span>
-              <span style="font-weight:700;font-size:12.5px;">Default</span>
-              <sc-if value="{{ theme.isDefault }}" hint-placeholder-val="{{ true }}"><i data-lucide="check" style="width:15px;height:15px;color:var(--accent);margin-left:auto;"></i></sc-if>
-            </div>
-            <div onClick="{{ theme.setSky }}" style="{{ theme.skyStyle }}">
-              <span style="width:22px;height:22px;border-radius:6px;background:#1D86FF;display:inline-block;"></span>
-              <span style="font-weight:700;font-size:12.5px;">Sky Blue</span>
-              <sc-if value="{{ theme.isSky }}" hint-placeholder-val="{{ false }}"><i data-lucide="check" style="width:15px;height:15px;color:var(--accent);margin-left:auto;"></i></sc-if>
-            </div>
-            <div onClick="{{ theme.setDark }}" style="{{ theme.darkStyle }}">
-              <span style="width:22px;height:22px;border-radius:6px;background:#1e222b;display:inline-block;"></span>
-              <span style="font-weight:700;font-size:12.5px;">Dark</span>
-              <sc-if value="{{ theme.isDark }}" hint-placeholder-val="{{ false }}"><i data-lucide="check" style="width:15px;height:15px;color:var(--accent);margin-left:auto;"></i></sc-if>
-            </div>
-          </div>
-        </div>
 
         <!-- Sync Status summary -->
         <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;margin-bottom:14px;">
             <span style="font-weight:800;font-size:15px;">Sync Status</span>
-            <button onClick="{{ quickSync }}" disabled="{{ syncBusy }}" style="{{ quickSyncStyle }}"><i data-lucide="refresh-cw" style="width:13px;height:13px;"></i>{{ quickSyncLabel }}</button>
           </div>
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
             <span style="{{ sync.bigDot }}"></span>
@@ -671,7 +649,7 @@
         </div>
         <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:15px 16px;">
           <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-400);font-weight:700;">Advancers / Decliners</div>
-          <div style="font-weight:800;font-size:24px;letter-spacing:-0.02em;margin-top:6px;">{{ sector.adv }} <span style="color:var(--success);font-size:16px;">&#9650;</span> <span style="color:var(--gray-300);font-size:15px;">/</span> {{ sector.dec }} <span style="color:var(--danger);font-size:16px;">&#9660;</span></div>
+          <div style="font-weight:800;font-size:24px;letter-spacing:-0.02em;margin-top:6px;">{{ sector.adv }} <span style="color:var(--success);font-size:16px;">▲</span> <span style="color:var(--gray-300);font-size:15px;">/</span> {{ sector.dec }} <span style="color:var(--danger);font-size:16px;">▼</span></div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:15px 16px;">
           <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-400);font-weight:700;">8-wk Avg Breadth</div>
@@ -773,7 +751,7 @@
           <div style="font-size:11.5px;color:var(--gray-400);margin:4px 0 12px;">Select any text in a reply, then click Pin to save it as a result.</div>
           <div ref="{{ setChatBox }}" style="flex:1;overflow-y:auto;padding-right:4px;">
             <sc-if value="{{ ai.empty }}" hint-placeholder-val="{{ true }}">
-              <div style="text-align:center;color:var(--gray-400);font-size:12.5px;padding:20px 12px 14px;">Ask about {{ sector.name }} breadth, leaders, or what&rsquo;s driving the move.</div>
+              <div style="text-align:center;color:var(--gray-400);font-size:12.5px;padding:20px 12px 14px;">Ask about {{ sector.name }} breadth, leaders, or what’s driving the move.</div>
             </sc-if>
             <sc-for list="{{ ai.messages }}" as="m" hint-placeholder-count="0">
               <div style="{{ m.wrapStyle }}">
@@ -792,7 +770,7 @@
               </div>
             </sc-for>
             <sc-if value="{{ ai.busy }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;justify-content:flex-start;margin-bottom:10px;"><div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:10px 13px;font-size:12.5px;color:var(--gray-400);">Analysing {{ sector.name }}&hellip;</div></div>
+              <div style="display:flex;justify-content:flex-start;margin-bottom:10px;"><div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:10px 13px;font-size:12.5px;color:var(--gray-400);">Analysing {{ sector.name }}…</div></div>
             </sc-if>
             <sc-if value="{{ ai.hasError }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;justify-content:flex-start;margin-bottom:10px;"><div style="background:var(--danger-dim);border:1px solid var(--danger);border-radius:12px;padding:10px 13px;font-size:12px;color:var(--gray-700);">{{ ai.error }} <button onClick="{{ ai.retry }}" style="cursor:pointer;margin-left:6px;border:none;background:transparent;color:var(--danger);font-weight:700;font-size:12px;">Retry</button></div></div>
@@ -833,7 +811,7 @@
                     <button onClick="{{ p.del }}" title="Remove" style="cursor:pointer;border:none;background:transparent;color:var(--gray-400);padding:2px;"><i data-lucide="x" style="width:13px;height:13px;"></i></button>
                   </div>
                 </div>
-                <div style="font-size:10.5px;color:var(--gray-400);margin-top:3px;">{{ p.sector }} &middot; {{ p.when }}</div>
+                <div style="font-size:10.5px;color:var(--gray-400);margin-top:3px;">{{ p.sector }} · {{ p.when }}</div>
               </li>
             </sc-for>
           </ul>
@@ -881,7 +859,7 @@
             </div>
           </div>
         </div>
-        <div style="font-size:11px;color:var(--gray-400);margin-top:14px;">Each cell = average share of the sector&rsquo;s stocks trading above their 44-day MA across that week&rsquo;s trading days; the sub-figure is the average number of stocks above out of the sector total. Sectors ranked by 8-week average breadth.</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:14px;">Each cell = average share of the sector’s stocks trading above their 44-day MA across that week’s trading days; the sub-figure is the average number of stocks above out of the sector total. Sectors ranked by 8-week average breadth.</div>
       </div>
     </div>
   </div>
@@ -947,20 +925,20 @@
         <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;">
           <div style="font-weight:800;font-size:15px;margin-bottom:14px;">Log a trade</div>
           <div style="display:flex;flex-direction:column;gap:11px;">
-            <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Symbol</div><input value="{{ journal.form.symbol }}" onInput="{{ journal.form.onSymbol }}" placeholder="e.g. RELIANCE" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
+            <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Symbol</div><input value="{{ journal.form.symbol }}" onInput="{{ journal.form.onSymbol }}" placeholder="e.g. RELIANCE" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
             <div style="display:flex;gap:10px;">
-              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Entry date</div><input type="date" value="{{ journal.form.entryDate }}" onInput="{{ journal.form.onEntry }}" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 9px;font-size:12px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
-              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Exit date</div><input type="date" value="{{ journal.form.exitDate }}" onInput="{{ journal.form.onExit }}" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 9px;font-size:12px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
+              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Entry date</div><input type="date" value="{{ journal.form.entryDate }}" onInput="{{ journal.form.onEntry }}" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 9px;font-size:12px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
+              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Exit date</div><input type="date" value="{{ journal.form.exitDate }}" onInput="{{ journal.form.onExit }}" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 9px;font-size:12px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
             </div>
             <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Segment</div><div style="display:flex;gap:8px;"><button onClick="{{ journal.form.setDelivery }}" style="{{ journal.form.delStyle }}">Delivery</button><button onClick="{{ journal.form.setIntraday }}" style="{{ journal.form.intStyle }}">Intraday</button></div></div>
             <div style="display:flex;gap:10px;">
-              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Quantity</div><input type="number" value="{{ journal.form.qty }}" onInput="{{ journal.form.onQty }}" placeholder="0" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
+              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Quantity</div><input type="number" value="{{ journal.form.qty }}" onInput="{{ journal.form.onQty }}" placeholder="0" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
             </div>
             <div style="display:flex;gap:10px;">
-              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Buy price</div><input type="number" value="{{ journal.form.buy }}" onInput="{{ journal.form.onBuy }}" placeholder="0.00" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
-              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Sell price <span style="color:var(--gray-400);">(blank = open)</span></div><input type="number" value="{{ journal.form.sell }}" onInput="{{ journal.form.onSell }}" placeholder="0.00" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
+              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Buy price</div><input type="number" value="{{ journal.form.buy }}" onInput="{{ journal.form.onBuy }}" placeholder="0.00" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
+              <div style="flex:1;"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Sell price <span style="color:var(--gray-400);">(blank = open)</span></div><input type="number" value="{{ journal.form.sell }}" onInput="{{ journal.form.onSell }}" placeholder="0.00" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
             </div>
-            <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Tags <span style="color:var(--gray-400);">(comma-separated)</span></div><input value="{{ journal.form.tags }}" onInput="{{ journal.form.onTags }}" placeholder="breakout, swing, revenge…" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
+            <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Tags <span style="color:var(--gray-400);">(comma-separated)</span></div><input value="{{ journal.form.tags }}" onInput="{{ journal.form.onTags }}" placeholder="breakout, swing, revenge…" style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:8px;padding:0 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
             <div><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Comment <span style="color:var(--gray-400);">(optional)</span></div><textarea value="{{ journal.form.note }}" onInput="{{ journal.form.onNote }}" placeholder="Setup, rationale, mistakes, lessons…" style="width:100%;min-height:56px;resize:vertical;border:1px solid var(--gray-200);border-radius:8px;padding:8px 11px;font-size:12.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></textarea></div>
             <sc-if value="{{ journal.prev.openShow }}" hint-placeholder-val="{{ false }}">
               <div style="border:1px solid var(--warning-dim);background:var(--warning-dim);border-radius:10px;padding:10px 13px;font-size:12px;color:#9a6a00;">Open position — no charges until you add a sell price. Unrealized P&amp;L will track the last market price.</div>
@@ -992,9 +970,9 @@
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
             <span style="font-weight:800;font-size:15px;">Trades</span>
             <div style="flex:1;"></div>
-            <div style="position:relative;"><i data-lucide="search" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--gray-400);width:13px;height:13px;"></i><input value="{{ journal.filter.q }}" onInput="{{ journal.filter.onQ }}" placeholder="Filter symbol/tag" style="width:150px;height:30px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px 0 26px;font-size:11.5px;outline:none;background:var(--gray-50);color:var(--gray-900);" /></div>
+            <div style="position:relative;"><i data-lucide="search" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--gray-400);width:13px;height:13px;"></i><input value="{{ journal.filter.q }}" onInput="{{ journal.filter.onQ }}" placeholder="Filter symbol/tag" style="width:150px;height:30px;border:1px solid var(--gray-200);border-radius:8px;padding:0 10px 0 26px;font-size:11.5px;outline:none;background:var(--gray-50);color:var(--gray-900);"></div>
             <sc-for list="{{ journal.filter.segs }}" as="sg" hint-placeholder-count="3"><button onClick="{{ sg.onClick }}" style="{{ sg.style }}">{{ sg.label }}</button></sc-for>
-            <input type="file" accept=".csv,text/csv" ref="{{ journal.setImport }}" onChange="{{ journal.onImport }}" style="display:none;" />
+            <input type="file" accept=".csv,text/csv" ref="{{ journal.setImport }}" onChange="{{ journal.onImport }}" style="display:none;">
             <button onClick="{{ journal.triggerImport }}" title="Import CSV" style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:7px;padding:6px 9px;"><i data-lucide="upload" style="width:13px;height:13px;"></i>Import</button>
             <button onClick="{{ journal.onExport }}" title="Export CSV" style="cursor:pointer;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:7px;padding:6px 9px;"><i data-lucide="download" style="width:13px;height:13px;"></i>Export</button>
           </div>
@@ -1051,7 +1029,7 @@
               </div>
             </div>
           </sc-if>
-          <div style="font-size:11px;color:var(--gray-400);margin-top:12px;line-height:1.5;">Charges follow Zerodha&rsquo;s equity schedule: Delivery — ₹0 brokerage, STT 0.1% both sides, stamp 0.015% (buy), DP ₹15.34/scrip on sell. Intraday — 0.03% or ₹20/order brokerage, STT 0.025% (sell), stamp 0.003% (buy). Plus NSE txn 0.00297%, SEBI ₹10/cr, and 18% GST.</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:12px;line-height:1.5;">Charges follow Zerodha’s equity schedule: Delivery — ₹0 brokerage, STT 0.1% both sides, stamp 0.015% (buy), DP ₹15.34/scrip on sell. Intraday — 0.03% or ₹20/order brokerage, STT 0.025% (sell), stamp 0.003% (buy). Plus NSE txn 0.00297%, SEBI ₹10/cr, and 18% GST.</div>
         </div>
       </div>
     </div>
@@ -1081,7 +1059,7 @@
       </div>
       <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;">
         <div style="font-weight:800;font-size:15px;margin-bottom:4px;">Saved data</div>
-        <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">Clears your journal, pinned results, AI chat, and stock comments from this browser. This can&rsquo;t be undone.</div>
+        <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">Clears your journal, pinned results, AI chat, and stock comments from this browser. This can’t be undone.</div>
         <sc-if value="{{ settings.clearConfirm }}" hint-placeholder-val="{{ false }}">
           <div style="border:1px solid var(--danger);background:var(--danger-dim);border-radius:10px;padding:12px 14px;">
             <div style="font-size:12.5px;color:var(--gray-700);margin-bottom:10px;">Delete all saved data? This removes every journal entry, pin, and comment.</div>
@@ -1094,6 +1072,181 @@
       </div>
     </div>
   </div>
+  </sc-if>
+
+  <!-- ============ STOCK LIST (grid) ============ -->
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+  <div style="{{ adminStyle }}" data-screen-label="Stock list">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+      <div>
+        <div style="font-weight:800;font-size:22px;letter-spacing:-0.02em;">Stock List</div>
+        <div style="font-size:13px;color:var(--gray-500);margin-top:2px;">{{ grid.countLabel }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+        <button onClick="{{ grid.newRow }}" style="cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:9px;padding:8px 13px;"><i data-lucide="plus" style="width:14px;height:14px;"></i>New</button>
+        <button onClick="{{ grid.openAdd }}" style="cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-700);border-radius:9px;padding:8px 12px;"><i data-lucide="columns-3" style="width:14px;height:14px;"></i>Add column</button>
+        <button onClick="{{ grid.export }}" style="cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-700);border-radius:9px;padding:8px 12px;"><i data-lucide="download" style="width:14px;height:14px;"></i>Export CSV</button>
+        <sc-if value="{{ grid.hasHidden }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ grid.showAllCols }}" style="cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:9px;padding:8px 12px;"><i data-lucide="eye" style="width:14px;height:14px;"></i>{{ grid.hiddenLabel }}</button>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+        <sc-for list="{{ grid.views }}" as="v" hint-placeholder-count="4">
+          <button onClick="{{ v.onClick }}" style="{{ v.style }}">{{ v.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--gray-200);border-radius:9px;padding:7px 11px;min-width:230px;">
+        <i data-lucide="search" style="width:14px;height:14px;color:var(--gray-400);"></i>
+        <input value="{{ grid.q }}" onChange="{{ grid.onSearch }}" placeholder="Filter list…" style="border:none;outline:none;background:transparent;font-family:inherit;font-size:12.5px;color:inherit;width:100%;">
+      </div>
+      <sc-if value="{{ grid.grouped }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ grid.ungroup }}" style="cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;border:1px solid var(--accent);background:var(--accent-light);color:var(--accent);border-radius:999px;padding:6px 11px;white-space:nowrap;flex:0 0 auto;"><i data-lucide="group" style="width:13px;height:13px;"></i>{{ grid.groupLabel }}<i data-lucide="x" style="width:12px;height:12px;"></i></button>
+      </sc-if>
+      <sc-if value="{{ grid.hasFilters }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ grid.clearAllFilters }}" style="cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:999px;padding:6px 11px;"><i data-lucide="filter-x" style="width:13px;height:13px;"></i>Clear filters</button>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ grid.hasDirty }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--hex-honey);background:var(--hex-honey-dim);border-radius:11px;padding:9px 14px;margin-bottom:10px;">
+        <i data-lucide="pencil-line" style="width:15px;height:15px;color:#9a6a00;"></i>
+        <span style="font-size:12.5px;font-weight:600;color:var(--gray-700);flex:1;">{{ grid.dirtyLabel }}</span>
+        <button onClick="{{ grid.save }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:6px 13px;">Save changes</button>
+        <button onClick="{{ grid.discard }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 12px;">Discard</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ grid.hasSel }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--accent);background:var(--accent-light);border-radius:11px;padding:9px 14px;margin-bottom:10px;">
+        <i data-lucide="check-square" style="width:15px;height:15px;color:var(--accent);"></i>
+        <span style="font-size:12.5px;font-weight:700;color:var(--accent);flex:1;">{{ grid.selLabel }}</span>
+        <button onClick="{{ grid.deleteSel }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:1px solid var(--danger);background:var(--surface);color:var(--danger);border-radius:8px;padding:6px 12px;">Delete rows</button>
+        <button onClick="{{ grid.clearSel }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:none;background:transparent;color:var(--gray-500);border-radius:8px;padding:6px 8px;">Clear</button>
+      </div>
+    </sc-if>
+
+    <div style="background:var(--surface);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;">
+      <div style="overflow:auto;max-height:62vh;">
+        <div style="{{ grid.minWidthStyle }}">
+          <div style="{{ grid.headStyle }}">
+            <div onClick="{{ grid.selAll }}" style="display:flex;align-items:center;justify-content:center;height:38px;cursor:pointer;border-right:1px solid var(--gray-100);"><i data-lucide="{{ grid.selAllIcon }}" style="width:14px;height:14px;color:var(--gray-400);"></i></div>
+            <sc-for list="{{ grid.head }}" as="h" hint-placeholder-count="8">
+              <div draggable="{{ true }}" onDragStart="{{ h.onDragStart }}" onDragOver="{{ h.onDragOver }}" onDrop="{{ h.onDrop }}" onDragEnd="{{ h.onDragEnd }}" style="{{ h.style }}">
+                <span onClick="{{ h.onSort }}" style="cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ h.name }}</span>
+                <i onClick="{{ h.onSort }}" data-lucide="{{ h.sortIcon }}" style="{{ h.sortStyle }}"></i>
+                <sc-if value="{{ h.filtered }}" hint-placeholder-val="{{ false }}"><i data-lucide="filter" style="width:11px;height:11px;color:var(--accent);"></i></sc-if>
+                <i onClick="{{ h.onMenu }}" data-lucide="chevron-down" style="width:13px;height:13px;color:var(--gray-400);cursor:pointer;margin-left:auto;"></i>
+              </div>
+            </sc-for>
+            <div onClick="{{ grid.openAdd }}" title="Add a column" style="display:flex;align-items:center;justify-content:center;height:38px;cursor:pointer;color:var(--accent);"><i data-lucide="plus" style="width:15px;height:15px;"></i></div>
+          </div>
+
+          <sc-for list="{{ grid.groups }}" as="g" hint-placeholder-count="1">
+            <sc-if value="{{ g.showHeader }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ g.toggle }}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--gray-100);border-bottom:1px solid var(--gray-200);cursor:pointer;position:sticky;left:0;">
+                <i data-lucide="{{ g.icon }}" style="width:14px;height:14px;color:var(--gray-500);"></i>
+                <span style="font-size:12px;font-weight:800;">{{ g.key }}</span>
+                <span style="font-size:11px;color:var(--gray-500);">{{ g.countLabel }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ g.rows }}" as="row" hint-placeholder-count="12">
+                <div style="{{ row.style }}">
+                  <div onClick="{{ row.onSel }}" style="display:flex;align-items:center;justify-content:center;cursor:pointer;border-right:1px solid var(--gray-100);"><i data-lucide="{{ row.selIcon }}" style="{{ row.selStyle }}"></i></div>
+                  <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="8">
+                    <div onClick="{{ cell.onClick }}" title="{{ cell.title }}" style="{{ cell.style }}">
+                      <sc-if value="{{ cell.isSelect }}" hint-placeholder-val="{{ false }}">
+                        <select value="{{ cell.value }}" onChange="{{ cell.onSelect }}" onBlur="{{ cell.onBlur }}" style="width:100%;font-family:inherit;font-size:12px;border:1px solid var(--accent);border-radius:6px;padding:3px 5px;background:var(--surface);color:inherit;outline:none;">
+                          <sc-for list="{{ cell.options }}" as="op" hint-placeholder-count="0"><option value="{{ op.v }}">{{ op.label }}</option></sc-for>
+                        </select>
+                      </sc-if>
+                      <sc-if value="{{ cell.isInput }}" hint-placeholder-val="{{ false }}">
+                        <input value="{{ cell.value }}" onChange="{{ cell.onChange }}" onKeyDown="{{ cell.onKey }}" onBlur="{{ cell.onBlur }}" autoFocus="{{ true }}" style="width:100%;font-family:inherit;font-size:12px;border:1px solid var(--accent);border-radius:6px;padding:3px 6px;background:var(--surface);color:inherit;outline:none;">
+                      </sc-if>
+                      <sc-if value="{{ cell.isChip }}" hint-placeholder-val="{{ false }}"><span style="{{ cell.chipStyle }}">{{ cell.chipLabel }}</span></sc-if>
+                      <sc-if value="{{ cell.isTrend }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;align-items:center;gap:5px;">
+                          <sc-for list="{{ cell.badges }}" as="bd" hint-placeholder-count="3"><span style="{{ bd.style }}"><i data-lucide="{{ bd.icon }}" style="width:10px;height:10px;"></i>{{ bd.label }}</span></sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ cell.isBool }}" hint-placeholder-val="{{ false }}"><i data-lucide="{{ cell.boolIcon }}" style="{{ cell.boolStyle }}"></i></sc-if>
+                      <sc-if value="{{ cell.isPlain }}" hint-placeholder-val="{{ true }}"><span style="{{ cell.textStyle }}">{{ cell.text }}</span></sc-if>
+                      <sc-if value="{{ cell.isLink }}" hint-placeholder-val="{{ false }}"><i onClick="{{ row.onOpen }}" data-lucide="external-link" style="width:12px;height:12px;color:var(--gray-300);margin-left:auto;cursor:pointer;"></i></sc-if>
+                    </div>
+                  </sc-for>
+                  <div style="display:flex;align-items:center;justify-content:center;">
+                    <sc-if value="{{ row.dirty }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:50%;background:var(--hex-honey);"></span></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+          </sc-for>
+
+          <sc-if value="{{ grid.empty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:44px 24px;text-align:center;color:var(--gray-400);font-size:12.5px;">No rows match this view, search, or column filters.</div>
+          </sc-if>
+        </div>
+      </div>
+      <sc-if value="{{ grid.hasMore }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:10px;text-align:center;border-top:1px solid var(--gray-100);"><button onClick="{{ grid.more }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:7px 14px;">{{ grid.moreLabel }}</button></div>
+      </sc-if>
+    </div>
+    <div style="font-size:11px;color:var(--gray-400);margin-top:10px;">Click any editable cell to change it inline · Enter saves, Esc cancels · drag a column header to reorder · column menus sort, filter, group, hide, or delete.</div>
+  </div>
+  </sc-if>
+
+  <!-- grid popovers -->
+  <sc-if value="{{ grid.anyMenu }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ grid.closeMenus }}" style="position:fixed;inset:0;z-index:60;"></div>
+  </sc-if>
+  <sc-if value="{{ grid.colMenu.open }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ grid.colMenu.style }}">
+      <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-400);font-weight:700;padding:4px 10px 6px;">{{ grid.colMenu.name }}</div>
+      <sc-for list="{{ grid.colMenu.items }}" as="mi" hint-placeholder-count="5">
+        <div onClick="{{ mi.onClick }}" style="{{ mi.style }}" style-hover="background:var(--gray-100);"><i data-lucide="{{ mi.icon }}" style="width:14px;height:14px;"></i>{{ mi.label }}</div>
+      </sc-for>
+    </div>
+  </sc-if>
+  <sc-if value="{{ grid.filterMenu.open }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ grid.filterMenu.style }}">
+      <div style="font-size:11px;font-weight:800;padding:2px 10px 8px;">Filter by {{ grid.filterMenu.name }}</div>
+      <div style="max-height:240px;overflow-y:auto;">
+        <sc-for list="{{ grid.filterMenu.values }}" as="fv" hint-placeholder-count="5">
+          <div onClick="{{ fv.onClick }}" style="display:flex;align-items:center;gap:8px;padding:6px 10px;cursor:pointer;font-size:12px;" style-hover="background:var(--gray-100);">
+            <i data-lucide="{{ fv.icon }}" style="{{ fv.iconStyle }}"></i><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ fv.label }}</span><span style="font-size:10.5px;color:var(--gray-400);">{{ fv.count }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:6px;padding:8px 10px 2px;border-top:1px solid var(--gray-100);margin-top:6px;">
+        <button onClick="{{ grid.filterMenu.clear }}" style="cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:7px;padding:5px 10px;">Clear</button>
+        <button onClick="{{ grid.closeMenus }}" style="cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:7px;padding:5px 12px;">Done</button>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ grid.addMenu.open }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ grid.addMenu.style }}">
+      <div style="font-size:12.5px;font-weight:800;margin-bottom:10px;">Create a column</div>
+      <div style="font-size:10.5px;font-weight:700;color:var(--gray-500);margin-bottom:4px;">Name</div>
+      <input value="{{ grid.addMenu.name }}" onChange="{{ grid.addMenu.onName }}" placeholder="e.g. Analyst owner" style="width:100%;box-sizing:border-box;font-family:inherit;font-size:12.5px;border:1px solid var(--gray-200);border-radius:8px;padding:7px 9px;background:var(--surface);color:inherit;outline:none;margin-bottom:10px;">
+      <div style="font-size:10.5px;font-weight:700;color:var(--gray-500);margin-bottom:4px;">Type</div>
+      <select value="{{ grid.addMenu.type }}" onChange="{{ grid.addMenu.onType }}" style="width:100%;box-sizing:border-box;font-family:inherit;font-size:12.5px;border:1px solid var(--gray-200);border-radius:8px;padding:7px 9px;background:var(--surface);color:inherit;outline:none;margin-bottom:10px;">
+        <sc-for list="{{ grid.addMenu.types }}" as="t" hint-placeholder-count="5"><option value="{{ t.v }}">{{ t.label }}</option></sc-for>
+      </select>
+      <sc-if value="{{ grid.addMenu.isChoice }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:10.5px;font-weight:700;color:var(--gray-500);margin-bottom:4px;">Choices (comma separated)</div>
+        <input value="{{ grid.addMenu.opts }}" onChange="{{ grid.addMenu.onOpts }}" placeholder="Buy, Hold, Avoid" style="width:100%;box-sizing:border-box;font-family:inherit;font-size:12.5px;border:1px solid var(--gray-200);border-radius:8px;padding:7px 9px;background:var(--surface);color:inherit;outline:none;margin-bottom:10px;">
+      </sc-if>
+      <div style="display:flex;gap:7px;justify-content:flex-end;">
+        <button onClick="{{ grid.closeMenus }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 12px;">Cancel</button>
+        <button onClick="{{ grid.addMenu.create }}" style="cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:6px 14px;">Create</button>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ grid.toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--gray-800,#1b1f27);color:#fff;font-size:12px;font-weight:700;padding:9px 16px;border-radius:999px;z-index:80;box-shadow:var(--shadow-md,0 8px 24px rgba(0,0,0,.2));">{{ grid.toast }}</div>
   </sc-if>
 
   <!-- ============ LIBRARY / READER ============ -->
@@ -1170,7 +1323,7 @@
         <div style="flex:1;display:flex;min-height:0;">
           <sc-if value="{{ reader.tocOpen }}" hint-placeholder-val="{{ false }}">
             <div style="width:268px;flex:0 0 268px;background:var(--surface);border-right:1px solid var(--gray-100);overflow-y:auto;padding:12px;">
-              <div style="display:flex;align-items:center;gap:7px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:9px;padding:7px 10px;margin-bottom:12px;"><i data-lucide="search" style="width:14px;height:14px;color:var(--gray-400);flex:0 0 auto;"></i><input value="{{ reader.searchQ }}" onInput="{{ reader.onSearch }}" placeholder="Search in book…" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:12.5px;color:var(--gray-900);" /></div>
+              <div style="display:flex;align-items:center;gap:7px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:9px;padding:7px 10px;margin-bottom:12px;"><i data-lucide="search" style="width:14px;height:14px;color:var(--gray-400);flex:0 0 auto;"></i><input value="{{ reader.searchQ }}" onInput="{{ reader.onSearch }}" placeholder="Search in book…" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:12.5px;color:var(--gray-900);"></div>
 
               <sc-if value="{{ reader.hasSearch }}" hint-placeholder-val="{{ false }}">
                 <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-400);font-weight:800;margin-bottom:8px;padding:0 6px;">Results</div>
@@ -1260,7 +1413,7 @@
                   <button onClick="{{ reader.summarizeBook }}" style-hover="border-color:var(--accent);color:var(--accent);" style="cursor:pointer;flex:1;font-size:11px;font-weight:700;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:5px;"><i data-lucide="book-open-text" style="width:13px;height:13px;"></i>Summarize book</button>
                 </div>
                 <div style="display:flex;gap:8px;">
-                  <input value="{{ reader.askQ }}" onInput="{{ reader.onAskQ }}" placeholder="Ask about this book…" style="flex:1;min-width:0;border:1px solid var(--gray-200);border-radius:8px;padding:9px 11px;font-size:12.5px;outline:none;background:var(--surface);color:var(--gray-900);" />
+                  <input value="{{ reader.askQ }}" onInput="{{ reader.onAskQ }}" placeholder="Ask about this book…" style="flex:1;min-width:0;border:1px solid var(--gray-200);border-radius:8px;padding:9px 11px;font-size:12.5px;outline:none;background:var(--surface);color:var(--gray-900);">
                   <button onClick="{{ reader.ask }}" style="{{ reader.askSendStyle }}">Send</button>
                 </div>
               </div>
@@ -1277,7 +1430,7 @@
   <div onClick="{{ renameModal.cancel }}" style="position:fixed;inset:0;background:rgba(17,24,39,0.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;">
     <div onClick="{{ renameModal.stop }}" style="width:420px;max-width:92vw;background:var(--surface);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-lg);padding:18px 20px;">
       <div style="font-weight:800;font-size:15px;margin-bottom:12px;">Rename book</div>
-      <input value="{{ renameModal.text }}" onInput="{{ renameModal.onText }}" style="width:100%;box-sizing:border-box;border:1px solid var(--gray-200);border-radius:9px;padding:10px 12px;font-size:13.5px;outline:none;background:var(--surface);color:var(--gray-900);margin-bottom:14px;" />
+      <input value="{{ renameModal.text }}" onInput="{{ renameModal.onText }}" style="width:100%;box-sizing:border-box;border:1px solid var(--gray-200);border-radius:9px;padding:10px 12px;font-size:13.5px;outline:none;background:var(--surface);color:var(--gray-900);margin-bottom:14px;">
       <div style="display:flex;justify-content:flex-end;gap:8px;">
         <button onClick="{{ renameModal.cancel }}" style="cursor:pointer;font-size:12.5px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:8px 14px;">Cancel</button>
         <button onClick="{{ renameModal.save }}" style="cursor:pointer;font-size:12.5px;font-weight:700;border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;">Save</button>
@@ -1291,7 +1444,7 @@
   <div onClick="{{ bookDelModal.cancel }}" style="position:fixed;inset:0;background:rgba(17,24,39,0.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;">
     <div onClick="{{ bookDelModal.stop }}" style="width:420px;max-width:92vw;background:var(--surface);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-lg);padding:18px 20px;">
       <div style="font-weight:800;font-size:15px;margin-bottom:6px;">Delete book?</div>
-      <div style="font-size:12.5px;color:var(--gray-600);line-height:1.5;margin-bottom:14px;">Remove &ldquo;{{ bookDelModal.title }}&rdquo; from the library. This also clears its reading progress, bookmarks, and highlights.</div>
+      <div style="font-size:12.5px;color:var(--gray-600);line-height:1.5;margin-bottom:14px;">Remove “{{ bookDelModal.title }}” from the library. This also clears its reading progress, bookmarks, and highlights.</div>
       <div style="display:flex;justify-content:flex-end;gap:8px;">
         <button onClick="{{ bookDelModal.cancel }}" style="cursor:pointer;font-size:12.5px;font-weight:600;border:1px solid var(--gray-200);background:var(--surface);color:var(--gray-600);border-radius:8px;padding:8px 14px;">Cancel</button>
         <button onClick="{{ bookDelModal.confirm }}" style="cursor:pointer;font-size:12.5px;font-weight:700;border:none;background:var(--danger);color:#fff;border-radius:8px;padding:8px 14px;">Delete</button>
@@ -1368,7 +1521,7 @@
     <div onClick="{{ palette.stop }}" style="width:560px;max-width:92vw;background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-lg);overflow:hidden;">
       <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--gray-100);">
         <i data-lucide="search" style="width:17px;height:17px;color:var(--gray-400);"></i>
-        <input value="{{ palette.query }}" onInput="{{ palette.onQuery }}" placeholder="Jump to a stock, sector, or screen…" style="flex:1;border:none;outline:none;font-size:14px;background:transparent;color:var(--gray-900);" />
+        <input value="{{ palette.query }}" onInput="{{ palette.onQuery }}" placeholder="Jump to a stock, sector, or screen…" style="flex:1;border:none;outline:none;font-size:14px;background:transparent;color:var(--gray-900);">
         <span style="font-size:10px;color:var(--gray-400);border:1px solid var(--gray-200);border-radius:5px;padding:2px 6px;">ESC</span>
       </div>
       <div style="max-height:340px;overflow-y:auto;padding:8px;">
@@ -1393,19 +1546,96 @@ class Component extends DCLogic {
   ANCHOR = new Date(2026,6,24,15,30,0).getTime();
   DAY = 24*3600000;
 
+  SUBCAT = {"FEDERALBNK":"Private Bank","HAL":"Defence Aerospace","360ONE":"Wealth Management","AUBANK":"Small Finance Bank","ABCAPITAL":"Diversified Financials","AXISBANK":"Private Bank","BSE":"Exchange","BAJFINANCE":"NBFC","BAJAJFINSV":"Holding Company","BAJAJHLDNG":"Holding Company","BANKBARODA":"Public Sector Bank","BANKINDIA":"Public Sector Bank","GROWW":"Capital Markets","CANBK":"Public Sector Bank","CHOLAFIN":"NBFC","HDFCAMC":"Asset Management","HDFCBANK":"Private Bank","HDFCLIFE":"Life Insurance","HUDCO":"Housing Finance","ICICIBANK":"Private Bank","ICICIGI":"General Insurance","ICICIAMC":"Asset Management","IDFCFIRSTB":"Private Bank","INDIANB":"Public Sector Bank","IRFC":"Infrastructure Finance","IREDA":"Infrastructure Finance","INDUSINDBK":"Private Bank","JIOFIN":"NBFC","KOTAKBANK":"Private Bank","LTF":"NBFC","LICHSGFIN":"Housing Finance","M&MFIN":"NBFC","MFSL":"Life Insurance","MOTILALOFS":"Capital Markets","MCX":"Exchange","MUTHOOTFIN":"Gold Loan NBFC","PAYTM":"Fintech · Payments","POLICYBZR":"Fintech · Insurtech","PFC":"Infrastructure Finance","PNB":"Public Sector Bank","RECLTD":"Infrastructure Finance","SBICARD":"Credit Cards","SBILIFE":"Life Insurance","SHRIRAMFIN":"NBFC","SBIN":"Public Sector Bank","TATACAP":"NBFC","TATAINVEST":"Holding Company","UNIONBANK":"Public Sector Bank","YESBANK":"Private Bank","ABB":"Electrical Equipment","APLAPOLLO":"Steel Products","ASHOKLEY":"Commercial Vehicles","ASTRAL":"Plastic Products","BDL":"Defence","BEL":"Defence Electronics","BHEL":"Heavy Electricals","CGPOWER":"Electrical Equipment","COCHINSHIP":"Shipbuilding","CUMMINSIND":"Industrial Engines","GVT&D":"Power T&D Equipment","KEI":"Cables & Wires","POWERINDIA":"Power T&D Equipment","MAZDOCK":"Shipbuilding","POLYCAB":"Cables & Wires","PREMIERENE":"Solar Equipment","ENRIN":"Power T&D Equipment","SIEMENS":"Electrical Equipment","SUPREMEIND":"Plastic Products","SUZLON":"Wind Energy Equipment","WAAREEENER":"Solar Equipment","TMCV":"Commercial Vehicles","ALKEM":"Pharma · Formulations","APOLLOHOSP":"Hospitals","AUROPHARMA":"Pharma · Generics","BIOCON":"Biotech","CIPLA":"Pharma · Formulations","DIVISLAB":"Pharma · API/CRAMS","DRREDDY":"Pharma · Generics","FORTIS":"Hospitals","GLENMARK":"Pharma · Formulations","LAURUSLABS":"Pharma · API/CRAMS","LUPIN":"Pharma · Generics","MANKIND":"Pharma · Formulations","MAXHEALTH":"Hospitals","SUNPHARMA":"Pharma · Specialty","TORNTPHARM":"Pharma · Formulations","ZYDUSLIFE":"Pharma · Generics","ASIANPAINT":"Paints","BLUESTARCO":"Consumer Electronics","DIXON":"Electronics Manufacturing","HAVELLS":"Electrical Appliances","KALYANKJIL":"Jewellery","LGEINDIA":"Consumer Electronics","TITAN":"Jewellery","VOLTAS":"Consumer Electronics","BRITANNIA":"Packaged Foods","COLPAL":"Personal Care","DABUR":"Personal Care","GODFRYPHLP":"Cigarettes","GODREJCP":"Household Products","HINDUNILVR":"Home & Personal Care","ITC":"Cigarettes · Diversified","MARICO":"Personal Care","NESTLEIND":"Packaged Foods","PATANJALI":"Edible Oils","RADICO":"Breweries & Distilleries","TATACONSUM":"Tea & Beverages","UNITDSPR":"Breweries & Distilleries","VBL":"Soft Drinks","DMART":"Retail · Grocery","ETERNAL":"Online Food Delivery","NYKAA":"E-commerce","INDHOTEL":"Hotels","IRCTC":"Travel Services","JUBLFOOD":"Restaurants","LENSKART":"Retail · Eyewear","NAUKRI":"Internet · Classifieds","SWIGGY":"Online Food Delivery","TRENT":"Retail · Apparel","VMM":"Retail · Value","COFORGE":"IT Services","HCLTECH":"IT Services","INFY":"IT Services","KPITTECH":"Engineering R&D","LTM":"IT Services","MPHASIS":"IT Services","OFSS":"Software Products","PERSISTENT":"IT Services","TCS":"IT Services","TATAELXSI":"Engineering R&D","TECHM":"IT Services","WIPRO":"IT Services","ADANIENT":"Diversified · Trading","HINDALCO":"Aluminium","HINDZINC":"Zinc & Lead","JSWSTEEL":"Steel","JINDALSTEL":"Steel","NMDC":"Iron Ore Mining","NATIONALUM":"Aluminium","SAIL":"Steel","TATASTEEL":"Steel","VEDL":"Diversified Metals","ATGL":"City Gas Distribution","BPCL":"Refining & Marketing","COALINDIA":"Coal Mining","GAIL":"Gas Transmission","HINDPETRO":"Refining & Marketing","IOC":"Refining & Marketing","ONGC":"Exploration & Production","OIL":"Exploration & Production","RELIANCE":"Refining · Diversified","ADANIENSOL":"Power Transmission","ADANIGREEN":"Renewables","ADANIPOWER":"Thermal Generation","JSWENERGY":"Integrated Power","NHPC":"Hydro Generation","NTPC":"Thermal Generation","POWERGRID":"Power Transmission","TATAPOWER":"Integrated Power","BAJAJ-AUTO":"Two Wheelers","BHARATFORG":"Auto Components","BOSCHLTD":"Auto Components","EICHERMOT":"Two Wheelers","EXIDEIND":"Batteries","HEROMOTOCO":"Two Wheelers","HYUNDAI":"Passenger Vehicles","MRF":"Tyres","M&M":"Passenger Vehicles · UV","MARUTI":"Passenger Vehicles","MOTHERSON":"Auto Components","TVSMOTOR":"Two Wheelers","TMPV":"Passenger Vehicles","TIINDIA":"Auto Components","ADANIPORTS":"Ports & Logistics","CONCOR":"Logistics","GMRAIRPORT":"Airports","INDIGO":"Airlines","LT":"Engineering & Construction","RVNL":"Railway Construction","AMBUJACEM":"Cement","GRASIM":"Cement · Diversified","SHREECEM":"Cement","ULTRACEMCO":"Cement","DLF":"Real Estate Developer","GODREJPROP":"Real Estate Developer","LODHA":"Real Estate Developer","OBEROIRLTY":"Real Estate Developer","PHOENIXLTD":"Retail Real Estate","PRESTIGE":"Real Estate Developer","COROMANDEL":"Fertilisers","PIIND":"Agrochemicals","PIDILITIND":"Specialty Chemicals","SRF":"Specialty Chemicals","SOLARINDS":"Explosives","UPL":"Agrochemicals","BHARTIARTL":"Telecom Services","INDUSTOWER":"Telecom Infrastructure","TATACOMM":"Enterprise Data","IDEA":"Telecom Services","PAGEIND":"Innerwear & Apparel"};
   DEFS = [
-    ['Banking','HDFCBANK','HDFC Bank'],['Banking','ICICIBANK','ICICI Bank'],['Banking','SBIN','State Bank of India'],['Banking','AXISBANK','Axis Bank'],['Banking','KOTAKBANK','Kotak Mahindra Bank'],
-    ['IT Services','TCS','Tata Consultancy Svc'],['IT Services','INFY','Infosys'],['IT Services','WIPRO','Wipro'],['IT Services','HCLTECH','HCL Technologies'],
-    ['Energy','RELIANCE','Reliance Industries'],['Energy','ONGC','Oil & Natural Gas'],['Energy','NTPC','NTPC Ltd'],['Energy','POWERGRID','Power Grid Corp'],
-    ['FMCG','ITC','ITC Ltd'],['FMCG','HINDUNILVR','Hindustan Unilever'],['FMCG','NESTLEIND','Nestle India'],['FMCG','BRITANNIA','Britannia Inds'],
-    ['Auto','MARUTI','Maruti Suzuki'],['Auto','TATAMOTORS','Tata Motors'],['Auto','M&M','Mahindra & Mahindra'],
-    ['Pharma','SUNPHARMA','Sun Pharma'],['Pharma','CIPLA','Cipla'],['Pharma','DRREDDY','Dr Reddy\u2019s Labs']
+    ['Financial Services','360ONE','360 ONE WAM Ltd.','EQ','INE466L01038'],['Capital Goods','ABB','ABB India Ltd.','EQ','INE117A01022'],['Capital Goods','APLAPOLLO','APL Apollo Tubes Ltd.','EQ','INE702C01027'],['Financial Services','AUBANK','AU Small Finance Bank Ltd.','EQ','INE949L01017'],
+    ['Power','ADANIENSOL','Adani Energy Solutions Ltd.','EQ','INE931S01010'],['Metals & Mining','ADANIENT','Adani Enterprises Ltd.','EQ','INE423A01024'],['Power','ADANIGREEN','Adani Green Energy Ltd.','EQ','INE364U01010'],['Services','ADANIPORTS','Adani Ports and Special Economic Zone Ltd.','EQ','INE742F01042'],
+    ['Power','ADANIPOWER','Adani Power Ltd.','EQ','INE814H01029'],['Oil Gas & Consumable Fuels','ATGL','Adani Total Gas Ltd.','EQ','INE399L01023'],['Financial Services','ABCAPITAL','Aditya Birla Capital Ltd.','EQ','INE674K01013'],['Healthcare','ALKEM','Alkem Laboratories Ltd.','EQ','INE540L01014'],
+    ['Construction Materials','AMBUJACEM','Ambuja Cements Ltd.','EQ','INE079A01024'],['Healthcare','APOLLOHOSP','Apollo Hospitals Enterprise Ltd.','EQ','INE437A01024'],['Capital Goods','ASHOKLEY','Ashok Leyland Ltd.','EQ','INE208A01029'],['Consumer Durables','ASIANPAINT','Asian Paints Ltd.','EQ','INE021A01026'],
+    ['Capital Goods','ASTRAL','Astral Ltd.','EQ','INE006I01046'],['Healthcare','AUROPHARMA','Aurobindo Pharma Ltd.','EQ','INE406A01037'],['Consumer Services','DMART','Avenue Supermarts Ltd.','EQ','INE192R01011'],['Financial Services','AXISBANK','Axis Bank Ltd.','EQ','INE238A01034'],
+    ['Financial Services','BSE','BSE Ltd.','EQ','INE118H01025'],['Automobile and Auto Components','BAJAJ-AUTO','Bajaj Auto Ltd.','EQ','INE917I01010'],['Financial Services','BAJFINANCE','Bajaj Finance Ltd.','EQ','INE296A01032'],['Financial Services','BAJAJFINSV','Bajaj Finserv Ltd.','EQ','INE918I01026'],
+    ['Financial Services','BAJAJHLDNG','Bajaj Holdings & Investment Ltd.','EQ','INE118A01012'],['Financial Services','BANKBARODA','Bank of Baroda','EQ','INE028A01039'],['Financial Services','BANKINDIA','Bank of India','EQ','INE084A01016'],['Capital Goods','BDL','Bharat Dynamics Ltd.','EQ','INE171Z01026'],
+    ['Capital Goods','BEL','Bharat Electronics Ltd.','EQ','INE263A01024'],['Automobile and Auto Components','BHARATFORG','Bharat Forge Ltd.','EQ','INE465A01025'],['Capital Goods','BHEL','Bharat Heavy Electricals Ltd.','EQ','INE257A01026'],['Oil Gas & Consumable Fuels','BPCL','Bharat Petroleum Corporation Ltd.','EQ','INE029A01011'],
+    ['Telecommunication','BHARTIARTL','Bharti Airtel Ltd.','EQ','INE397D01024'],['Financial Services','GROWW','Billionbrains Garage Ventures Ltd.','EQ','INE0HOQ01053'],['Healthcare','BIOCON','Biocon Ltd.','EQ','INE376G01013'],['Consumer Durables','BLUESTARCO','Blue Star Ltd.','EQ','INE472A01039'],
+    ['Automobile and Auto Components','BOSCHLTD','Bosch Ltd.','EQ','INE323A01026'],['Fast Moving Consumer Goods','BRITANNIA','Britannia Industries Ltd.','EQ','INE216A01030'],['Capital Goods','CGPOWER','CG Power and Industrial Solutions Ltd.','EQ','INE067A01029'],['Financial Services','CANBK','Canara Bank','EQ','INE476A01022'],
+    ['Financial Services','CHOLAFIN','Cholamandalam Investment and Finance Company Ltd.','EQ','INE121A01024'],['Healthcare','CIPLA','Cipla Ltd.','EQ','INE059A01026'],['Oil Gas & Consumable Fuels','COALINDIA','Coal India Ltd.','EQ','INE522F01014'],['Capital Goods','COCHINSHIP','Cochin Shipyard Ltd.','EQ','INE704P01025'],
+    ['Information Technology','COFORGE','Coforge Ltd.','EQ','INE591G01025'],['Fast Moving Consumer Goods','COLPAL','Colgate Palmolive (India) Ltd.','EQ','INE259A01022'],['Services','CONCOR','Container Corporation of India Ltd.','EQ','INE111A01025'],['Chemicals','COROMANDEL','Coromandel International Ltd.','EQ','INE169A01031'],
+    ['Capital Goods','CUMMINSIND','Cummins India Ltd.','EQ','INE298A01020'],['Realty','DLF','DLF Ltd.','EQ','INE271C01023'],['Fast Moving Consumer Goods','DABUR','Dabur India Ltd.','EQ','INE016A01026'],['Healthcare','DIVISLAB','Divi\'s Laboratories Ltd.','EQ','INE361B01024'],
+    ['Consumer Durables','DIXON','Dixon Technologies (India) Ltd.','EQ','INE935N01020'],['Healthcare','DRREDDY','Dr. Reddy\'s Laboratories Ltd.','EQ','INE089A01031'],['Automobile and Auto Components','EICHERMOT','Eicher Motors Ltd.','EQ','INE066A01021'],['Consumer Services','ETERNAL','Eternal Ltd.','EQ','INE758T01015'],
+    ['Automobile and Auto Components','EXIDEIND','Exide Industries Ltd.','EQ','INE302A01020'],['Consumer Services','NYKAA','FSN E-Commerce Ventures Ltd.','EQ','INE388Y01029'],['Financial Services','FEDERALBNK','Federal Bank Ltd.','EQ','INE171A01029'],['Healthcare','FORTIS','Fortis Healthcare Ltd.','EQ','INE061F01013'],
+    ['Oil Gas & Consumable Fuels','GAIL','GAIL (India) Ltd.','EQ','INE129A01019'],['Capital Goods','GVT&D','GE Vernova T&D India Ltd.','EQ','INE200A01026'],['Services','GMRAIRPORT','GMR Airports Ltd.','EQ','INE776C01039'],['Healthcare','GLENMARK','Glenmark Pharmaceuticals Ltd.','EQ','INE935A01035'],
+    ['Fast Moving Consumer Goods','GODFRYPHLP','Godfrey Phillips India Ltd.','EQ','INE260B01028'],['Fast Moving Consumer Goods','GODREJCP','Godrej Consumer Products Ltd.','EQ','INE102D01028'],['Realty','GODREJPROP','Godrej Properties Ltd.','EQ','INE484J01027'],['Construction Materials','GRASIM','Grasim Industries Ltd.','EQ','INE047A01021'],
+    ['Information Technology','HCLTECH','HCL Technologies Ltd.','EQ','INE860A01027'],['Financial Services','HDFCAMC','HDFC Asset Management Company Ltd.','EQ','INE127D01025'],['Financial Services','HDFCBANK','HDFC Bank Ltd.','EQ','INE040A01034'],['Financial Services','HDFCLIFE','HDFC Life Insurance Company Ltd.','EQ','INE795G01014'],
+    ['Consumer Durables','HAVELLS','Havells India Ltd.','EQ','INE176B01034'],['Automobile and Auto Components','HEROMOTOCO','Hero MotoCorp Ltd.','EQ','INE158A01026'],['Metals & Mining','HINDALCO','Hindalco Industries Ltd.','EQ','INE038A01020'],['Capital Goods','HAL','Hindustan Aeronautics Ltd.','EQ','INE066F01020'],
+    ['Oil Gas & Consumable Fuels','HINDPETRO','Hindustan Petroleum Corporation Ltd.','EQ','INE094A01015'],['Fast Moving Consumer Goods','HINDUNILVR','Hindustan Unilever Ltd.','EQ','INE030A01027'],['Metals & Mining','HINDZINC','Hindustan Zinc Ltd.','EQ','INE267A01025'],['Capital Goods','POWERINDIA','Hitachi Energy India Ltd.','EQ','INE07Y701011'],
+    ['Financial Services','HUDCO','Housing & Urban Development Corporation Ltd.','EQ','INE031A01017'],['Automobile and Auto Components','HYUNDAI','Hyundai Motor India Ltd.','EQ','INE0V6F01027'],['Financial Services','ICICIBANK','ICICI Bank Ltd.','EQ','INE090A01021'],['Financial Services','ICICIGI','ICICI Lombard General Insurance Company Ltd.','EQ','INE765G01017'],
+    ['Financial Services','ICICIAMC','ICICI Prudential Asset Management Company Ltd.','EQ','INE346A01027'],['Financial Services','IDFCFIRSTB','IDFC First Bank Ltd.','EQ','INE092T01019'],['Fast Moving Consumer Goods','ITC','ITC Ltd.','EQ','INE154A01025'],['Financial Services','INDIANB','Indian Bank','EQ','INE562A01011'],
+    ['Consumer Services','INDHOTEL','Indian Hotels Co. Ltd.','EQ','INE053A01029'],['Oil Gas & Consumable Fuels','IOC','Indian Oil Corporation Ltd.','EQ','INE242A01010'],['Consumer Services','IRCTC','Indian Railway Catering And Tourism Corporation Ltd.','EQ','INE335Y01020'],['Financial Services','IRFC','Indian Railway Finance Corporation Ltd.','EQ','INE053F01010'],
+    ['Financial Services','IREDA','Indian Renewable Energy Development Agency Ltd.','EQ','INE202E01016'],['Telecommunication','INDUSTOWER','Indus Towers Ltd.','EQ','INE121J01017'],['Financial Services','INDUSINDBK','IndusInd Bank Ltd.','EQ','INE095A01012'],['Consumer Services','NAUKRI','Info Edge (India) Ltd.','EQ','INE663F01032'],
+    ['Information Technology','INFY','Infosys Ltd.','EQ','INE009A01021'],['Services','INDIGO','InterGlobe Aviation Ltd.','EQ','INE646L01027'],['Power','JSWENERGY','JSW Energy Ltd.','EQ','INE121E01018'],['Metals & Mining','JSWSTEEL','JSW Steel Ltd.','EQ','INE019A01038'],
+    ['Metals & Mining','JINDALSTEL','Jindal Steel Ltd.','EQ','INE749A01030'],['Financial Services','JIOFIN','Jio Financial Services Ltd.','EQ','INE758E01017'],['Consumer Services','JUBLFOOD','Jubilant Foodworks Ltd.','EQ','INE797F01020'],['Capital Goods','KEI','KEI Industries Ltd.','EQ','INE878B01027'],
+    ['Information Technology','KPITTECH','KPIT Technologies Ltd.','EQ','INE04I401011'],['Consumer Durables','KALYANKJIL','Kalyan Jewellers India Ltd.','EQ','INE303R01014'],['Financial Services','KOTAKBANK','Kotak Mahindra Bank Ltd.','EQ','INE237A01036'],['Financial Services','LTF','L&T Finance Ltd.','EQ','INE498L01015'],
+    ['Consumer Durables','LGEINDIA','LG Electronics India Ltd.','EQ','INE324D01010'],['Financial Services','LICHSGFIN','LIC Housing Finance Ltd.','EQ','INE115A01026'],['Information Technology','LTM','LTM Ltd.','EQ','INE214T01019'],['Construction','LT','Larsen & Toubro Ltd.','EQ','INE018A01030'],
+    ['Healthcare','LAURUSLABS','Laurus Labs Ltd.','EQ','INE947Q01028'],['Consumer Services','LENSKART','Lenskart Solutions Ltd.','EQ','INE956O01016'],['Realty','LODHA','Lodha Developers Ltd.','EQ','INE670K01029'],['Healthcare','LUPIN','Lupin Ltd.','EQ','INE326A01037'],
+    ['Automobile and Auto Components','MRF','MRF Ltd.','EQ','INE883A01011'],['Financial Services','M&MFIN','Mahindra & Mahindra Financial Services Ltd.','EQ','INE774D01024'],['Automobile and Auto Components','M&M','Mahindra & Mahindra Ltd.','EQ','INE101A01026'],['Healthcare','MANKIND','Mankind Pharma Ltd.','EQ','INE634S01028'],
+    ['Fast Moving Consumer Goods','MARICO','Marico Ltd.','EQ','INE196A01026'],['Automobile and Auto Components','MARUTI','Maruti Suzuki India Ltd.','EQ','INE585B01010'],['Financial Services','MFSL','Max Financial Services Ltd.','EQ','INE180A01020'],['Healthcare','MAXHEALTH','Max Healthcare Institute Ltd.','EQ','INE027H01010'],
+    ['Capital Goods','MAZDOCK','Mazagoan Dock Shipbuilders Ltd.','EQ','INE249Z01020'],['Financial Services','MOTILALOFS','Motilal Oswal Financial Services Ltd.','EQ','INE338I01027'],['Information Technology','MPHASIS','MphasiS Ltd.','EQ','INE356A01018'],['Financial Services','MCX','Multi Commodity Exchange of India Ltd.','EQ','INE745G01043'],
+    ['Financial Services','MUTHOOTFIN','Muthoot Finance Ltd.','EQ','INE414G01012'],['Power','NHPC','NHPC Ltd.','EQ','INE848E01016'],['Metals & Mining','NMDC','NMDC Ltd.','EQ','INE584A01023'],['Power','NTPC','NTPC Ltd.','EQ','INE733E01010'],
+    ['Metals & Mining','NATIONALUM','National Aluminium Co. Ltd.','EQ','INE139A01034'],['Fast Moving Consumer Goods','NESTLEIND','Nestle India Ltd.','EQ','INE239A01024'],['Realty','OBEROIRLTY','Oberoi Realty Ltd.','EQ','INE093I01010'],['Oil Gas & Consumable Fuels','ONGC','Oil & Natural Gas Corporation Ltd.','EQ','INE213A01029'],
+    ['Oil Gas & Consumable Fuels','OIL','Oil India Ltd.','EQ','INE274J01014'],['Financial Services','PAYTM','One 97 Communications Ltd.','EQ','INE982J01020'],['Information Technology','OFSS','Oracle Financial Services Software Ltd.','EQ','INE881D01027'],['Financial Services','POLICYBZR','PB Fintech Ltd.','EQ','INE417T01026'],
+    ['Chemicals','PIIND','PI Industries Ltd.','EQ','INE603J01030'],['Textiles','PAGEIND','Page Industries Ltd.','EQ','INE761H01022'],['Fast Moving Consumer Goods','PATANJALI','Patanjali Foods Ltd.','EQ','INE619A01035'],['Information Technology','PERSISTENT','Persistent Systems Ltd.','EQ','INE262H01021'],
+    ['Realty','PHOENIXLTD','Phoenix Mills Ltd.','EQ','INE211B01039'],['Chemicals','PIDILITIND','Pidilite Industries Ltd.','EQ','INE318A01026'],['Capital Goods','POLYCAB','Polycab India Ltd.','EQ','INE455K01017'],['Financial Services','PFC','Power Finance Corporation Ltd.','EQ','INE134E01011'],
+    ['Power','POWERGRID','Power Grid Corporation of India Ltd.','EQ','INE752E01010'],['Capital Goods','PREMIERENE','Premier Energies Ltd.','EQ','INE0BS701011'],['Realty','PRESTIGE','Prestige Estates Projects Ltd.','EQ','INE811K01011'],['Financial Services','PNB','Punjab National Bank','EQ','INE160A01022'],
+    ['Financial Services','RECLTD','REC Ltd.','EQ','INE020B01018'],['Fast Moving Consumer Goods','RADICO','Radico Khaitan Ltd','EQ','INE944F01028'],['Construction','RVNL','Rail Vikas Nigam Ltd.','EQ','INE415G01027'],['Oil Gas & Consumable Fuels','RELIANCE','Reliance Industries Ltd.','EQ','INE002A01018'],
+    ['Financial Services','SBICARD','SBI Cards and Payment Services Ltd.','EQ','INE018E01016'],['Financial Services','SBILIFE','SBI Life Insurance Company Ltd.','EQ','INE123W01016'],['Chemicals','SRF','SRF Ltd.','EQ','INE647A01010'],['Automobile and Auto Components','MOTHERSON','Samvardhana Motherson International Ltd.','EQ','INE775A01035'],
+    ['Construction Materials','SHREECEM','Shree Cement Ltd.','EQ','INE070A01015'],['Financial Services','SHRIRAMFIN','Shriram Finance Ltd.','EQ','INE721A01047'],['Capital Goods','ENRIN','Siemens Energy India Ltd.','EQ','INE1NPP01017'],['Capital Goods','SIEMENS','Siemens Ltd.','EQ','INE003A01024'],
+    ['Chemicals','SOLARINDS','Solar Industries India Ltd.','EQ','INE343H01029'],['Financial Services','SBIN','State Bank of India','EQ','INE062A01020'],['Metals & Mining','SAIL','Steel Authority of India Ltd.','EQ','INE114A01011'],['Healthcare','SUNPHARMA','Sun Pharmaceutical Industries Ltd.','EQ','INE044A01036'],
+    ['Capital Goods','SUPREMEIND','Supreme Industries Ltd.','EQ','INE195A01028'],['Capital Goods','SUZLON','Suzlon Energy Ltd.','EQ','INE040H01021'],['Consumer Services','SWIGGY','Swiggy Ltd.','EQ','INE00H001014'],['Automobile and Auto Components','TVSMOTOR','TVS Motor Company Ltd.','EQ','INE494B01023'],
+    ['Financial Services','TATACAP','Tata Capital Ltd.','EQ','INE976I01016'],['Telecommunication','TATACOMM','Tata Communications Ltd.','EQ','INE151A01013'],['Information Technology','TCS','Tata Consultancy Services Ltd.','EQ','INE467B01029'],['Fast Moving Consumer Goods','TATACONSUM','Tata Consumer Products Ltd.','EQ','INE192A01025'],
+    ['Information Technology','TATAELXSI','Tata Elxsi Ltd.','EQ','INE670A01012'],['Financial Services','TATAINVEST','Tata Investment Corporation Ltd.','EQ','INE672A01026'],['Capital Goods','TMCV','Tata Motors Ltd.','EQ','INE1TAE01010'],['Automobile and Auto Components','TMPV','Tata Motors Passenger Vehicles Ltd.','EQ','INE155A01022'],
+    ['Power','TATAPOWER','Tata Power Co. Ltd.','EQ','INE245A01021'],['Metals & Mining','TATASTEEL','Tata Steel Ltd.','EQ','INE081A01020'],['Information Technology','TECHM','Tech Mahindra Ltd.','EQ','INE669C01036'],['Consumer Durables','TITAN','Titan Company Ltd.','EQ','INE280A01028'],
+    ['Healthcare','TORNTPHARM','Torrent Pharmaceuticals Ltd.','EQ','INE685A01028'],['Consumer Services','TRENT','Trent Ltd.','EQ','INE849A01020'],['Automobile and Auto Components','TIINDIA','Tube Investments of India Ltd.','EQ','INE974X01010'],['Chemicals','UPL','UPL Ltd.','EQ','INE628A01036'],
+    ['Construction Materials','ULTRACEMCO','UltraTech Cement Ltd.','EQ','INE481G01011'],['Financial Services','UNIONBANK','Union Bank of India','EQ','INE692A01016'],['Fast Moving Consumer Goods','UNITDSPR','United Spirits Ltd.','EQ','INE854D01024'],['Fast Moving Consumer Goods','VBL','Varun Beverages Ltd.','EQ','INE200M01039'],
+    ['Metals & Mining','VEDL','Vedanta Ltd.','EQ','INE205A01025'],['Consumer Services','VMM','Vishal Mega Mart Ltd.','EQ','INE01EA01019'],['Telecommunication','IDEA','Vodafone Idea Ltd.','EQ','INE669E01016'],['Consumer Durables','VOLTAS','Voltas Ltd.','EQ','INE226A01021'],
+    ['Capital Goods','WAAREEENER','Waaree Energies Ltd.','EQ','INE377N01017'],['Information Technology','WIPRO','Wipro Ltd.','EQ','INE075A01022'],['Financial Services','YESBANK','Yes Bank Ltd.','EQ','INE528G01035'],['Healthcare','ZYDUSLIFE','Zydus Lifesciences Ltd.','EQ','INE010B01027']
   ];
-  BASE = { HDFCBANK:1678,ICICIBANK:1245,SBIN:842,AXISBANK:1156,KOTAKBANK:1798,TCS:4126,INFY:1842,WIPRO:562,HCLTECH:1734,RELIANCE:2984,ONGC:274,NTPC:412,POWERGRID:328,ITC:472,HINDUNILVR:2456,NESTLEIND:2510,BRITANNIA:5240,MARUTI:12680,TATAMOTORS:978,'M&M':2870,SUNPHARMA:1812,CIPLA:1524,DRREDDY:6120 };
+  BASE = { '360ONE':4640,'ABB':332,'APLAPOLLO':366,'AUBANK':5007,'ADANIENSOL':266,'ADANIENT':5348,'ADANIGREEN':3349,'ADANIPORTS':85,'ADANIPOWER':204,'ATGL':4506,'ABCAPITAL':562,'ALKEM':4744,'AMBUJACEM':1840,'APOLLOHOSP':187,'ASHOKLEY':85,'ASIANPAINT':791,'ASTRAL':1240,'AUROPHARMA':2781,'DMART':265,'AXISBANK':1156,'BSE':3578,'BAJAJ-AUTO':749,'BAJFINANCE':551,'BAJAJFINSV':135,'BAJAJHLDNG':1152,'BANKBARODA':414,'BANKINDIA':5490,'BDL':2318,'BEL':1139,'BHARATFORG':3840,'BHEL':95,'BPCL':325,'BHARTIARTL':129,'GROWW':3354,'BIOCON':429,'BLUESTARCO':101,'BOSCHLTD':7186,'BRITANNIA':5240,'CGPOWER':171,'CANBK':279,'CHOLAFIN':215,'CIPLA':1524,'COALINDIA':353,'COCHINSHIP':210,'COFORGE':408,'COLPAL':6443,'CONCOR':736,'COROMANDEL':6680,'CUMMINSIND':647,'DLF':102,'DABUR':2209,'DIVISLAB':232,'DIXON':106,'DRREDDY':6120,'EICHERMOT':65,'ETERNAL':544,'EXIDEIND':3664,'NYKAA':260,'FEDERALBNK':3249,'FORTIS':69,'GAIL':93,'GVT&D':218,'GMRAIRPORT':4182,'GLENMARK':207,'GODFRYPHLP':3986,'GODREJCP':2252,'GODREJPROP':100,'GRASIM':561,'HCLTECH':1734,'HDFCAMC':882,'HDFCBANK':1678,'HDFCLIFE':2968,'HAVELLS':78,'HEROMOTOCO':1526,'HINDALCO':1799,'HAL':141,'HINDPETRO':1074,'HINDUNILVR':2456,'HINDZINC':838,'POWERINDIA':261,'HUDCO':227,'HYUNDAI':2921,'ICICIBANK':1245,'ICICIGI':138,'ICICIAMC':317,'IDFCFIRSTB':556,'ITC':472,'INDIANB':1045,'INDHOTEL':6449,'IOC':87,'IRCTC':374,'IRFC':158,'IREDA':72,'INDUSTOWER':86,'INDUSINDBK':349,'NAUKRI':157,'INFY':1842,'INDIGO':4930,'JSWENERGY':5015,'JSWSTEEL':1239,'JINDALSTEL':136,'JIOFIN':2141,'JUBLFOOD':3381,'KEI':2049,'KPITTECH':491,'KALYANKJIL':1335,'KOTAKBANK':1798,'LTF':2320,'LGEINDIA':506,'LICHSGFIN':66,'LTM':1888,'LT':620,'LAURUSLABS':3825,'LENSKART':641,'LODHA':170,'LUPIN':90,'MRF':527,'M&MFIN':165,'M&M':2870,'MANKIND':113,'MARICO':285,'MARUTI':12680,'MFSL':1056,'MAXHEALTH':136,'MAZDOCK':122,'MOTILALOFS':273,'MPHASIS':90,'MCX':95,'MUTHOOTFIN':501,'NHPC':196,'NMDC':2497,'NTPC':412,'NATIONALUM':4039,'NESTLEIND':2510,'OBEROIRLTY':963,'ONGC':274,'OIL':67,'PAYTM':2371,'OFSS':159,'POLICYBZR':117,'PIIND':2761,'PAGEIND':292,'PATANJALI':278,'PERSISTENT':189,'PHOENIXLTD':517,'PIDILITIND':655,'POLYCAB':86,'PFC':3472,'POWERGRID':328,'PREMIERENE':4404,'PRESTIGE':212,'PNB':1439,'RECLTD':5063,'RADICO':1715,'RVNL':1401,'RELIANCE':2984,'SBICARD':688,'SBILIFE':66,'SRF':96,'MOTHERSON':966,'SHREECEM':614,'SHRIRAMFIN':242,'ENRIN':4836,'SIEMENS':6896,'SOLARINDS':65,'SBIN':842,'SAIL':62,'SUNPHARMA':1812,'SUPREMEIND':3725,'SUZLON':1043,'SWIGGY':376,'TVSMOTOR':728,'TATACAP':1190,'TATACOMM':3718,'TCS':4126,'TATACONSUM':455,'TATAELXSI':1384,'TATAINVEST':1399,'TMCV':130,'TMPV':126,'TATAPOWER':6676,'TATASTEEL':905,'TECHM':111,'TITAN':71,'TORNTPHARM':456,'TRENT':1943,'TIINDIA':1381,'UPL':1655,'ULTRACEMCO':2035,'UNIONBANK':83,'UNITDSPR':418,'VBL':96,'VEDL':3493,'VMM':6196,'IDEA':174,'VOLTAS':860,'WAAREEENER':1723,'WIPRO':562,'YESBANK':652,'ZYDUSLIFE':739 };
 
   constructor(props){
     super(props);
     this.univ = this.buildUniverse();
+    this.MONLBL=[];
+    this.univ.forEach(s=>{ const m=this.aggCandles(s.raw,21); const ma=this.sma(m.map(c=>c.c),20);
+      const i=m.length-1; s.close20m=m[i].c; s.ma20m=ma[i]; s.above20m = ma[i]!=null && m[i].c>=ma[i];
+      [2,1,0].forEach(k=>{ const j=i-k; s['above20m_'+k] = j>=0 && ma[j]!=null && m[j].c>=ma[j]; });
+      const w=this.aggCandles(s.raw,5); const wma=this.sma(w.map(c=>c.c),20); const wi=w.length-1;
+      s.above20w = wma[wi]!=null && w[wi].c>=wma[wi];
+      const dma=this.sma(s.raw.map(c=>c.c),20); const di=s.raw.length-1;
+      s.above20d = dma[di]!=null && s.raw[di].c>=dma[di];
+      const n=(s.above20d?1:0)+(s.above20w?1:0)+(s.above20m_0?1:0);
+      s.screen = n===3 ? 'Strong buy' : n===2 ? 'Buy candidate' : n===1 ? 'Watch' : 'Avoid';
+      if(!this.MONLBL.length) this.MONLBL=[2,1,0].map(k=>{ const n=new Date(); const d=new Date(n.getFullYear(),n.getMonth()-k,1); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+" '"+String(d.getFullYear()).slice(2); }); });
+    const SECOPTS=Array.from(new Set(this.univ.map(s=>s.industry))).sort();
+    this.GRIDBASE=[
+      {id:'sym',name:'Symbol',type:'text',w:120},
+      {id:'company',name:'Company Name',type:'text',w:240,edit:true,link:true},
+      {id:'industry',name:'Industry',type:'choice',opts:SECOPTS,w:180,edit:true,filter:true},
+      {id:'subcategory',name:'Subcategory',type:'text',w:190,edit:true,filter:true},
+      {id:'screen',name:'Screen',type:'choice',opts:['Strong buy','Buy candidate','Watch','Avoid','On hold'],w:146,edit:true,filter:true},
+      {id:'above20d',name:'20 MA · daily',type:'signal20',w:140,filter:true},
+      {id:'above20w',name:'20 MA · weekly',type:'signal20',w:146,filter:true},
+      {id:'ma20trend',name:'20 MA · '+this.MONLBL[2],type:'trend3',w:150,filter:true},
+      //{id:'_dead',name:'x ·  M',type:'signal20',w:180,filter:true},
+    ];
+    this.GRIDSEEDCOLS=[
+      {id:'c_notes',name:'Notes',type:'text',w:320,custom:true,edit:true},
+    ];
+    this.GRIDSEEDVALS={
+      RELIANCE:{c_notes:'Refining margins improving; watch GRM print.'},
+      INFY:{c_notes:'Deal wins steady, guidance conservative.'},
+      TCS:{c_notes:'Waiting on BFSI recovery.'},
+      HDFCBANK:{c_notes:'Deposit growth lagging peers.'},
+    };
     const order = {};
     this.univ.forEach(s=>{ (order[s.industry]=order[s.industry]||[]).push(s.sym); });
     const seedHi = [
@@ -1448,6 +1678,11 @@ class Component extends DCLogic {
       hmx:0, hmy:0, dense:false, paletteOpen:false, paletteQuery:'', universeLoaded:true, secSort:'pct', secSortDir:'desc', runExpanded:null, searchFocus:false,
       jf:{symbol:'',segment:'Delivery',qty:'',buy:'',sell:'',note:'',tags:'',entryDate:'',exitDate:''}, jEdit:null, jEditText:'', journalChart:null, jChartType:'candle',
       jFilter:{q:'',seg:'All'}, defaultSegment:'Delivery', trendCell:null,
+      gridCols:this.GRIDSEEDCOLS.slice(), gridVals:JSON.parse(JSON.stringify(this.GRIDSEEDVALS)), gridDirty:{},
+      gridOrder:null, gridDrag:null, gridOver:null,
+      gridSortBy:'sym', gridSortDir:'asc', gridGroup:'industry', gridHide:{}, gridFilter:{}, gridQ:'', gridView:'all',
+      gridSel:{}, gridEdit:null, gridEditVal:'', gridColMenu:null, gridFilterMenu:null, gridAddOpen:null,
+      gridNewName:'', gridNewType:'text', gridNewOpts:'', gridLimit:60, gridDeleted:{}, gridExtra:[], gridGroupClosed:{}, gridToast:'',
       books:this.seedBooks(), readerBook:null, readerPage:0, readerFont:106, readerTheme:'sepia', readerToc:false, readerAsk:false,
       bookAskQ:'', bookAskLog:[], bookAsking:false, progress:{}, ingest:{state:'idle',pct:0,name:'',kind:'text'},
       bookmarks:{}, bookHighlights:{}, readerFontFamily:'serif', readerWidth:'normal', readerSearch:'', selPopover:null, readerSettings:false, flashHl:null,
@@ -1458,10 +1693,24 @@ class Component extends DCLogic {
         { id:'js3', entryDate:'2026-07-24', exitDate:'', symbol:'INFY', segment:'Delivery', qty:40, buy:1820.00, sell:null, note:'Adding on strength; holding above 44 MA.', tags:['swing'] }
       ]
     };
-    try{ const sv=JSON.parse(localStorage.getItem('paro:v1')||'null'); if(sv){ ['selected','filter','fav','watch','theme','comments','highlights','order','collapsed','selectedSector','pins','chat','dense','journal','screen','defaultSegment','timeframe','bollinger','rsi','books','progress','readerFont','readerTheme','bookmarks','bookHighlights','readerFontFamily','readerWidth'].forEach(k=>{ if(sv[k]!==undefined) this.state[k]=sv[k]; }); } }catch(e){}
+    try{ const sv=JSON.parse(localStorage.getItem('paro:v2')||'null'); if(sv){ ['selected','filter','fav','watch','theme','comments','highlights','order','collapsed','selectedSector','pins','chat','dense','journal','screen','defaultSegment','timeframe','bollinger','rsi','books','progress','readerFont','readerTheme','bookmarks','bookHighlights','readerFontFamily','readerWidth'].forEach(k=>{ if(sv[k]!==undefined) this.state[k]=sv[k]; }); } }catch(e){}
+    try{ // reconcile persisted sector map against the live universe
+      const un=this.clean, bySec={}; this.univ.forEach(s=>{ (bySec[s.industry]=bySec[s.industry]||[]).push(s.sym); });
+      const symSet={}; this.univ.forEach(s=>symSet[s.sym]=true);
+      const prev=this.state.order||{}, next={};
+      Object.keys(bySec).forEach(sec=>{
+        const kept=(prev[sec]||[]).map(x=>un.call(this,String(x))).filter(x=>symSet[x]&&bySec[sec].indexOf(x)>=0);
+        next[sec]=kept.concat(bySec[sec].filter(x=>kept.indexOf(x)<0));
+      });
+      this.state.order=next;
+      if(!symSet[un.call(this,String(this.state.selected||''))]) this.state.selected=this.univ[0].sym;
+      const f={}; Object.keys(this.state.fav||{}).forEach(k=>{ const c=un.call(this,k); if(symSet[c]) f[c]=this.state.fav[k]; }); this.state.fav=f;
+      const w={}; Object.keys(this.state.watch||{}).forEach(k=>{ const c=un.call(this,k); if(symSet[c]) w[c]=this.state.watch[k]; }); this.state.watch=w;
+      if(this.state.selectedSector && !bySec[this.state.selectedSector]) this.state.selectedSector=Object.keys(bySec)[0];
+    }catch(e){}
   }
   onResize=()=>{ const m=window.innerWidth<860; if(m!==this.state.mobile) this.setState({mobile:m}); };
-  persist(){ try{ const {selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,journal,screen,defaultSegment,timeframe,bollinger,rsi}=this.state; const snap=JSON.stringify({selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,journal,screen,defaultSegment,timeframe,bollinger,rsi,books:this.state.books,progress:this.state.progress,readerFont:this.state.readerFont,readerTheme:this.state.readerTheme,bookmarks:this.state.bookmarks,bookHighlights:this.state.bookHighlights,readerFontFamily:this.state.readerFontFamily,readerWidth:this.state.readerWidth}); if(snap!==this._snap){ this._snap=snap; localStorage.setItem('paro:v1',snap); } }catch(e){} }
+  persist(){ try{ const {selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,journal,screen,defaultSegment,timeframe,bollinger,rsi}=this.state; const snap=JSON.stringify({selected,filter,fav,watch,theme,comments,highlights,order,collapsed,selectedSector,pins,chat,dense,journal,screen,defaultSegment,timeframe,bollinger,rsi,books:this.state.books,progress:this.state.progress,readerFont:this.state.readerFont,readerTheme:this.state.readerTheme,bookmarks:this.state.bookmarks,bookHighlights:this.state.bookHighlights,readerFontFamily:this.state.readerFontFamily,readerWidth:this.state.readerWidth}); if(snap!==this._snap){ this._snap=snap; localStorage.setItem('paro:v2',snap); } }catch(e){} }
 
   fmtTs(ts){ const d=new Date(ts); const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; let h=d.getHours(),m=d.getMinutes(); const ap=h>=12?'PM':'AM'; h=h%12||12; return mo+' '+d.getDate()+', '+h+':'+(m<10?'0':'')+m+' '+ap; }
   onChatInput=(e)=>this.setState({chatInput:e.target.value});
@@ -1529,9 +1778,9 @@ class Component extends DCLogic {
   clean(s){ return s.replace(/&amp;/g,'&').replace(/&rsquo;|&#8217;|\u2019/g,"'"); }
 
   buildUniverse(){
-    return this.DEFS.map(([industry,sym,company],k)=>{
+    return this.DEFS.map(([industry,sym,company,series,isin],k)=>{
       const rnd=this.rng(this.hash(sym));
-      const N=1400, vol=0.014;
+      const N=760, vol=0.014;
       let closes=[1]; for(let i=1;i<N;i++) closes.push(closes[i-1]*(1+(rnd()-0.485)*vol*2));
       const base=this.BASE[sym]||1000;
       const scale=base/closes[N-1];
@@ -1549,8 +1798,8 @@ class Component extends DCLogic {
       const close=disp[disp.length-1].c, ma44=maDisp[maDisp.length-1];
       const pct=(close-ma44)/ma44*100;
       const h4=this.hash(sym+'i');
-      return { sym, company, industry, series:'EQ', yahoo:sym+'.NS', raw:candles,
-        isin:'INE'+(100+h4%800)+'A01'+(10+h4%80),
+      return { sym, company, industry, subcategory:this.SUBCAT[sym]||'', series:series||'EQ', yahoo:sym+'.NS', raw:candles,
+        isin:isin||('INE'+(100+h4%800)+'A01'+(10+h4%80)),
         disp, maDisp, close, ma44, pct, above:close>=ma44,
         lastSync:['2h ago','4h ago','1d ago','3h ago','6h ago'][k%5],
         syncStatus:['synced','synced','stale','synced','synced'][k%5] };
@@ -1575,6 +1824,95 @@ class Component extends DCLogic {
 
   // ---- nav / routing
   go(screen,filter){ const st={screen}; if(filter) st.filter=filter; this.setState(st); }
+
+  // ---- stock list grid
+  GRIDTYPES=[['text','Single line text'],['number','Number'],['choice','Choice'],['date','Date'],['boolean','Yes / No']];
+  GRIDLEGACY={c_conv:1,c_target:1,c_review:1};
+  gridAllCols(){ const all=this.GRIDBASE.concat((this.state.gridCols||[]).filter(c=>!this.GRIDLEGACY[c.id]));
+    const ord=this.state.gridOrder; if(!ord||!ord.length) return all;
+    const byId={}; all.forEach(c=>byId[c.id]=c);
+    const out=ord.map(id=>byId[id]).filter(Boolean);
+    all.forEach(c=>{ if(out.indexOf(c)<0) out.push(c); });
+    return out; }
+  gridDragStart=(id)=>(e)=>{ try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',id); }catch(err){} this.setState({gridDrag:id, gridColMenu:null, gridFilterMenu:null, gridEdit:null}); };
+  gridDragOver=(id)=>(e)=>{ e.preventDefault(); try{ e.dataTransfer.dropEffect='move'; }catch(err){} if(this.state.gridOver!==id) this.setState({gridOver:id}); };
+  gridDragEnd=()=>this.setState({gridDrag:null, gridOver:null});
+  gridDrop=(id)=>(e)=>{ e.preventDefault(); const from=this.state.gridDrag; this.setState({gridDrag:null,gridOver:null});
+    if(!from||from===id) return;
+    const ids=this.gridAllCols().map(c=>c.id);
+    const fi=ids.indexOf(from), ti=ids.indexOf(id); if(fi<0||ti<0) return;
+    ids.splice(fi,1); ids.splice(ids.indexOf(id)+(ti>fi?1:0),0,from);
+    this.setState({gridOrder:ids}); this.gridToast('Column moved'); };
+  gridSourceRows(){ const st=this.state; return st.gridExtra.concat(this.univ).filter(r=>!st.gridDeleted[r.sym]); }
+  gridVal(row,col){ const o=this.state.gridVals[row.sym]; if(o&&o[col.id]!==undefined) return o[col.id];
+    const base=col.custom? undefined : row[col.id];
+    return base===undefined ? (col.type==='boolean'?false:'') : base; }
+  gridDisplay(row,col){ const v=this.gridVal(row,col);
+    if(col.type==='money') return typeof v==='number'? this.fmt(v) : '—';
+    if(col.type==='pct') return typeof v==='number'? (v>=0?'+':'')+v.toFixed(2)+'%' : '—';
+    if(col.type==='number') return v===''||v==null? '' : '\u20b9'+Number(v).toLocaleString('en-IN');
+    if(col.type==='boolean') return v?'Yes':'No';
+    if(col.type==='signal') return v?'Above 44 MA':'Below 44 MA';
+    if(col.type==='signal20') return v?'Above':'Below';
+    if(col.type==='trend3') return row['above20m_0']?'Above':'Below';
+    if(col.type==='chip') return this.chip(v).label;
+    if(col.id==='company') return this.clean(String(v||''));
+    return v===''||v==null? '' : String(v); }
+  gridWrite(sym,colId,v){ this.setState(s=>({ gridVals:{...s.gridVals,[sym]:{...(s.gridVals[sym]||{}),[colId]:v}}, gridEdit:null })); this.gridToast('Saved'); }
+
+  gridSortToggle=(id)=>this.setState(s=>({ gridSortBy:id, gridSortDir: s.gridSortBy===id && s.gridSortDir==='asc' ? 'desc':'asc', gridColMenu:null }));
+  gridSortSet=(id,dir)=>this.setState({gridSortBy:id,gridSortDir:dir,gridColMenu:null});
+  gridGroupBy=(id)=>this.setState(s=>({gridGroup:s.gridGroup===id?'':id, gridColMenu:null, gridGroupClosed:{}}));
+  gridUngroup=()=>this.setState({gridGroup:'none'});
+  gridHideCol=(id)=>this.setState(s=>({gridHide:{...s.gridHide,[id]:true}, gridColMenu:null}));
+  gridShowAllCols=()=>this.setState({gridHide:{}});
+  gridDelCol=(id)=>this.setState(s=>({gridCols:s.gridCols.filter(c=>c.id!==id), gridColMenu:null}));
+  _anchor(e){ const r=e.currentTarget.getBoundingClientRect(); return { x:Math.max(10,Math.min(r.left-160, window.innerWidth-260)), y:Math.min(r.bottom+6, window.innerHeight-280) }; }
+  gridOpenColMenu=(id,e)=>{ e.stopPropagation(); this.setState({gridColMenu:{id,...this._anchor(e)}, gridFilterMenu:null, gridAddOpen:null, gridEdit:null}); };
+  gridOpenFilter=(id)=>this.setState(s=>({gridFilterMenu:{id, x:s.gridColMenu?s.gridColMenu.x:220, y:s.gridColMenu?s.gridColMenu.y:180}, gridColMenu:null}));
+  gridToggleFilterVal=(cid,val)=>this.setState(s=>{ const cur=(s.gridFilter[cid]||[]).slice(); const i=cur.indexOf(val); if(i>=0) cur.splice(i,1); else cur.push(val); return {gridFilter:{...s.gridFilter,[cid]:cur}, gridLimit:60}; });
+  gridClearFilter=(cid)=>this.setState(s=>({gridFilter:{...s.gridFilter,[cid]:[]}}));
+  gridClearAllFilters=()=>this.setState({gridFilter:{}});
+  gridOpenAdd=(e)=>{ e.stopPropagation(); this.setState({gridAddOpen:this._anchor(e), gridColMenu:null, gridFilterMenu:null}); };
+  gridNewName=(e)=>this.setState({gridNewName:e.target.value});
+  gridNewType=(e)=>this.setState({gridNewType:e.target.value});
+  gridNewOpts=(e)=>this.setState({gridNewOpts:e.target.value});
+  gridCreateCol=()=>{ const n=(this.state.gridNewName||'').trim(); if(!n) return; const t=this.state.gridNewType;
+    const opts=t==='choice' ? (this.state.gridNewOpts||'').split(',').map(x=>x.trim()).filter(Boolean) : undefined;
+    const col={ id:'c_'+Math.random().toString(36).slice(2,7), name:n, type:t, opts, w:t==='text'?220:(t==='boolean'?100:130), custom:true, edit:true, filter:(t==='choice'||t==='boolean'), align:t==='number'?'right':undefined };
+    this.setState(s=>({gridCols:[...s.gridCols,col], gridAddOpen:null, gridNewName:'', gridNewOpts:''})); this.gridToast('Column "'+n+'" added'); };
+  gridCloseMenus=()=>this.setState({gridColMenu:null,gridFilterMenu:null,gridAddOpen:null});
+
+  gridStartEdit=(sym,colId,cur)=>this.setState({gridEdit:{sym,col:colId}, gridEditVal:cur==null?'':String(cur), gridColMenu:null, gridFilterMenu:null});
+  gridEditChange=(e)=>this.setState({gridEditVal:e.target.value});
+  gridCommit=()=>{ const ed=this.state.gridEdit; if(!ed) return; const col=this.gridAllCols().find(c=>c.id===ed.col); let v=this.state.gridEditVal;
+    if(col&&col.type==='number') v = v===''? '' : (Number(v)||0);
+    this.gridWrite(ed.sym, ed.col, v); };
+  gridCancelEdit=()=>this.setState({gridEdit:null});
+  gridKey=(e)=>{ if(e.key==='Enter'){ e.preventDefault(); this.gridCommit(); } else if(e.key==='Escape'){ e.preventDefault(); this.gridCancelEdit(); } };
+  gridPickSelect=(sym,colId)=>(e)=>this.gridWrite(sym,colId,e.target.value);
+  gridToggleBool=(sym,colId,cur)=>this.gridWrite(sym,colId,!cur);
+
+  gridToggleSel=(sym)=>this.setState(s=>({gridSel:{...s.gridSel,[sym]:!s.gridSel[sym]}}));
+  gridClearSel=()=>this.setState({gridSel:{}});
+  gridDeleteSel=()=>this.setState(s=>{ const d={...s.gridDeleted}; let n=0; Object.keys(s.gridSel).forEach(k=>{ if(s.gridSel[k]){ d[k]=true; n++; } }); this.gridToast(n+' row'+(n===1?'':'s')+' removed from the list'); return {gridDeleted:d, gridSel:{}}; });
+  gridBulkReview=()=>this.setState(s=>{ const v={...s.gridVals}, dj={...s.gridDirty}; Object.keys(s.gridSel).forEach(k=>{ if(s.gridSel[k]){ v[k]={...(v[k]||{}),c_review:true}; dj[k]=true; } }); return {gridVals:v, gridDirty:dj, gridSel:{}}; });
+  gridSave=()=>{ const n=Object.keys(this.state.gridDirty).length; this.setState({gridDirty:{}}); this.gridToast(n+' row'+(n===1?'':'s')+' saved'); };
+  gridDiscard=()=>this.setState({ gridVals:JSON.parse(JSON.stringify(this.GRIDSEEDVALS)), gridDirty:{}, gridExtra:[], gridEdit:null });
+  gridAddRow=()=>{ const sym='NEW-'+(this.state.gridExtra.length+1);
+    const row={ sym, company:'', industry:this.GRIDBASE[2].opts[0], series:'EQ', isin:'', close:null, ma44:null, pct:null, above:false, syncStatus:'idle', lastSync:'—', _new:true };
+    this.setState(s=>({ gridExtra:[row,...s.gridExtra], gridEdit:{sym,col:'company'}, gridEditVal:'', gridSortBy:'', gridQ:'', gridView:'all' })); };
+  gridSetView=(v)=>this.setState({gridView:v, gridLimit:60});
+  gridSearch=(e)=>this.setState({gridQ:e.target.value, gridLimit:60});
+  gridMore=()=>this.setState(s=>({gridLimit:s.gridLimit+100}));
+  gridToggleGroupOpen=(k)=>this.setState(s=>({gridGroupClosed:{...s.gridGroupClosed,[k]:!s.gridGroupClosed[k]}}));
+  gridToast(msg){ this.setState({gridToast:msg}); clearTimeout(this._gToast); this._gToast=setTimeout(()=>this.setState({gridToast:''}),1900); }
+  gridExport=()=>{ const cols=this.gridAllCols().filter(c=>!this.state.gridHide[c.id]);
+    const esc=(x)=>/[",\n]/.test(x)? '"'+x.replace(/"/g,'""')+'"' : x;
+    const rows=this.gridSourceRows();
+    const csv=[cols.map(c=>esc(c.name)).join(',')].concat(rows.map(r=>cols.map(c=>esc(this.gridDisplay(r,c))).join(','))).join('\n');
+    try{ navigator.clipboard.writeText(csv); }catch(e){}
+    this.gridToast(rows.length+' rows copied as CSV'); };
 
   // ---- search / filter
   onSearch=(e)=>this.setState({search:e.target.value});
@@ -1654,10 +1992,10 @@ class Component extends DCLogic {
   clearData=()=>{ if(this._st)clearInterval(this._st); this.setState({ clearConfirm:false, journal:[], pins:[], chat:[], chatError:'', streaming:false, comments:{}, journalChart:null }); };
 
   // ---- sync simulation
-  runSync=(mode)=>{
+  runSync=(mode,scope)=>{
     if(this.syncTimer) return;
-    const total=this.univ.length;
-    const partial = mode!=='Full';
+    const total = scope==='watchlist' ? Math.max(1,Object.keys(this.state.watch).filter(k=>this.state.watch[k]).length) : this.univ.length;
+    const partial = mode!=='Full' && total>10;
     this.setState({ sync:{ ...this.state.sync, status:'running', mode, processed:0, updated:0, failed:0, total, started:'just now', error:'', errorTitle:'' } });
     let p=0;
     this.syncTimer=setInterval(()=>{
@@ -1665,18 +2003,17 @@ class Component extends DCLogic {
       if(p>=total){ p=total; clearInterval(this.syncTimer); this.syncTimer=null;
         const failed=partial?3:0;
         const status=partial?'partial':'success';
-        const details=[
-          {sym:'RELIANCE',status:'ok',rows:1,window:'Jul 24',message:''},
-          {sym:'INFY',status:'ok',rows:1,window:'Jul 24',message:''},
-          {sym:'WIPRO',status:partial?'fail':'ok',rows:partial?0:1,window:partial?'—':'Jul 24',message:partial?'Provider timeout after 30s.':''},
-          {sym:'CIPLA',status:'ok',rows:1,window:'Jul 24',message:''},
-        ];
+        const syms = scope==='watchlist'
+          ? Object.keys(this.state.watch).filter(k=>this.state.watch[k])
+          : ['RELIANCE','INFY','WIPRO','CIPLA'];
+        const details = syms.map((sy,i)=>({ sym:sy, status:(partial&&i===2)?'fail':'ok', rows:(partial&&i===2)?0:1,
+          window:(partial&&i===2)?'—':'Jul 24', message:(partial&&i===2)?'Provider timeout after 30s.':'' }));
         const log={id:'l'+Date.now(),status,mode,start:'just now',processed:total,updated:total-failed,failed,error:partial?failed+' symbols failed — provider timeouts.':'',details};
         this.setState(s=>({ sync:{...s.sync,status,processed:total,updated:total-failed,failed,lastSuccess:partial?s.sync.lastSuccess:'just now', error:partial?'3 symbols failed to sync — see logs for detail.':'', errorTitle:partial?'Partial failure':''}, logs:[log,...s.logs], selectedLog:log.id }));
       } else { this.setState(s=>({sync:{...s.sync,processed:Math.min(p,total),updated:Math.max(0,Math.min(p,total)-1)}})); }
     },260);
   };
-  quickSync=()=>this.runSync('Full');
+  quickSync=()=>this.runSync('Incremental · Watchlist','watchlist');
 
   // ---- upload
   setFileInput=(el)=>{ this.fileInput=el; };
@@ -1990,7 +2327,10 @@ class Component extends DCLogic {
   openPalette=()=>this.setState({paletteOpen:true, paletteQuery:''});
   closePalette=()=>this.setState({paletteOpen:false});
   onPaletteQuery=(e)=>this.setState({paletteQuery:e.target.value});
-  componentDidMount(){ this.icons(); this.draw(); window.addEventListener('resize',this.onResize); window.addEventListener('keydown',this.onKeyGlobal); setTimeout(()=>this.setState({listLoading:false}),750); setTimeout(()=>this.setState({detailLoading:false}),850); }
+  componentDidMount(){ const legacy={c_conv:1,c_target:1,c_review:1};
+    if((this.state.gridCols||[]).some(c=>legacy[c.id])) this.setState(s=>({gridCols:s.gridCols.filter(c=>!legacy[c.id])}));
+    if(!this.state.gridGroup) this.setState({gridGroup:'industry'});
+    this.icons(); this.draw(); window.addEventListener('resize',this.onResize); window.addEventListener('keydown',this.onKeyGlobal); setTimeout(()=>this.setState({listLoading:false}),750); setTimeout(()=>this.setState({detailLoading:false}),850); }
   componentDidUpdate(){ this.icons(); this.draw(); this.drawTrade(); this.drawEquity(); this.drawRotation(); this.drawCompare(); this.persist(); if(this.chatBox && this.state.screen==='sector'){ this.chatBox.scrollTop=this.chatBox.scrollHeight; } }
   componentWillUnmount(){ if(this.ro)this.ro.disconnect(); if(this.syncTimer)clearInterval(this.syncTimer); if(this._st)clearInterval(this._st); clearTimeout(this._dt); window.removeEventListener('resize',this.onResize); window.removeEventListener('keydown',this.onKeyGlobal); }
   icons(){
@@ -2078,10 +2418,10 @@ class Component extends DCLogic {
       ? '--surface:#1e222b;--gray-50:#171a21;--gray-100:#20242d;--gray-200:#333a45;--gray-300:#454e5b;--gray-400:#818b9a;--gray-500:#9aa4b2;--gray-600:#b9c1cc;--gray-700:#d3d9e0;--gray-800:#e8ebef;--gray-900:#f3f5f8;--success-dim:#123a2a;--danger-dim:#3a2024;--warning-dim:#39331e;--hex-honey-dim:#39331e;--info-dim:#1c3350;--electric-dim:#0f3a40;--hex-blue-light:#2a2f6b;--hex-bright-dim:#1c3350;'
       : '--surface:#ffffff;');
     const shellStyle=(M?'min-height:100vh;height:auto;display:flex;flex-direction:column;overflow-y:auto;':'height:100vh;display:flex;overflow:hidden;')+'background:var(--gray-100);color:var(--gray-900);'+accentVars;
-    const railOuterStyle=M?'width:100%;flex:0 0 auto;display:flex;padding:8px 10px 0;':'width:64px;flex:0 0 64px;display:flex;flex-direction:column;align-items:center;padding:12px 0;';
+    const railOuterStyle=M?'width:100%;flex:0 0 auto;display:flex;padding:8px 10px 0;':'width:64px;flex:0 0 64px;display:flex;flex-direction:column;align-items:center;padding:12px 0;min-height:0;';
     const railInnerStyle=M
       ?'background:var(--surface);border:1px solid var(--gray-200);border-radius:16px;box-shadow:var(--shadow-sm);display:flex;flex-direction:row;align-items:center;padding:8px 10px;gap:6px;width:100%;'
-      :'background:var(--surface);border:1px solid var(--gray-200);border-radius:18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px;flex:1;width:48px;';
+      :'background:var(--surface);border:1px solid var(--gray-200);border-radius:18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px;flex:1;min-height:0;overflow-y:auto;width:48px;';
     const wsStyle=M?'display:flex;flex-direction:column;padding:0 10px 10px;gap:10px;':'flex:1;display:flex;min-width:0;padding:12px 12px 12px 0;gap:12px;';
     const sidebarStyle=M
       ?'width:100%;flex:0 0 auto;max-height:68vh;background:var(--surface);border:1px solid var(--gray-200);border-radius:18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;'
@@ -2091,6 +2431,7 @@ class Component extends DCLogic {
     const adminGridStyle=M?'display:grid;grid-template-columns:1fr;gap:10px;':'display:grid;grid-template-columns:1.4fr 1fr;gap:12px;align-items:start;';
     const isWorkspace=st.screen==='workspace', isAdmin=st.screen==='admin';
     const isLibrary=st.screen==='library';
+    const isList=st.screen==='list';
     const syncBusy=st.sync.status==='running';
 
     const wb=this.weeklyBreadth();
@@ -2184,6 +2525,7 @@ class Component extends DCLogic {
       railItem('layers','Sector analysis', isSector, ()=>this.go('sector')),
       railItem('bar-chart-3','Weekly sector trends', isTrends, ()=>this.go('trends')),
       railItem('notebook-pen','Trading journal', isJournal, ()=>this.go('journal')),
+      railItem('table-2','Stock list', isList, ()=>this.go('list')),
       railItem('book-open','Library · reader', isLibrary, ()=>this.openLibrary()),
       railItem('sliders-horizontal','Admin', isAdmin, ()=>this.go('admin')),
     ];
@@ -2419,7 +2761,7 @@ class Component extends DCLogic {
 
     // command palette
     const pq=st.paletteQuery.trim().toLowerCase(); const palItems=[];
-    [['Market workspace','workspace','layout-dashboard'],['Sector analysis','sector','layers'],['Weekly sector trends','trends','bar-chart-3'],['Trading journal','journal','notebook-pen'],['Admin','admin','sliders-horizontal']].forEach(([label,scr,icon])=>{ if(!pq||label.toLowerCase().includes(pq)) palItems.push({id:'sc'+scr,icon,label,kind:'Screen',onClick:()=>this.setState({screen:scr,paletteOpen:false})}); });
+    [['Market workspace','workspace','layout-dashboard'],['Stock list','list','table-2'],['Sector analysis','sector','layers'],['Weekly sector trends','trends','bar-chart-3'],['Trading journal','journal','notebook-pen'],['Admin','admin','sliders-horizontal']].forEach(([label,scr,icon])=>{ if(!pq||label.toLowerCase().includes(pq)) palItems.push({id:'sc'+scr,icon,label,kind:'Screen',onClick:()=>this.setState({screen:scr,paletteOpen:false})}); });
     secList.forEach(nm=>{ if(!pq||nm.toLowerCase().includes(pq)) palItems.push({id:'se'+nm,icon:'layers',label:nm,kind:'Sector',onClick:()=>this.setState({screen:'sector',selectedSector:nm,paletteOpen:false})}); });
     this.univ.forEach(s=>{ if(!pq||s.sym.toLowerCase().includes(pq)||this.clean(s.company).toLowerCase().includes(pq)) palItems.push({id:'st'+s.sym,icon:'trending-up',label:s.sym+' · '+this.clean(s.company),kind:'Stock',onClick:()=>this.setState({screen:'workspace',selected:s.sym,detailLoading:false,paletteOpen:false})}); });
     const palette={ open:st.paletteOpen, query:st.paletteQuery, onQuery:this.onPaletteQuery, close:this.closePalette, stop:(e)=>e.stopPropagation(), items:palItems.slice(0,9), empty:palItems.length===0 };
@@ -2521,7 +2863,133 @@ class Component extends DCLogic {
     const selPopover = st.selPopover ? { show:true, add:this.addHighlight,
       style:'position:fixed;z-index:70;left:'+Math.max(8,Math.min((typeof window!=='undefined'?window.innerWidth:1200)-140, st.selPopover.x-52))+'px;top:'+Math.max(8,st.selPopover.y-48)+'px;' } : { show:false };
 
+    // ---- stock list grid model
+    const allCols=this.gridAllCols();
+    const vCols=allCols.filter(c=>!st.gridHide[c.id]);
+    let gRows=this.gridSourceRows();
+    if(st.gridView==='above') gRows=gRows.filter(r=>r.above);
+    else if(st.gridView==='fav') gRows=gRows.filter(r=>st.fav[r.sym]);
+    else if(st.gridView==='edited') gRows=gRows.filter(r=>st.gridVals[r.sym]||r._new);
+    const gq=(st.gridQ||'').trim().toLowerCase();
+    if(gq) gRows=gRows.filter(r=>vCols.some(c=>String(this.gridDisplay(r,c)).toLowerCase().includes(gq)));
+    Object.keys(st.gridFilter).forEach(cid=>{ const vals=st.gridFilter[cid]; if(!vals||!vals.length) return;
+      const col=allCols.find(c=>c.id===cid); if(!col) return; gRows=gRows.filter(r=>vals.indexOf(String(this.gridDisplay(r,col)))>=0); });
+    const sortCol=allCols.find(c=>c.id===st.gridSortBy);
+    if(sortCol){ const dir=st.gridSortDir==='desc'?-1:1;
+      gRows=gRows.slice().sort((a,b)=>{ let x=this.gridVal(a,sortCol), y=this.gridVal(b,sortCol);
+        if(typeof x==='boolean')x=x?1:0; if(typeof y==='boolean')y=y?1:0;
+        if(x==null)x=''; if(y==null)y='';
+        if(typeof x==='number'&&typeof y==='number') return (x-y)*dir;
+        x=String(x).toLowerCase(); y=String(y).toLowerCase(); return x<y?-dir:(x>y?dir:0); }); }
+    const gTotal=gRows.length;
+    const gShown=gRows.slice(0,st.gridLimit);
+    const groupCol=allCols.find(c=>c.id===(st.gridGroup||'industry'));
+    const rowGrid='display:grid;grid-template-columns:34px '+vCols.map(c=>c.w+'px').join(' ')+' 40px;';
+    const mkCell=(r,c)=>{
+      const editing = !!(st.gridEdit && st.gridEdit.sym===r.sym && st.gridEdit.col===c.id);
+      const raw=this.gridVal(r,c), text=this.gridDisplay(r,c);
+      const editable=!!c.edit;
+      const isSelect = editing && c.type==='choice';
+      const isInput = editing && c.type!=='choice' && c.type!=='boolean';
+      const isBool = !editing && c.type==='boolean';
+      const isChip = !editing && (c.type==='chip'||c.type==='signal'||c.type==='signal20');
+      const isTrend = !editing && c.type==='trend3';
+      const badges = isTrend ? [0].map((k,i)=>{ const on=!!r['above20m_'+k]; return { label:on?'Above':'Below',
+        style:'display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap;'+(on?'background:var(--success-dim);color:var(--success);':'background:var(--danger-dim);color:var(--danger);'),
+        icon:on?'arrow-up-right':'arrow-down-right' }; }) : [];
+      const isPlain = !editing && !isBool && !isChip && !isTrend;
+      let textStyle='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+      if(c.type==='pct'&&typeof raw==='number') textStyle+='font-weight:700;color:'+(raw>=0?'var(--success)':'var(--danger)')+';';
+      else if(c.id==='sym') textStyle+='font-weight:800;letter-spacing:0.01em;';
+      else if(c.type==='money'||c.type==='number') textStyle+='font-variant-numeric:tabular-nums;';
+      if(c.id==='screen'){ const col={'Strong buy':'var(--success)','Buy candidate':'var(--success)','Watch':'#9a6a00','Avoid':'var(--danger)','On hold':'var(--gray-500)'}[raw]||'var(--gray-500)';
+        textStyle+='font-weight:700;color:'+col+';'; }
+      if(!text&&editable) textStyle+='color:var(--gray-300);';
+      let chipStyle='',chipLabel='';
+      if(isChip){ const ch=(c.type==='signal'||c.type==='signal20') ? { label:this.gridDisplay(r,c), style:'display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;'+(raw?'background:var(--success-dim);color:var(--success);':'background:var(--danger-dim);color:var(--danger);') } : this.chip(raw);
+        chipStyle=ch.style; chipLabel=ch.label; }
+      if(false){ const ch=c.type==='signal' ? { label:raw?'Above 44 MA':'Below 44 MA', style:'display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;'+(raw?'background:var(--success-dim);color:var(--success);':'background:var(--danger-dim);color:var(--danger);') } : this.chip(raw);
+        chipStyle=ch.style; chipLabel=ch.label; }
+      const onClick = isBool && editable ? (()=>this.gridToggleBool(r.sym,c.id,raw))
+        : (editable && !editing ? (()=>this.gridStartEdit(r.sym,c.id, c.type==='number'? (raw===''?'':raw) : raw)) : (()=>{}));
+      return { style:'padding:0 10px;height:36px;display:flex;align-items:center;gap:6px;border-right:1px solid var(--gray-100);font-size:12px;min-width:0;'+(c.align==='right'?'justify-content:flex-end;':'')+(editable?'cursor:'+(isBool?'pointer':'text')+';':''),
+        title: editable? (text||'Click to edit') : text,
+        editing, isSelect, isInput, isBool, isChip, isPlain, isTrend, badges, isLink: !!c.link && !editing,
+        value: editing? st.gridEditVal : '', text, textStyle, chipStyle, chipLabel,
+        boolIcon: raw?'check-circle-2':'circle', boolStyle:'width:15px;height:15px;color:'+(raw?'var(--success)':'var(--gray-300)')+';',
+        options:(c.opts||[]).concat(c.custom?['']:[]).map(o=>({v:o,label:o||'—'})),
+        onClick, onChange:this.gridEditChange, onKey:this.gridKey, onBlur:this.gridCommit, onSelect:this.gridPickSelect(r.sym,c.id) };
+    };
+    const mkRow=(r)=>{ const sel=!!st.gridSel[r.sym], dirty=false;
+      return { sym:r.sym, dirty, selIcon:sel?'check-square':'square', selStyle:'width:14px;height:14px;color:'+(sel?'var(--accent)':'var(--gray-300)')+';',
+        style:rowGrid+'border-bottom:1px solid var(--gray-100);'+(sel?'background:var(--accent-light);':(dirty?'background:var(--hex-honey-dim);':'')),
+        onSel:()=>this.gridToggleSel(r.sym), onOpen:()=>this.setState({screen:'workspace',selected:r.sym}),
+        cells: vCols.map(c=>mkCell(r,c)) }; };
+    let gGroups=[];
+    if(groupCol){ const map={}; gRows.forEach(r=>{ const k=String(this.gridDisplay(r,groupCol))||'—'; (map[k]=map[k]||[]).push(r); });
+      const per=Math.max(3,Math.round(st.gridLimit/Math.max(1,Object.keys(map).length)));
+      gGroups=Object.keys(map).sort().map(k=>{ const all=map[k], shown=all.slice(0,per);
+        return { key:k, showHeader:true, open:!st.gridGroupClosed[k], icon:st.gridGroupClosed[k]?'chevron-right':'chevron-down',
+          countLabel:(shown.length<all.length? shown.length+' of '+all.length : all.length+' item'+(all.length===1?'':'s')),
+          toggle:()=>this.gridToggleGroupOpen(k), rows:shown.map(mkRow) }; }); }
+    else gGroups=[{ key:'all', showHeader:false, open:true, icon:'chevron-down', countLabel:'', toggle:()=>{}, rows:gShown.map(mkRow) }];
+    const gVisible=gGroups.reduce((a,g)=>a+g.rows.length,0);
+    const vbtn=(on)=>'cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border-radius:999px;padding:6px 12px;border:1px solid '+(on?'var(--accent)':'var(--gray-200)')+';'+(on?'background:var(--accent-light);color:var(--accent);':'background:var(--surface);color:var(--gray-600);');
+    const selCount=Object.keys(st.gridSel).filter(k=>st.gridSel[k]).length;
+    const dirtyCount=0;
+    const hiddenCount=Object.keys(st.gridHide).filter(k=>st.gridHide[k]).length;
+    const menuItemStyle='display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-700);';
+    const popBase=(p,w)=>'position:fixed;z-index:70;left:'+p.x+'px;top:'+p.y+'px;width:'+w+'px;background:var(--surface);border:1px solid var(--gray-200);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,0.18);padding:8px;';
+    const cm=st.gridColMenu, cmc=cm? allCols.find(c=>c.id===cm.id):null;
+    const colMenu = cmc ? { open:true, name:cmc.name, style:popBase(cm,220), items:[
+        {icon:'arrow-up',label:'Sort ascending',style:menuItemStyle,onClick:()=>this.gridSortSet(cmc.id,'asc')},
+        {icon:'arrow-down',label:'Sort descending',style:menuItemStyle,onClick:()=>this.gridSortSet(cmc.id,'desc')},
+      ].concat(cmc.filter?[{icon:'filter',label:'Filter by values',style:menuItemStyle,onClick:()=>this.gridOpenFilter(cmc.id)}]:[])
+       .concat([{icon:'group',label:st.gridGroup===cmc.id?'Remove grouping':'Group by this column',style:menuItemStyle,onClick:()=>this.gridGroupBy(cmc.id)},
+        {icon:'eye-off',label:'Hide column',style:menuItemStyle,onClick:()=>this.gridHideCol(cmc.id)}])
+       .concat(cmc.custom?[{icon:'trash-2',label:'Delete column',style:menuItemStyle+'color:var(--danger);',onClick:()=>this.gridDelCol(cmc.id)}]:[]) } : {open:false};
+    const fm=st.gridFilterMenu, fmc=fm? allCols.find(c=>c.id===fm.id):null;
+    let filterMenu={open:false};
+    if(fmc){ const counts={}; this.gridSourceRows().forEach(r=>{ const k=String(this.gridDisplay(r,fmc)); counts[k]=(counts[k]||0)+1; });
+      const active=st.gridFilter[fmc.id]||[];
+      filterMenu={ open:true, name:fmc.name, style:popBase(fm,240), clear:()=>this.gridClearFilter(fmc.id),
+        values:Object.keys(counts).sort().map(k=>({ label:k||'(empty)', count:counts[k], icon:active.indexOf(k)>=0?'check-square':'square',
+          iconStyle:'width:14px;height:14px;color:'+(active.indexOf(k)>=0?'var(--accent)':'var(--gray-300)')+';', onClick:()=>this.gridToggleFilterVal(fmc.id,k) })) }; }
+    const addMenu = st.gridAddOpen ? { open:true, style:popBase(st.gridAddOpen,260)+'padding:14px;', name:st.gridNewName, type:st.gridNewType, opts:st.gridNewOpts,
+      isChoice:st.gridNewType==='choice', types:this.GRIDTYPES.map(t=>({v:t[0],label:t[1]})),
+      onName:this.gridNewName, onType:this.gridNewType, onOpts:this.gridNewOpts, create:this.gridCreateCol } : {open:false};
+    const grid={
+      countLabel: gTotal+' of '+this.gridSourceRows().length+' stocks · '+vCols.length+' columns'+(st.gridGroup?' · grouped':''),
+      minWidthStyle:'min-width:'+(34+40+vCols.reduce((a,c)=>a+c.w,0))+'px;',
+      headStyle: rowGrid+'position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--gray-200);',
+      head: vCols.map(c=>({ name:c.name, dragging:st.gridDrag===c.id,
+        onDragStart:this.gridDragStart(c.id), onDragOver:this.gridDragOver(c.id), onDrop:this.gridDrop(c.id), onDragEnd:this.gridDragEnd,
+        style:'display:flex;align-items:center;gap:5px;padding:0 10px;height:38px;border-right:1px solid var(--gray-100);font-size:11.5px;font-weight:700;color:var(--gray-600);min-width:0;cursor:grab;user-select:none;'
+          +(c.align==='right'?'justify-content:flex-end;':'')
+          +(st.gridDrag===c.id?'opacity:0.4;':'')
+          +(st.gridOver===c.id&&st.gridDrag&&st.gridOver!==st.gridDrag?'box-shadow:inset 3px 0 0 var(--accent);background:var(--accent-light);':''),
+        sortIcon: st.gridSortBy===c.id ? (st.gridSortDir==='asc'?'arrow-up':'arrow-down') : 'chevrons-up-down',
+        sortStyle:'width:11px;height:11px;cursor:pointer;color:'+(st.gridSortBy===c.id?'var(--accent)':'var(--gray-300)')+';',
+        filtered: !!(st.gridFilter[c.id]&&st.gridFilter[c.id].length),
+        onSort:()=>this.gridSortToggle(c.id), onMenu:(e)=>this.gridOpenColMenu(c.id,e) })),
+      groups:gGroups, empty:gTotal===0,
+      views:[].map(v=>({ label:v[1], style:vbtn(st.gridView===v[0]), onClick:()=>this.gridSetView(v[0]) })),
+      q:st.gridQ, onSearch:this.gridSearch,
+      grouped:!!groupCol, groupLabel: groupCol? 'Grouped by '+groupCol.name : '', ungroup:this.gridUngroup,
+      hasFilters:Object.keys(st.gridFilter).some(k=>(st.gridFilter[k]||[]).length), clearAllFilters:this.gridClearAllFilters,
+      hasDirty:dirtyCount>0, dirtyLabel:dirtyCount+' row'+(dirtyCount===1?'':'s')+' with unsaved changes',
+      save:this.gridSave, discard:this.gridDiscard,
+      hasSel:selCount>0, selLabel:selCount+' selected', deleteSel:this.gridDeleteSel, clearSel:this.gridClearSel, bulkReview:this.gridBulkReview,
+      selAll:()=>this.setState(s=>{ const all={}; const on=selCount<gShown.length; if(on) gShown.forEach(r=>all[r.sym]=true); return {gridSel:all}; }),
+      selAllIcon: selCount>0&&selCount>=gShown.length ? 'check-square':'square',
+      newRow:this.gridAddRow, openAdd:this.gridOpenAdd, export:this.gridExport,
+      hasHidden:hiddenCount>0, hiddenLabel:'Show '+hiddenCount+' hidden', showAllCols:this.gridShowAllCols,
+      hasMore:gTotal>gVisible, moreLabel:'Show more · '+(gTotal-gVisible)+' remaining', more:this.gridMore,
+      colMenu, filterMenu, addMenu, anyMenu: !!(cmc||fmc||st.gridAddOpen), closeMenus:this.gridCloseMenus, toast:st.gridToast,
+    };
+
     return {
+      isList, grid,
       shellStyle, railOuterStyle, railInnerStyle, wsStyle, sidebarStyle, panelStyle, adminStyle, adminGridStyle,
       isWorkspace, isAdmin, isTrends, trends, isSector, sector, isJournal, journal, tradeChart, isSettings, settings, trendDrill,
       isLibrary, shelfOpen, shelf, reader, ingest, selPopover, renameModal, bookDelModal,

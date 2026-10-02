@@ -1,9 +1,11 @@
-from datetime import date, datetime
+from datetime import datetime
+from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
-class UniverseStockOut(BaseModel):
+class UniverseStock(BaseModel):
+    id: int
     symbol: str
     company: str
     industry: str
@@ -11,53 +13,29 @@ class UniverseStockOut(BaseModel):
     isin: str
     yahoo_symbol: str
     active: bool
+    created_at: datetime
 
     model_config = {"from_attributes": True}
 
 
-class UniverseUploadOut(BaseModel):
-    id: int
-    filename: str
-    total: int
-    duplicates: int
-    invalid: int
-    uploaded_at: datetime
-    replaced: bool = False
-    invalid_messages: list[str] = Field(default_factory=list)
-
-    model_config = {"from_attributes": True}
-
-
-class SyncRequest(BaseModel):
-    mode: str = "Incremental"  # Full | Incremental
-
-
-class SyncRunOut(BaseModel):
-    id: int
-    mode: str
-    status: str
-    started_at: datetime
-    finished_at: datetime | None
-    processed: int
-    updated: int
-    failed: int
-    error: str | None = None
-
-    model_config = {"from_attributes": True}
-
-
-class SyncRunItemOut(BaseModel):
-    id: int
-    run_id: int
+class UniverseUploadPreviewRow(BaseModel):
     symbol: str
-    status: str
-    rows_written: int
-    window_start: date | None
-    window_end: date | None
-    message: str | None
-
-    model_config = {"from_attributes": True}
+    company: str
+    industry: str
+    series: str
+    isin: str
+    yahoo_symbol: str
 
 
-class SyncRunDetailOut(SyncRunOut):
-    items: list[SyncRunItemOut] = Field(default_factory=list)
+class UniverseUploadResponse(BaseModel):
+    total: int
+    dup: int
+    invalid: int
+    mode: Literal["append", "replace"]
+    preview: list[UniverseUploadPreviewRow]
+    created_at: datetime
+
+
+class UniverseStatusResponse(BaseModel):
+    active_stocks: int
+    last_upload_at: datetime | None

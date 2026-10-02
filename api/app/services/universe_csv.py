@@ -1,82 +1,66 @@
-"""Pure CSV universe parsing / validation (no DB)."""
-
 from __future__ import annotations
 
 import csv
 import io
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+REQUIRED_HEADERS = ["Company Name", "Industry", "Symbol", "Series", "ISIN Code"]
 
 
-EXPECTED_HEADERS = ["Company Name", "Industry", "Symbol", "Series", "ISIN Code"]
-
-
-@dataclass
-class UniverseRow:
+@dataclass(frozen=True)
+class ParsedUniverseRow:
+    symbol: str
     company: str
     industry: str
-    symbol: str
     series: str
     isin: str
-
-    @property
-    def yahoo_symbol(self) -> str:
-        # Keep & (e.g. M&M → M&M.NS)
-        return f"{self.symbol}.NS"
+    yahoo_symbol: str
 
 
-@dataclass
-class UniverseParseResult:
-    rows: list[UniverseRow] = field(default_factory=list)
-    total: int = 0
-    duplicates: int = 0
-    invalid: int = 0
-    invalid_messages: list[str] = field(default_factory=list)
+@dataclass(frozen=True)
+class ParsedUniverseCSV:
+    total: int
+    invalid: int
+    rows: list[ParsedUniverseRow]
 
 
-def _norm_header(h: str) -> str:
-    return h.strip().lstrip("\ufeff")
+def parse_universe_csv(content: bytes) -> ParsedUniverseCSV:
+    decoded = content.decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(decoded))
 
+    if reader.fieldnames is None:
+        raise ValueError("CSV has no header row.")
 
-def parse_universe_csv(content: str | bytes) -> UniverseParseResult:
-    if isinstance(content, bytes):
-        content = content.decode("utf-8-sig")
-    reader = csv.DictReader(io.StringIO(content))
-    if not reader.fieldnames:
-        return UniverseParseResult(invalid=1, invalid_messages=["empty CSV"])
-
-    headers = [_norm_header(h) for h in reader.fieldnames]
-    missing = [h for h in EXPECTED_HEADERS if h not in headers]
+    missing = [name for name in REQUIRED_HEADERS if name not in reader.fieldnames]
     if missing:
-        return UniverseParseResult(
-            invalid=1,
-            invalid_messages=[f"missing headers: {', '.join(missing)}"],
-        )
+        missing_text = ", ".join(missing)
+        raise ValueError(f"Missing required column(s): {missing_text}. No changes were applied.")
 
-    result = UniverseParseResult()
-    seen: set[str] = set()
-    for i, raw in enumerate(reader, start=2):
-        result.total += 1
+    total = 0
+    invalid = 0
+    rows: list[ParsedUniverseRow] = []
+
+    for raw in reader:
+        total += 1
         company = (raw.get("Company Name") or "").strip()
         industry = (raw.get("Industry") or "").strip()
         symbol = (raw.get("Symbol") or "").strip().upper()
-        series = (raw.get("Series") or "").strip() or "EQ"
+        series = (raw.get("Series") or "").strip()
         isin = (raw.get("ISIN Code") or "").strip()
 
-        if not company or not industry or not symbol:
-            result.invalid += 1
-            result.invalid_messages.append(f"row {i}: missing company/industry/symbol")
+        if not (company and industry and symbol and series and isin):
+            invalid += 1
             continue
-        if symbol in seen:
-            result.duplicates += 1
-            continue
-        seen.add(symbol)
-        result.rows.append(
-            UniverseRow(
+
+        rows.append(
+            ParsedUniverseRow(
+                symbol=symbol,
                 company=company,
                 industry=industry,
-                symbol=symbol,
                 series=series,
                 isin=isin,
+                yahoo_symbol=f"{symbol}.NS",
             )
         )
-    return result
+
+    return ParsedUniverseCSV(total=total, invalid=invalid, rows=rows)

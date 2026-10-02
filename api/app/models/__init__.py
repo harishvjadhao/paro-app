@@ -1,18 +1,7 @@
-"""ORM models — imported by Alembic and the app."""
-
-from app.models.base_tables import (  # noqa: F401
-    ChartHighlight,
-    Comment,
-    Indicator,
-    JournalTrade,
-    PriceBar,
-    StockUniverse,
-    SyncRun,
-    SyncRunItem,
-    UniverseUpload,
-    WatchlistItem,
-)
-from app.models.books import (  # noqa: F401
+from app.models.base import Base
+from app.models.highlights import ChartHighlight
+from app.models.journal import Trade
+from app.models.library import (
     Book,
     BookBookmark,
     BookChunk,
@@ -22,23 +11,29 @@ from app.models.books import (  # noqa: F401
     IngestionJob,
     ReadingProgress,
 )
+from app.models.sync import PriceBar, SyncRun, SyncRunItem
+from app.models.universe import StockUniverse, UniverseUpload
+from app.models.workspace import StockComment, StockState
+from app.models.stock_list import StockListColumn, StockMeta
 
 __all__ = [
+    "Base",
     "StockUniverse",
     "UniverseUpload",
     "PriceBar",
-    "Indicator",
-    "WatchlistItem",
-    "Comment",
-    "ChartHighlight",
-    "JournalTrade",
     "SyncRun",
     "SyncRunItem",
+    "StockState",
+    "StockComment",
+    "StockMeta",
+    "StockListColumn",
+    "Trade",
+    "ChartHighlight",
     "Book",
     "BookPage",
-    "BookChunk",
-    "BookSuggestion",
     "IngestionJob",
+    "BookSuggestion",
+    "BookChunk",
     "ReadingProgress",
     "BookBookmark",
     "BookHighlight",

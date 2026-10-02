@@ -1,109 +1,58 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Icon } from "@/components/Icon";
-import { usePrefs } from "@/store/prefs";
-import type { ScreenId, StockFilter } from "@/lib/types";
+import {
+  Activity,
+  BarChart3,
+  BookOpen,
+  Bookmark,
+  FlaskConical,
+  LayoutDashboard,
+  Layers,
+  NotebookPen,
+  Settings,
+  SlidersHorizontal,
+  Table2,
+} from 'lucide-react'
+import { NavLink } from 'react-router-dom'
 
 type NavItem = {
-  to: string;
-  icon: string;
-  label: string;
-  filter?: StockFilter;
-  screen: ScreenId;
-};
+  label: string
+  to: string
+  Icon: typeof LayoutDashboard
+}
 
-const ITEMS: NavItem[] = [
-  {
-    to: "/?filter=all",
-    icon: "layout-dashboard",
-    label: "Market workspace",
-    filter: "all",
-    screen: "workspace",
-  },
-  {
-    to: "/?filter=ma",
-    icon: "activity",
-    label: "Signals · above 44 MA",
-    filter: "ma",
-    screen: "workspace",
-  },
-  {
-    to: "/?filter=watch",
-    icon: "bookmark",
-    label: "Watchlist",
-    filter: "watch",
-    screen: "workspace",
-  },
-  {
-    to: "/?filter=fav",
-    icon: "flask-conical",
-    label: "Research · favorites",
-    filter: "fav",
-    screen: "workspace",
-  },
-  { to: "/sector", icon: "layers", label: "Sector analysis", screen: "sector" },
-  {
-    to: "/trends",
-    icon: "bar-chart-3",
-    label: "Weekly sector trends",
-    screen: "trends",
-  },
-  {
-    to: "/journal",
-    icon: "notebook-pen",
-    label: "Trading journal",
-    screen: "journal",
-  },
-  { to: "/library", icon: "book-open", label: "Library · reader", screen: "library" },
-  { to: "/admin", icon: "sliders-horizontal", label: "Admin", screen: "admin" },
-];
+const navItems: NavItem[] = [
+  { label: 'Market workspace', to: '/workspace?filter=all', Icon: LayoutDashboard },
+  { label: 'Signals · above 44 MA', to: '/workspace?filter=ma', Icon: Activity },
+  { label: 'Watchlist', to: '/workspace?filter=watch', Icon: Bookmark },
+  { label: 'Research · favorites', to: '/workspace?filter=fav', Icon: FlaskConical },
+  { label: 'Sector analysis', to: '/sector', Icon: Layers },
+  { label: 'Weekly sector trends', to: '/trends', Icon: BarChart3 },
+  { label: 'Trading journal', to: '/journal', Icon: NotebookPen },
+  { label: 'Stock list', to: '/list', Icon: Table2 },
+  { label: 'Library · reader', to: '/library', Icon: BookOpen },
+  { label: 'Admin', to: '/admin', Icon: SlidersHorizontal },
+]
 
 export function NavRail() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const filter = usePrefs((s) => s.filter);
-  const setFilter = usePrefs((s) => s.setFilter);
-  const setLastScreen = usePrefs((s) => s.setLastScreen);
-
-  const isWorkspace = location.pathname === "/" || location.pathname === "";
-
   return (
-    <div className="rail-outer">
-      <div className="rail-inner">
-        <div className="rail-brand" title="PaRo">
-          P
-        </div>
-        {ITEMS.map((item) => {
-          const active =
-            item.screen === "workspace"
-              ? isWorkspace && filter === item.filter
-              : location.pathname.startsWith(item.to);
-          return (
-            <button
-              key={item.to + (item.filter || "")}
-              type="button"
-              title={item.label}
-              className={`rail-btn${active ? " is-active" : ""}`}
-              onClick={() => {
-                setLastScreen(item.screen);
-                if (item.filter) setFilter(item.filter);
-                navigate(item.to);
-              }}
+    <aside className='rail-wrap'>
+      <div className='rail'>
+        <div className='brand-pill'>P</div>
+        <nav className='rail-links' aria-label='Primary navigation'>
+          {navItems.map(({ to, label, Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              title={label}
+              className={({ isActive }) => `rail-btn ${isActive ? 'active' : ''}`}
             >
-              <Icon name={item.icon} size={18} />
-            </button>
-          );
-        })}
-        <NavLink
-          to="/settings"
-          title="Settings"
-          className={({ isActive }) =>
-            `rail-btn rail-settings${isActive ? " is-active" : ""}`
-          }
-          onClick={() => setLastScreen("settings")}
-        >
-          <Icon name="settings" size={18} />
+              <Icon size={16} />
+            </NavLink>
+          ))}
+        </nav>
+        <NavLink to='/settings' title='Settings' className={({ isActive }) => `rail-btn ${isActive ? 'active' : ''}`}>
+          <Settings size={16} />
         </NavLink>
       </div>
-    </div>
-  );
+    </aside>
+  )
 }

@@ -1,176 +1,278 @@
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime
+import threading
+from typing import Literal
 
-from sqlalchemy import delete, select
-from sqlalchemy.dialects.postgresql import insert as pg_insert
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models import Indicator, PriceBar, StockUniverse, SyncRun, SyncRunItem
-from app.providers.prices.base import OhlcvBar, PriceProvider
-from app.services.indicators import ma44
+from app.config import settings
+from app.db import SessionLocal
+from app.providers.prices import PriceProvider, YFinanceProvider
+from app.repositories.sync import SyncRepository
+from app.repositories.universe import UniverseRepository
+
+SyncMode = Literal["full", "incremental"]
+SyncScope = Literal["universe", "watchlist", "single"]
 
 
-FULL_YEARS = 4
-INCREMENTAL_LOOKBACK_DAYS = 14
+class SyncService:
+    _lock = threading.Lock()
+    _running = False
 
+    def __init__(
+        self,
+        sync_repo: SyncRepository | None = None,
+        universe_repo: UniverseRepository | None = None,
+        provider: PriceProvider | None = None,
+    ) -> None:
+        self.sync_repo = sync_repo or SyncRepository()
+        self.universe_repo = universe_repo or UniverseRepository()
+        self.provider = provider or YFinanceProvider()
+        self._run_totals: dict[int, int] = {}
 
-def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    def start_run(self, db: Session, *, mode: SyncMode, scope: SyncScope) -> int:
+        if mode not in {"full", "incremental"}:
+            raise HTTPException(status_code=400, detail="Invalid sync mode")
+        if scope not in {"universe", "watchlist", "single"}:
+            raise HTTPException(status_code=400, detail="Invalid sync scope")
 
+        with self._lock:
+            if self._running:
+                raise HTTPException(status_code=409, detail="A sync run is already in progress")
+            self._running = True
 
-def _window_for_mode(db: Session, symbol: str, mode: str) -> tuple[date, date]:
-    end = date.today()
-    if mode == "Full":
-        start = end - timedelta(days=365 * FULL_YEARS + 30)
-        return start, end
-    # Incremental: from last bar - lookback, or full if empty
-    last = db.scalar(
-        select(PriceBar.date)
-        .where(PriceBar.symbol == symbol)
-        .order_by(PriceBar.date.desc())
-        .limit(1)
-    )
-    if last is None:
-        start = end - timedelta(days=365 * FULL_YEARS + 30)
-    else:
-        start = last - timedelta(days=INCREMENTAL_LOOKBACK_DAYS)
-    return start, end
+        run = self.sync_repo.create_run(db, mode=mode, scope=scope, status="running")
+        db.commit()
+        return run.id
 
+    def release_lock(self) -> None:
+        with self._lock:
+            self._running = False
 
-def _upsert_bars(db: Session, symbol: str, bars: list[OhlcvBar]) -> int:
-    if not bars:
-        return 0
-    rows = [
-        {
-            "symbol": symbol,
-            "date": b.date,
-            "open": b.open,
-            "high": b.high,
-            "low": b.low,
-            "close": b.close,
-            "volume": b.volume,
-        }
-        for b in bars
-    ]
-    stmt = pg_insert(PriceBar).values(rows)
-    stmt = stmt.on_conflict_do_update(
-        constraint="uq_price_bars_symbol_date",
-        set_={
-            "open": stmt.excluded.open,
-            "high": stmt.excluded.high,
-            "low": stmt.excluded.low,
-            "close": stmt.excluded.close,
-            "volume": stmt.excluded.volume,
-        },
-    )
-    db.execute(stmt)
-    return len(rows)
+    def get_symbols_for_scope(self, db: Session, scope: SyncScope, explicit_symbols: list[str] | None = None) -> list[str]:
+        if explicit_symbols:
+            return explicit_symbols
+        if scope == "watchlist":
+            # Watchlist persistence is introduced in a later screen, so quick sync no-ops for now.
+            return []
+        return [row.symbol for row in self.universe_repo.list_universe(db)]
 
-
-def _recompute_ma44(db: Session, symbol: str) -> None:
-    closes_rows = db.execute(
-        select(PriceBar.date, PriceBar.close)
-        .where(PriceBar.symbol == symbol)
-        .order_by(PriceBar.date.asc())
-    ).all()
-    if len(closes_rows) < 44:
-        return
-    db.execute(delete(Indicator).where(Indicator.symbol == symbol))
-    closes = [float(c) for _, c in closes_rows]
-    dates = [d for d, _ in closes_rows]
-    batch = []
-    for i in range(43, len(closes)):
-        val = ma44(closes[: i + 1])
-        if val is None:
-            continue
-        batch.append({"symbol": symbol, "date": dates[i], "ma44": val})
-    if batch:
-        db.execute(pg_insert(Indicator).values(batch))
-
-
-def run_sync(
-    db: Session,
-    provider: PriceProvider,
-    *,
-    mode: str = "Incremental",
-    symbols: list[str] | None = None,
-) -> SyncRun:
-    if mode not in ("Full", "Incremental"):
-        raise ValueError("mode must be Full or Incremental")
-
-    run = SyncRun(mode=mode, status="running", started_at=_utcnow())
-    db.add(run)
-    db.commit()
-    db.refresh(run)
-
-    stmt = select(StockUniverse).where(StockUniverse.active.is_(True))
-    if symbols:
-        stmt = stmt.where(StockUniverse.symbol.in_([s.upper() for s in symbols]))
-    stocks = list(db.scalars(stmt).all())
-
-    processed = updated = failed = 0
-    for stock in stocks:
-        processed += 1
-        start, end = _window_for_mode(db, stock.symbol, mode)
+    def execute_run(
+        self,
+        run_id: int,
+        mode: SyncMode,
+        scope: SyncScope,
+        explicit_symbols: list[str] | None = None,
+    ) -> None:
         try:
-            bars = provider.fetch_daily(stock.yahoo_symbol, start, end)
-            n = _upsert_bars(db, stock.symbol, bars)
-            _recompute_ma44(db, stock.symbol)
-            db.add(
-                SyncRunItem(
-                    run_id=run.id,
-                    symbol=stock.symbol,
-                    status="ok",
-                    rows_written=n,
-                    window_start=start,
-                    window_end=end,
-                    message=None,
-                )
-            )
-            updated += 1
-            db.commit()
-        except Exception as exc:  # noqa: BLE001
-            db.rollback()
-            # re-attach run after rollback
-            run = db.get(SyncRun, run.id) or run
-            failed += 1
-            db.add(
-                SyncRunItem(
-                    run_id=run.id,
-                    symbol=stock.symbol,
-                    status="fail",
-                    rows_written=0,
-                    window_start=start,
-                    window_end=end,
-                    message=str(exc)[:500],
-                )
-            )
-            db.commit()
+            with SessionLocal() as db:
+                symbols = self.get_symbols_for_scope(db, scope, explicit_symbols)
+                self._run_totals[run_id] = len(symbols)
 
-    run = db.get(SyncRun, run.id)
-    assert run is not None
-    run.processed = processed
-    run.updated = updated
-    run.failed = failed
-    run.finished_at = _utcnow()
-    if failed and updated:
-        run.status = "partial"
-    elif failed and not updated:
-        run.status = "failed"
-    else:
-        run.status = "success"
-    db.commit()
-    db.refresh(run)
-    return run
+                processed = 0
+                updated = 0
+                failed = 0
+                forced_fails = {token.strip().upper() for token in settings.sync_force_fail_symbols.split(",") if token.strip()}
 
+                for symbol in symbols:
+                    processed += 1
+                    try:
+                        if symbol.upper() in forced_fails:
+                            raise RuntimeError("Forced failure for acceptance testing")
 
-def retry_failed(db: Session, provider: PriceProvider, run_id: int) -> SyncRun:
-    failed_syms = list(
-        db.scalars(
-            select(SyncRunItem.symbol).where(
-                SyncRunItem.run_id == run_id, SyncRunItem.status == "fail"
+                        last_date: date | None = None
+                        if mode == "incremental":
+                            last_date = self.sync_repo.get_latest_bar_date(db, symbol)
+
+                        bars = self.provider.fetch_daily_bars(symbol, mode, last_date)
+                        rows = self.sync_repo.upsert_price_bars(db, symbol, bars)
+                        updated += rows
+                        window = self._format_window(bars)
+                        self.sync_repo.add_run_item(
+                            db,
+                            run_id=run_id,
+                            symbol=symbol,
+                            status="ok",
+                            rows=rows,
+                            window=window,
+                            message="",
+                        )
+                    except Exception as exc:
+                        failed += 1
+                        self.sync_repo.add_run_item(
+                            db,
+                            run_id=run_id,
+                            symbol=symbol,
+                            status="fail",
+                            rows=0,
+                            window="-",
+                            message=str(exc),
+                        )
+
+                    self.sync_repo.update_run_counters(
+                        db,
+                        run_id=run_id,
+                        processed=processed,
+                        updated=updated,
+                        failed=failed,
+                    )
+                    db.commit()
+
+                if failed == 0:
+                    status = "success"
+                elif updated == 0:
+                    status = "failed"
+                else:
+                    status = "partial"
+
+                self.sync_repo.finish_run(db, run_id=run_id, status=status)
+                db.commit()
+        finally:
+            self.release_lock()
+
+    def _format_window(self, bars: list[dict[str, float | date]]) -> str:
+        if not bars:
+            return "-"
+        start = bars[0]["date"]
+        end = bars[-1]["date"]
+        return f"{start} -> {end}"
+
+    def _recover_stale_run_if_needed(self, db: Session, run) -> None:
+        # If process restarted or run was interrupted, DB can keep a stale
+        # `running` state while there is no active in-memory execution.
+        with self._lock:
+            running_now = self._running
+
+        if run.status != "running" or running_now:
+            return
+
+        self.sync_repo.finish_run(
+            db,
+            run_id=run.id,
+            status="partial",
+            error="Sync run was interrupted and auto-recovered.",
+        )
+        db.commit()
+
+    def status(self, db: Session):
+        run = self.sync_repo.latest_run(db)
+        if run is None:
+            return {
+                "id": 0,
+                "mode": "-",
+                "scope": "-",
+                "status": "idle",
+                "started_at": datetime.utcnow(),
+                "finished_at": None,
+                "processed": 0,
+                "updated": 0,
+                "failed": 0,
+                "total": 0,
+                "error": None,
+            }
+
+        self._recover_stale_run_if_needed(db, run)
+        run = self.sync_repo.get_run(db, run.id)
+
+        return {
+            "id": run.id,
+            "mode": run.mode,
+            "scope": run.scope,
+            "status": run.status,
+            "started_at": run.started_at,
+            "finished_at": run.finished_at,
+            "processed": run.processed,
+            "updated": run.updated,
+            "failed": run.failed,
+            "total": self._run_totals.get(run.id, max(run.processed, len(self.sync_repo.list_run_items(db, run.id)))),
+            "error": run.error,
+        }
+
+    def list_runs(self, db: Session):
+        runs = self.sync_repo.list_runs(db)
+        if runs:
+            self._recover_stale_run_if_needed(db, runs[0])
+            runs = self.sync_repo.list_runs(db)
+        payload = []
+        for run in runs:
+            payload.append(
+                {
+                    "id": run.id,
+                    "mode": run.mode,
+                    "scope": run.scope,
+                    "status": run.status,
+                    "started_at": run.started_at,
+                    "finished_at": run.finished_at,
+                    "processed": run.processed,
+                    "updated": run.updated,
+                    "failed": run.failed,
+                    "total": self._run_totals.get(run.id, max(run.processed, len(self.sync_repo.list_run_items(db, run.id)))),
+                    "error": run.error,
+                }
             )
-        ).all()
-    )
-    return run_sync(db, provider, mode="Incremental", symbols=failed_syms)
+        return payload
+
+    def run_detail(self, db: Session, run_id: int):
+        run = self.sync_repo.get_run(db, run_id)
+        if run is None:
+            raise HTTPException(status_code=404, detail="Sync run not found")
+
+        self._recover_stale_run_if_needed(db, run)
+        run = self.sync_repo.get_run(db, run_id)
+
+        items = self.sync_repo.list_run_items(db, run_id)
+        return {
+            "run": {
+                "id": run.id,
+                "mode": run.mode,
+                "scope": run.scope,
+                "status": run.status,
+                "started_at": run.started_at,
+                "finished_at": run.finished_at,
+                "processed": run.processed,
+                "updated": run.updated,
+                "failed": run.failed,
+                "total": self._run_totals.get(run.id, max(run.processed, len(items))),
+                "error": run.error,
+            },
+            "items": [
+                {
+                    "id": item.id,
+                    "run_id": item.run_id,
+                    "symbol": item.symbol,
+                    "status": item.status,
+                    "rows": item.rows,
+                    "window": item.window,
+                    "message": item.message,
+                }
+                for item in items
+            ],
+        }
+
+    def retry_failed(self, db: Session, run_id: int) -> tuple[int, list[str], str, str]:
+        run = self.sync_repo.get_run(db, run_id)
+        if run is None:
+            raise HTTPException(status_code=404, detail="Sync run not found")
+
+        failed_symbols = self.sync_repo.failed_symbols_for_run(db, run_id)
+        if not failed_symbols:
+            raise HTTPException(status_code=400, detail="No failed symbols found for this run")
+
+        new_id = self.start_run(db, mode=run.mode, scope=run.scope)
+        return new_id, failed_symbols, run.mode, run.scope
+
+    def start_scheduled_incremental(self) -> None:
+        with SessionLocal() as db:
+            try:
+                run_id = self.start_run(db, mode="incremental", scope="universe")
+            except HTTPException:
+                return
+
+        thread = threading.Thread(
+            target=self.execute_run,
+            args=(run_id, "incremental", "universe", None),
+            daemon=True,
+        )
+        thread.start()

@@ -1,89 +1,110 @@
-# PaRo — Nifty-200 workspace (React + FastAPI + Postgres)
+# PaRo App - Local Run and Verification Guide
 
-Monorepo layout:
+This guide helps you run the project locally and verify the implemented flows (including S2 sync control).
 
-| Path | Role |
-|------|------|
-| `api/` | FastAPI backend (Python 3.11+, Pydantic v2, SQLAlchemy 2, Alembic) |
-| `web/` | Vite + React + TypeScript frontend |
-| `docker-compose.yml` | api, db (pgvector), web, redis, worker |
-| `Nifty Shares Viewer Wireframe/` | Prototype (`PaRo.dc.html`), build spec, phases, agent rules |
+## 1) Prerequisites
 
-## Quick start (Docker — preferred)
+- Windows machine
+- Python virtual environment already present at .venv
+- Node.js + npm installed
 
-```bash
-cp .env.example .env
-# fill Azure Foundry + optional storage keys; set PRICE_PROVIDER=yfinance when Yahoo is reachable
-docker compose up --build
-```
+## 2) Project structure
 
-- Web: http://localhost:5173  
-- API: http://localhost:8000/health  
-- Migrations run on api start (`alembic upgrade head`).
+- Backend: api
+- Frontend: web
+- Database file: data/paro.db
 
-## Local without Docker
+## 3) Environment setup
 
-Requires **Postgres 15+ with `pgvector`**, and Redis (book ingest queue). Set `DATABASE_URL` / `REDIS_URL` in `.env`, then:
+1. Open a terminal at repo root.
+2. Activate Python environment:
 
-```bash
-cd api && python -m venv .venv && .venv/Scripts/activate   # Windows
-pip install -r requirements.txt
-alembic upgrade head
-uvicorn app.main:app --reload --port 8000
+   source .venv/Scripts/activate
 
-cd web && npm install && npm run dev
-```
+3. Ensure backend env file exists (api/.env). If missing, copy from .env.example and adjust values.
 
-Offline/dev without Yahoo: `PRICE_PROVIDER=mock` in `.env`. Ingest runs inline if Redis is down.
+## 4) Run backend
 
-## Seed + first sync
+In a terminal from repo root:
 
-```bash
-cd api
-python -m app.scripts.seed_universe
-# then POST /admin/sync {"mode":"Full"} or use Admin UI
-```
+1. Move to backend folder:
 
-CSV default: `Nifty Shares Viewer Wireframe/uploads/ind_nifty200list.csv`.
+   cd api
 
-## Provider interfaces (swappable)
+2. Apply migrations:
 
-| Concern | Interface / factory | Implementations |
-|---------|---------------------|----------------|
-| Prices | `get_price_provider()` | `yfinance`, `mock` |
-| Chat | `get_chat_provider()` | Azure Foundry |
-| Embeddings | `get_embeddings_provider()` | Azure Foundry (+ stub if no key) |
-| Vision OCR | `get_vision_provider()` | Azure Foundry |
-| Object store | `get_storage()` | local filesystem (v1) |
+   ../.venv/Scripts/python.exe -m alembic upgrade head
 
-## Timezone
+3. Start API server:
 
-Timestamps stored **UTC** in Postgres; scheduler cron uses `TZ=Asia/Kolkata` (IST). UI should display IST.
+   ../.venv/Scripts/python.exe -m uvicorn app.main:app --reload --port 8000
 
-## Tests
+Expected:
+- API available at http://127.0.0.1:8000
+- Health endpoint: http://127.0.0.1:8000/health
 
-```bash
-cd api && python -m pytest tests -q
-cd web && npm run build
-```
+## 5) Run frontend
 
-## Smoke checklist (when Docker/DB/Yahoo ready)
+Open a second terminal from repo root:
 
-1. `docker compose up` → `/health` ok, web shell loads  
-2. Seed universe → Admin upload/sync → workspace lists stocks  
-3. Chart D/W/M + BB/RSI toggles  
-4. Sector / trends / journal charges  
-5. Sector Ask AI streams (Foundry key set)  
-6. Upload PDF → job ready → Library reader + Ask cites  
-7. Daily incremental sync scheduled post-close IST  
+1. Move to frontend folder:
 
-## Deploy
+   cd web
 
-See `Nifty Shares Viewer Wireframe/DEPLOY.md` (Phase 8 — pick a path before scaffolding deploy blueprints).
+2. Install dependencies (only first time or when package changes):
 
-## Docs
+   npm install
 
-- `Nifty Shares Viewer Wireframe/AGENT.md` — build loop  
-- `Nifty Shares Viewer Wireframe/PHASES.md` — task queue  
-- `Nifty Shares Viewer Wireframe/PaRo_BUILD_SPEC.md` — architecture  
-- `BUILD_LOG.md` — status / resume  
+3. Start dev server:
+
+   npm run dev
+
+Expected:
+- UI available at URL shown by Vite (commonly http://127.0.0.1:5173)
+
+## 6) Quick validation commands
+
+From repo root:
+
+Backend tests:
+
+- cd api
+- ../.venv/Scripts/python.exe -m pytest -q
+
+Frontend production build:
+
+- cd web
+- npm run build
+
+## 7) How to verify S1 and S2 in UI
+
+1. Open Admin screen in the frontend.
+2. S1 Universe Upload:
+- Upload the CSV from Nifty Shares Viewer Wireframe/uploads.
+- Confirm success summary, preview rows, and timestamp.
+- Test replace flow and cancel behavior.
+
+3. S2 Sync Control:
+- Click Full Sync or Incremental Sync.
+- Confirm buttons disable while run is active.
+- Confirm status card updates processed/updated/failed counts.
+- Confirm Recent Sync Logs populates and selecting a run shows Run Detail rows.
+- If a run has failed symbols, use Retry failed and confirm a new run starts.
+
+## 8) Useful troubleshooting
+
+- If frontend cannot call backend, ensure backend is running and CORS is enabled in backend app config.
+- If migration fails due to DB path, run commands exactly from api folder as shown above.
+- If stale data causes confusion, stop services and remove data/paro.db, then re-run migrations.
+
+## 9) Optional API checks
+
+Open these in browser or API client:
+
+- GET /health
+- GET /universe
+- GET /admin/sync/status
+- GET /admin/sync/runs
+
+Base URL for API calls:
+- http://127.0.0.1:8000
